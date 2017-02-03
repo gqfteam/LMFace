@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--gqf-->
+<!--义卖顶部条件选择器右边listitem-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/bighdp"
+              android:descendantFocusability="blocksDescendants"
+              android:orientation="horizontal" >
+    <ImageView
+        android:id="@+id/chose_two_item_img"
+        android:layout_width="@dimen/tinyhdp"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/tinymdp"
+        android:paddingLeft="@dimen/tinymdp"
+        android:src="@drawable/ic_global_filter_check_green"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:layout_gravity="center"
+        />
+
+    <TextView
+        android:id="@+id/chose_two_item_txt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:text="1千米"
+        android:textColor="@android:color/black"
+        android:layout_marginTop="@dimen/smallmdp"
+        android:layout_marginBottom="@dimen/smallmdp"
+        android:textSize="@dimen/smallsp" />
+</LinearLayout>

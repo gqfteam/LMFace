@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" 
+    android:background="@android:color/white">
+    
+    <LinearLayout 
+        android:layout_width="match_parent"
+            android:layout_height="@dimen/smallhdp"
+            android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="@dimen/smallhdp"
+            android:layout_weight="10"
+            android:layout_gravity="center"
+           android:layout_marginLeft="@dimen/hugemdp"
+           android:gravity="center"
+            android:text="所在地区"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/bigsp"
+            
+             />
+
+        <TextView 
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ac4"
+            android:layout_marginRight="@dimen/mediummdp"
+            android:paddingTop="@dimen/mediummdp"
+            />
+        </LinearLayout>
+    
+    
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F1F3"/>
+    
+    <RadioGroup 
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/smallhdp"
+        android:orientation="horizontal"
+        android:id="@+id/popu_RadioGroup"
+        >
+        
+        <RadioButton 
+            android:id="@+id/radio_province"
+            android:text="请选择"
+            android:textColor="#f00"
+            android:layout_width="0dp"
+            android:textSize="@dimen/tinysp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/popu_top_lin_shap"
+            />
+        
+        <RadioButton 
+            android:id="@+id/radio_city"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/tinysp"
+            android:clickable="false"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:gravity="center"
+            android:background="@drawable/popu_top_lin_shap"
+           />
+        
+        <RadioButton 
+            android:id="@+id/radio_district"
+           android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/tinysp"
+            android:clickable="false"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:background="@drawable/popu_top_lin_shap"
+            android:gravity="center"/>
+        <RadioButton
+            android:id="@+id/radio_compus"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:textSize="@dimen/tinysp"
+            android:clickable="false"
+            android:layout_height="match_parent"
+            android:button="@null"
+            android:background="@drawable/popu_top_lin_shap"
+            android:gravity="center"/>
+        <View 
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            />
+        <View 
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            />
+        
+    </RadioGroup>
+
+       
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/ac9"/>
+    
+    <ListView 
+        android:id="@+id/popup_list"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        >
+        
+    </ListView>
+    
+
+</LinearLayout>

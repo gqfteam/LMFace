@@ -1,0 +1,828 @@
+package com.lmface.User;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.jakewharton.rxbinding.widget.RxTextView;
+import com.lmface.R;
+import com.lmface.network.NetWork;
+import com.lmface.pojo.ResultCode;
+import com.lmface.pojo.campusinfo;
+import com.lmface.pojo.collegeinfo;
+import com.lmface.pojo.goods_msg;
+import com.lmface.pojo.goodsclassification;
+import com.lmface.pojo.goodsspecies;
+import com.lmface.pojo.user_msg;
+import com.lmface.util.ReadJson;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import hugo.weaving.DebugLog;
+import io.realm.Realm;
+import rx.Observable;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func4;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
+
+/**
+ * Created by johe on 2017/1/27.
+ */
+
+public class AddOrUpdateGoodsActivity extends AppCompatActivity {
+
+    Realm realm;
+    CompositeSubscription mcompositeSubscription;
+    @BindView(R.id.add_goods_toolbar)
+    Toolbar addGoodsToolbar;
+    @BindView(R.id.addgoods_goodsname_edi)
+    EditText addgoodsGoodsnameEdi;
+    @BindView(R.id.addgoods_goodsprice_edi)
+    EditText addgoodsGoodspriceEdi;
+    @BindView(R.id.addgoods_goodsimg_img1)
+    ImageView addgoodsGoodsimgImg1;
+    @BindView(R.id.addgoods_goodsimg_img2)
+    ImageView addgoodsGoodsimgImg2;
+    @BindView(R.id.addgoods_goodsimg_img3)
+    ImageView addgoodsGoodsimgImg3;
+    @BindView(R.id.addgoods_addImg_txt)
+    TextView addgoodsAddImgTxt;
+    @BindView(R.id.addgoods_deleteimg_txt)
+    TextView addgoodsDeleteimgTxt;
+    @BindView(R.id.addgoods_goodstxt_edi)
+    EditText addgoodsGoodstxtEdi;
+    @BindView(R.id.addgoods_phonenumber_edi)
+    EditText addgoodsPhonenumberEdi;
+    @BindView(R.id.addgoods_goodsaddress_txt)
+    TextView addgoodsGoodsaddressTxt;
+    @BindView(R.id.addgoods_goodsaddress_lin)
+    LinearLayout addgoodsGoodsaddressLin;
+    @BindView(R.id.addgoods_goodsclassification_txt)
+    TextView addgoodsGoodsclassificationTxt;
+    @BindView(R.id.addgoods_goodsclassification_lin)
+    LinearLayout addgoodsGoodsclassificationLin;
+    @BindView(R.id.User_addgoods_ScrollView)
+    ScrollView UserAddgoodsScrollView;
+    @BindView(R.id.User_allLin_lin)
+    RelativeLayout UserAllLinLin;
+    @BindView(R.id.commit_btn)
+    Button commitBtn;
+
+    int goodsId = -1;
+    goods_msg goodsMsg;
+    int chooseImgView = -1;
+
+    int courierId=1;
+    List<Bitmap> imgs;
+
+    String goodscity;
+
+    String college;
+    String campus;
+    String classification;
+    String species;
+    @BindView(R.id.addgoods_goodsnum_edi)
+    EditText addgoodsGoodsnumEdi;
+    Bitmap addgoodsGoodsimg1;
+    Bitmap addgoodsGoodsimg2;
+    Bitmap addgoodsGoodsimg3;
+
+    ArrayList<String> ListDatas;
+    ArrayList<String> DialogDatas;
+
+
+    List<collegeinfo> collegeinfos;
+    List<campusinfo> campusinfos;
+    List<goodsclassification> goodsclassifications;
+    List<goodsspecies> goodsspecies;
+
+    AddGoodsChooseListAdapter mAddGoodsChooseListAdapter;
+
+    int goodsclassificationid = -1;
+    int goodsspecieid = -1;
+
+    int collegeid = -1;
+    int campusid = -1;
+    @BindView(R.id.loan_courier_rad_1)
+    RadioButton loanCourierRad1;
+    @BindView(R.id.loan_courier_rad_2)
+    RadioButton loanCourierRad2;
+    @BindView(R.id.loan_courier_rad_3)
+    RadioButton loanCourierRad3;
+    @BindView(R.id.courier_radioGroup)
+    RadioGroup courierRadioGroup;
+
+    public void setToolbar(int statu) {
+        if (statu == 0) {
+            addGoodsToolbar.setTitle("上架商品");
+        } else {
+            addGoodsToolbar.setTitle("修改商品");
+        }
+        setSupportActionBar(addGoodsToolbar);
+        addGoodsToolbar.setNavigationIcon(R.drawable.barcode__back_arrow);
+        addGoodsToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_add_user_goods);
+        ButterKnife.bind(this);
+        //EventBus.getDefault().register(this);
+        realm = Realm.getDefaultInstance();
+        mcompositeSubscription = new CompositeSubscription();
+        imgs = new ArrayList<>();
+        goodsId = getIntent().getIntExtra("goodsId", -1);
+        Log.i("gqf","goodsId"+goodsId);
+        if (goodsId > 0) {
+            setToolbar(1);
+            getData(goodsId);
+        } else {
+            setToolbar(0);
+        }
+        initButton();
+
+    }
+
+    public void initButton() {
+
+        loanCourierRad1.setChecked(true);
+        Observable<CharSequence> CharSequence1 = RxTextView.textChanges(addgoodsGoodsnameEdi).skip(1);
+        Observable<CharSequence> CharSequence2 = RxTextView.textChanges(addgoodsGoodspriceEdi).skip(1);
+        Observable<CharSequence> CharSequence3 = RxTextView.textChanges(addgoodsPhonenumberEdi).skip(1);
+        Observable<CharSequence> CharSequence4 = RxTextView.textChanges(addgoodsGoodsnumEdi).skip(1);
+
+        Subscription etSc = Observable.combineLatest(CharSequence1, CharSequence2, CharSequence3, CharSequence4, new Func4<CharSequence, CharSequence, CharSequence, CharSequence, Boolean>() {
+            @Override
+            public Boolean call(CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, CharSequence charSequence4) {
+                boolean Bl = !TextUtils.isEmpty(charSequence);
+                boolean B2 = !TextUtils.isEmpty(charSequence2);
+                boolean B3 = !TextUtils.isEmpty(charSequence3);
+                boolean B4 = !TextUtils.isEmpty(charSequence4);
+                return Bl && B2 && B3 && B4;
+            }
+        }).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+            }
+
+            @DebugLog
+            @Override
+            public void onNext(Boolean aBoolean) {
+                Log.e("Daniel", "---aBoolean---" + aBoolean);
+                commitBtn.setEnabled(aBoolean);
+            }
+        });
+        mcompositeSubscription.add(etSc);
+    }
+
+    public void getData(int id) {
+        Subscription subscription = NetWork.getGoodsService().selectByGoodsId(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<goods_msg>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(goods_msg goods_msg) {
+                        goodsMsg=goods_msg;
+                        initViewMsg(goods_msg);
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
+
+    public void initViewMsg(goods_msg goods_msg) {
+        Log.i("gqf", "initViewMsg" + goods_msg.toString());
+        addgoodsGoodsnameEdi.setText(goods_msg.getGoodsname());
+        addgoodsPhonenumberEdi.setText(goods_msg.getUserphonenum());
+        addgoodsGoodstxtEdi.setText(goods_msg.getGoodsdetails());
+        addgoodsGoodspriceEdi.setText(goods_msg.getGoodsprice()+"");
+        addgoodsGoodsnumEdi.setText(goods_msg.getGoodsnum()+"");
+        for(int i=0;i<courierRadioGroup.getChildCount();i++){
+            RadioButton r=(RadioButton)courierRadioGroup.getChildAt(i);
+            Log.i("gqf","RadioButton"+r.getText().toString()+goods_msg.getCourierName());
+            if(r.getText().toString().equals(goods_msg.getCourierName())){
+                Log.i("gqf","RadioButton"+r.getText().toString()+"true"+goods_msg.getCourierName());
+                r.setChecked(true);
+                courierId=i+1;
+            }
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
+        mcompositeSubscription.unsubscribe();
+    }
+
+    @OnClick({R.id.loan_courier_rad_1, R.id.loan_courier_rad_2, R.id.loan_courier_rad_3,R.id.addgoods_goodsaddress_lin, R.id.addgoods_goodsclassification_lin, R.id.addgoods_goodsimg_img1, R.id.addgoods_goodsimg_img2, R.id.addgoods_goodsimg_img3, R.id.addgoods_addImg_txt, R.id.addgoods_deleteimg_txt, R.id.commit_btn})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.addgoods_goodsimg_img1:
+                chooseImgView(addgoodsGoodsimgImg1, 1);
+                break;
+            case R.id.addgoods_goodsimg_img2:
+                chooseImgView(addgoodsGoodsimgImg2, 2);
+                break;
+            case R.id.addgoods_goodsimg_img3:
+                chooseImgView(addgoodsGoodsimgImg3, 3);
+                break;
+            case R.id.addgoods_addImg_txt:
+
+                break;
+            case R.id.addgoods_deleteimg_txt:
+                break;
+            case R.id.commit_btn:
+                if (goodscity.equals("")) {
+                    Toast.makeText(getApplicationContext(), "商品地址信息不完整", Toast.LENGTH_SHORT).show();
+                } else if (goodsclassificationid == -1 || goodsspecieid == -1) {
+                    Toast.makeText(getApplicationContext(), "商品分类信息不完整", Toast.LENGTH_SHORT).show();
+                } else if (collegeid == -1 || campusid == -1) {
+                    Toast.makeText(getApplicationContext(), "商品地址信息不完整"+collegeid+campusid, Toast.LENGTH_SHORT).show();
+                } else {
+                    if(goodsId!=-1){
+                        update();
+                    }else{
+                        commit();
+                    }
+
+                }
+                break;
+            case R.id.addgoods_goodsaddress_lin:
+                //选择地址
+                showPopwindow();
+                updateAddressPopuList();
+                break;
+            case R.id.addgoods_goodsclassification_lin:
+                //选择分类
+                showPopwindow();
+                updateClassificationPopuList();
+                break;
+            case R.id.loan_courier_rad_1:
+                courierId=1;
+                break;
+            case R.id.loan_courier_rad_2:
+                courierId=2;
+                break;
+            case R.id.loan_courier_rad_3:
+                courierId=3;
+                break;
+        }
+    }
+
+    public void update(){
+        Subscription subscription = NetWork.getGoodsService().updateGoodsByGoodsId(goodsId,realm.where(user_msg.class).findFirst().getUserId(),
+                addgoodsGoodsnameEdi.getText().toString(), addgoodsGoodstxtEdi.getText().toString(),
+                "", "", "", addgoodsPhonenumberEdi.getText().toString(),
+                Double.parseDouble(addgoodsGoodspriceEdi.getText().toString()), goodscity, collegeid, campusid, goodsclassificationid,
+                goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), goodsMsg.getShelvestime(),courierId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResultCode>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(ResultCode s) {
+                        result("修改",s);
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
+    public void result(String name,ResultCode s){
+        if(s.getCode()==10000){
+            Toast.makeText(getApplicationContext(),name+"成功",Toast.LENGTH_SHORT).show();
+            onBackPressed();
+        }else{
+            Toast.makeText(getApplicationContext(),name+"失败",Toast.LENGTH_SHORT).show();
+        }
+    }
+    //先上传图片，然后返回图片地址记录，然后上传商品信息
+    public void commit() {
+            Subscription subscription = NetWork.getGoodsService().insertGoods(realm.where(user_msg.class).findFirst().getUserId(),
+                    addgoodsGoodsnameEdi.getText().toString(), addgoodsGoodstxtEdi.getText().toString(),
+                    "", "", "", addgoodsPhonenumberEdi.getText().toString(),
+                    Double.parseDouble(addgoodsGoodspriceEdi.getText().toString()), goodscity, collegeid, campusid, goodsclassificationid,
+                    goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), courierId
+            )
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ResultCode>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(ResultCode s) {
+                            result("提交",s);
+                        }
+                    });
+            mcompositeSubscription.add(subscription);
+
+    }
+
+    public void chooseImgView(ImageView imgv, int index) {
+        addgoodsGoodsimgImg1.setBackground(null);
+        addgoodsGoodsimgImg2.setBackground(null);
+        addgoodsGoodsimgImg3.setBackground(null);
+        if (imgv.getBackground() == null) {
+            imgv.setBackgroundResource(R.drawable.initialsignin_top_search_edittext);
+            chooseImgView = index;
+        } else {
+            imgv.setBackground(null);
+            chooseImgView = -1;
+        }
+    }
+
+    ListView popupList;
+    RadioGroup popuRadioGroup;
+    RadioButton radioCompus;
+    RadioButton radioDistrict;
+    RadioButton radioCity;
+    RadioButton radioProvince;
+    PopupWindow window;
+    int chooseIndes = 0;
+
+    public void changeRadColor() {
+        RadioButton r;
+        for (int i = 0; i < 4; i++) {
+            r = (RadioButton) popuRadioGroup.getChildAt(i);
+            if (i == chooseIndes) {
+                r.setTextColor(getResources().getColor(R.color.colorPrimary));
+            } else {
+                r.setTextColor(getResources().getColor(R.color.black));
+            }
+        }
+    }
+
+    private void showPopwindow() {
+
+        // 利用layoutInflater获得View
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.popwindow, null);
+        popupList = (ListView) view.findViewById(R.id.popup_list);
+        popuRadioGroup = (RadioGroup) view.findViewById(R.id.popu_RadioGroup);
+        radioCompus = (RadioButton) view.findViewById(R.id.radio_compus);
+        radioDistrict = (RadioButton) view.findViewById(R.id.radio_district);
+        radioCity = (RadioButton) view.findViewById(R.id.radio_city);
+        radioProvince = (RadioButton) view.findViewById(R.id.radio_province);
+        radioProvince.setChecked(true);
+        // 下面是两种方法得到宽度和高度 getWindow().getDecorView().getWidth()
+
+        window = new PopupWindow(view,
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.WRAP_CONTENT);
+
+        // 设置popWindow弹出窗体可点击，这句话必须添加，并且是true
+        window.setFocusable(true);
+
+        // 必须要给调用这个方法，否则点击popWindow以外部分，popWindow不会消失
+        window.setBackgroundDrawable(new BitmapDrawable());
+
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0xb0000000);
+        window.setBackgroundDrawable(dw);
+
+        // 在参照的View控件下方显示
+        // window.showAsDropDown(MainActivity.this.findViewById(R.id.start));
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = 0.5f;
+        getWindow().setAttributes(lp);
+
+        // 设置popWindow的显示和消失动画
+        window.setAnimationStyle(R.style.mypopwindow_anim_style);
+        // 在底部显示
+        window.showAtLocation(AddOrUpdateGoodsActivity.this.findViewById(R.id.User_allLin_lin),
+                Gravity.BOTTOM, 0, 0);
+
+        // popWindow消失监听方法
+        window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                WindowManager.LayoutParams lp = getWindow().getAttributes();
+                lp.alpha = 1f;
+                getWindow().setAttributes(lp);
+                mAddGoodsChooseListAdapter = null;
+                chooseIndes = 0;
+            }
+        });
+    }
+
+    public void changeRid(String choose) {
+        RadioButton r;
+        //点击后读取点击项地址信息
+        r = (RadioButton) popuRadioGroup.getChildAt(chooseIndes - 1);
+        r.setTextColor(this.getResources().getColor(R.color.black));
+        r.setText(choose);
+
+        if (chooseIndes < 4) {
+            //设置第二个button可点击
+            r = (RadioButton) popuRadioGroup.getChildAt(chooseIndes);
+            r.setClickable(true);
+            r.setEnabled(true);
+            r.setChecked(true);
+            r.setVisibility(View.VISIBLE);
+            r.setText("请选择");
+            r.setTextColor(this.getResources().getColor(R.color.colorPrimary));
+            for (int m = chooseIndes + 1; m < popuRadioGroup.getChildCount(); m++) {
+                popuRadioGroup.getChildAt(m).setVisibility(View.INVISIBLE);
+            }
+        }
+
+    }
+
+    public void updateAddressPopuList() {
+        radioProvince.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 0;
+                mAddGoodsChooseListAdapter.update(readJson(chooseIndes));
+                changeRadColor();
+
+            }
+        });
+        radioCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 1;
+                mAddGoodsChooseListAdapter.update(readJson(chooseIndes));
+                changeRadColor();
+            }
+        });
+        radioDistrict.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 2;
+                //根据城市搜大学
+                getJson(radioCity.getText().toString(), 3);
+                changeRadColor();
+            }
+        });
+        radioCompus.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 3;
+                //根据大学id搜校区
+                getJson(radioDistrict.getText().toString(), 0);
+                changeRadColor();
+            }
+        });
+        mAddGoodsChooseListAdapter = new AddGoodsChooseListAdapter(this, readJson(chooseIndes));
+        popupList.setAdapter(mAddGoodsChooseListAdapter);
+        popupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if (chooseIndes == 0) {
+                    radioProvince.setText(mAddGoodsChooseListAdapter.getItem(position).toString());
+                    chooseIndes = 1;
+                    //初始化所选
+                    addgoodsGoodsaddressTxt.setText("");
+                    goodscity = "";
+                    collegeid = -1;
+                    campusid = -1;
+                } else if (chooseIndes == 1) {
+                    radioCity.setText(mAddGoodsChooseListAdapter.getItem(position).toString());
+                    chooseIndes = 2;
+                    popupList.setEnabled(false);
+                    //初始化所选
+                    addgoodsGoodsaddressTxt.setText("");
+                    collegeid = -1;
+                    campusid = -1;
+                    //根据城市名获取大学
+                    getJson(mAddGoodsChooseListAdapter.getItem(position).toString(), 3);
+                } else if (chooseIndes == 2) {
+                    radioDistrict.setText(mAddGoodsChooseListAdapter.getItem(position).toString());
+                    chooseIndes = 3;
+                    popupList.setEnabled(false);
+                    //初始化所选
+                    addgoodsGoodsaddressTxt.setText("");
+                    campusid = -1;
+                    //根据大学id搜校区
+                    getJson(mAddGoodsChooseListAdapter.getItem(position).toString(), 0);
+                }
+                if (chooseIndes < 3) {
+                    changeRid(mAddGoodsChooseListAdapter.getItem(position).toString());
+                    mAddGoodsChooseListAdapter.update(readJson(chooseIndes));
+                } else if (chooseIndes == 4) {
+                    chooseIndes = 0;
+                    addgoodsGoodsaddressTxt.setText(radioProvince.getText() + " " + radioCity.getText() +
+                            " " + radioDistrict.getText() + " " + mAddGoodsChooseListAdapter.getItem(position).toString());
+                    goodscity = radioCity.getText().toString();
+                    college = radioDistrict.getText().toString();
+                    campus = mAddGoodsChooseListAdapter.getItem(position).toString();
+
+                    collegeid=campusinfos.get(position).getCollegeid();
+                    campusid=campusinfos.get(position).getCampusid();
+                    window.dismiss();
+                } else if (chooseIndes == 3) {
+                    chooseIndes = 4;
+                }
+            }
+        });
+    }
+
+    public void updateClassificationPopuList() {
+        radioProvince.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 0;
+                //获得全部种类
+                getJson("", 1);
+                changeRadColor();
+            }
+        });
+        radioCity.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseIndes = 1;
+                //根据种类id求分类
+                getJson(radioProvince.getText().toString(), 2);
+                changeRadColor();
+            }
+        });
+        getJson("", 1);
+    }
+
+    ReadJson rj;
+
+    public ArrayList<String> readJson(int position) {
+        String json = null;
+        ArrayList<String> data = new ArrayList<String>();
+        if (position == 0 || position == 1) {
+            json = this.getString(R.string.city_json);
+        } else if (position == 2) {
+            json = this.getString(R.string.university_json);
+        }
+        rj = ReadJson.getInstance();
+        if (position == 0 || position == 2) {
+            for (int i = 0; i < rj.readSaleTopChooseJson(json).size(); i++) {
+                data.add(rj.readSaleTopChooseJson(json).get(i).getName());
+            }
+        } else {
+            data = rj.readSaleTopChooseJson(json).get(17).getHave();
+        }
+
+        return data;
+    }
+
+    public void getJson(String name, final int index) {
+        if (index == 0) {
+            //获得校区
+            int id = 0;
+            for (collegeinfo c : collegeinfos) {
+                if (c.getCollegename().equals(name)) {
+                    id = c.getCollegeid();
+                }
+            }
+            if (id > 0) {
+                Subscription subscription = NetWork.getGoodsService().getcampusMsg(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<List<campusinfo>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<campusinfo> c) {
+                                campusinfos = c;
+                                updatePopuList(index);
+                            }
+                        });
+                mcompositeSubscription.add(subscription);
+
+            }
+        } else if (index == 1) {
+            //获得种类
+            Subscription subscription = NetWork.getGoodsService().getClassificationMsg()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<goodsclassification>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<goodsclassification> goodscs) {
+                            goodsclassifications = goodscs;
+                            //                            radioCity.setEnabled(true);
+                            //                            radioCity.setChecked(true);
+                            Log.i("gqf", "goodsclassification" + goodsclassifications.toString());
+                            updatePopuList(index);
+                        }
+                    });
+            mcompositeSubscription.add(subscription);
+
+        } else if (index == 2) {
+            //获得分类
+            int id = 0;
+            for (goodsclassification c : goodsclassifications) {
+                if (c.getGoodsclassification().equals(name)) {
+                    id = c.getClassificationid();
+                }
+            }
+            if (id > 0) {
+                Subscription subscription = NetWork.getGoodsService().getspeciesMsg(id)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Observer<List<com.lmface.pojo.goodsspecies>>() {
+                            @Override
+                            public void onCompleted() {
+
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+
+                            }
+
+                            @Override
+                            public void onNext(List<goodsspecies> goodsss) {
+                                goodsspecies = goodsss;
+                                updatePopuList(index);
+                            }
+                        });
+                mcompositeSubscription.add(subscription);
+
+            }
+        } else if (index == 3) {
+            //获得大学
+            Subscription subscription = NetWork.getGoodsService().getcollegeMsg(name)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<List<collegeinfo>>() {
+                        @Override
+                        public void onCompleted() {
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<collegeinfo> cs) {
+                            collegeinfos = cs;
+                            updatePopuList(index);
+                        }
+                    });
+            mcompositeSubscription.add(subscription);
+
+        }
+
+    }
+
+    public void updatePopuList(int index) {
+        switch (index) {
+            case 0:
+                ArrayList<String> campusdate = new ArrayList<>();
+                for (int i = 0; i < campusinfos.size(); i++) {
+                    campusdate.add(campusinfos.get(i).getCampusname());
+                }
+                mAddGoodsChooseListAdapter.update(campusdate);
+                popupList.setEnabled(true);
+                break;
+            case 1:
+                //解析json
+
+                ArrayList<String> classificationdate = new ArrayList<>();
+                for (int i = 0; i < goodsclassifications.size(); i++) {
+                    classificationdate.add(goodsclassifications.get(i).getGoodsclassification());
+                }
+                //初始化list
+                mAddGoodsChooseListAdapter = new AddGoodsChooseListAdapter(this, classificationdate);
+                popupList.setAdapter(mAddGoodsChooseListAdapter);
+                popupList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        if (chooseIndes == 0) {
+                            chooseIndes = 1;
+                            popupList.setEnabled(false);
+                            changeRid(mAddGoodsChooseListAdapter.getItem(position).toString());
+                            goodsclassificationid = goodsclassifications.get(position).getClassificationid();
+                            Log.i("gqf","goodsclassificationid"+goodsclassificationid);
+                            getJson(mAddGoodsChooseListAdapter.getItem(position).toString(), 2);
+                            //初始化所选
+                            goodsspecieid = -1;
+                            addgoodsGoodsclassificationTxt.setText("");
+                        } else if (chooseIndes == 1) {
+                            chooseIndes = 0;
+                            addgoodsGoodsclassificationTxt.setText("商品分类:" + radioProvince.getText() + "/" + mAddGoodsChooseListAdapter.getItem(position).toString());
+                            classification = radioProvince.getText().toString();
+                            species = mAddGoodsChooseListAdapter.getItem(position).toString();
+
+                                goodsspecieid = goodsspecies.get(position).getSpeciesid();
+                                goodsclassificationid=goodsspecies.get(position).getClassificationid();
+
+                            Log.i("gqf",goodsclassificationid+"goodsclassificationid"+goodsspecieid);
+                            window.dismiss();
+                        }
+                    }
+                });
+                popupList.setEnabled(true);
+
+                break;
+            case 2:
+                //解析json
+                ArrayList<String> specisdate = new ArrayList<>();
+                for (int i = 0; i < goodsspecies.size(); i++) {
+                    specisdate.add(goodsspecies.get(i).getSpeciesname());
+                }
+                specisdate.add("全部");
+                mAddGoodsChooseListAdapter.update(specisdate);
+                popupList.setEnabled(true);
+
+                break;
+
+            case 3:
+                ArrayList<String> colleges = new ArrayList<>();
+                for (int i = 0; i < collegeinfos.size(); i++) {
+                    colleges.add(collegeinfos.get(i).getCollegename());
+                }
+                mAddGoodsChooseListAdapter.update(colleges);
+                popupList.setEnabled(true);
+
+                break;
+        }
+    }
+
+
+}

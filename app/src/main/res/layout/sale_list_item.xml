@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+<LinearLayout
+    android:id="@+id/goods_item_lin"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/hugehxxxxdp"
+              android:background="?android:selectableItemBackground"
+              android:clickable="true"
+    >
+    <ImageView
+        android:id="@+id/goods_item_img"
+        android:layout_width="@dimen/hugehxxdp"
+        android:layout_height="@dimen/hugehxxdp"
+        android:layout_margin="@dimen/mediummdp"
+        />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/items_name"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tinyhdp"
+            android:text="C++基础大全"
+            android:textSize="@dimen/mediumxsp"
+            android:gravity="center_vertical"
+            android:layout_marginTop="@dimen/mediummdp"
+            android:textColor="#232222"/>
+        <TextView
+            android:id="@+id/items_classification"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tinyhdp"
+            android:text="分类/书籍"
+            android:textSize="@dimen/smallsp"
+            android:gravity="center_vertical"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"/>
+        <TextView
+            android:id="@+id/items_master"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tinyhdp"
+            android:text="联系人:轻疯"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/tinysp"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="@dimen/mediummdp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"/>
+        <TextView
+            android:layout_toRightOf="@+id/items_master"
+            android:id="@+id/items_phonenumber"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/tinyhdp"
+            android:text="联系电话:156****2651"
+            android:lines="1"
+            android:ellipsize="end"
+            android:textSize="@dimen/tinysp"
+            android:layout_marginRight="@dimen/mediummdp"
+            android:gravity="center_vertical|right"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="@dimen/mediummdp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="¥"
+            android:textSize="@dimen/mediumsp"
+            android:textColor="@color/colorPrimary"
+            android:layout_toLeftOf="@+id/items_price"
+            android:layout_alignBottom="@+id/items_price"
+            />
+
+        <TextView
+            android:id="@+id/items_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2020"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/bigsp"
+            android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:layout_alignTop="@+id/items_classification"
+            android:layout_alignEnd="@+id/items_phonenumber"/>
+
+    </RelativeLayout>
+</LinearLayout>
+</LinearLayout>

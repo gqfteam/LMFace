@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#11B6F2</color>
+    <color name="colorPrimaryDark">#0595df</color>
+    <color name="colorAccent">#FF4081</color>
+
+
+    <color name="white">#ffffff</color>
+    <color name="black">#444444</color>
+    <color name="gray_light">#EBEDF0</color>
+    <color name="red">#ee0000</color>
+    <color name="redlight">#d71010</color>
+    <color name="whitesmoke">#f4f4f4</color> <!-- 烟白色 -->
+    <color name="gary">#cecece</color> <!-- 灰色 -->
+    <color name="gary_dark">#979797</color> <!-- 深灰色 -->
+    <color name="frame_gary">#848484</color> <!-- 边框 -->
+
+    <color name="indigo">#4b0082</color> <!-- 靛青色 -->
+    <color name="crimson">#dc143c</color> <!-- 暗深红色 -->
+    <color name="transparent">#50000000</color> <!-- 半透明 -->
+
+    <color name="orangered">#ff4500</color> <!-- 红橙色 -->
+    <color name="darkorange">#ff8c00</color> <!-- 暗桔黄色 -->
+</resources>

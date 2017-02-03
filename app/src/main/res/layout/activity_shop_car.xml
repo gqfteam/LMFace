@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_height="match_parent">
+
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/shop_car_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/whitesmoke"
+            app:popupTheme="@style/ToolbarTheme" >
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/shop_car_list"
+        android:layout_width="match_parent"
+        android:background="@color/whitesmoke"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/gary"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:orientation="horizontal">
+        <CheckBox
+            android:id="@+id/shop_car_select_all"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="全选"
+            android:textSize="@dimen/mediumsp"
+            android:button="@drawable/sex_selector"
+            android:paddingLeft="@dimen/smallmdp"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1"/>
+        <LinearLayout
+            android:id="@+id/all_price_lin"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:id="@+id/shop_car_price_lin"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="总计："
+                    android:layout_gravity="bottom"
+                    android:gravity="bottom"
+                    android:textSize="@dimen/mediumxsp"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/all_select_goods_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="¥0"
+                    android:gravity="bottom"
+                    android:layout_gravity="bottom"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="@dimen/mediumxsp"/>
+            </LinearLayout>
+            <TextView
+                android:id="@+id/all_select_goods_courier"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_gravity="right"
+                android:text="运费：0元"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/shop_car_pay"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_width="@dimen/hugehxxxxxdp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/bigsp"
+            android:text="结算(0)"
+            android:textColor="@color/white"
+            android:background="@color/orangered"/>
+        <Button
+            android:id="@+id/shop_car_delect_all"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_width="@dimen/hugehxxxxxdp"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/bigsp"
+            android:visibility="gone"
+            android:text="删除"
+            android:textColor="@color/white"
+            android:background="@color/redlight"/>
+    </LinearLayout>
+</LinearLayout>

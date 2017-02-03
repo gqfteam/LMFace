@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:id="@+id/store_lin"
+    android:background="@color/white">
+    <LinearLayout
+        android:id="@+id/shop_rad_group"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/smallhdp"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/CB_shop_city"
+            style="@style/sale_top_rad"
+            android:checked="false"
+            android:text="洛阳"
+
+            />
+
+        <ImageView
+            android:layout_width="0.5dip"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#ffffff"
+            android:adjustViewBounds="true"
+            android:scaleY="5"
+            android:src="@drawable/sale_top_line"/>
+
+        <CheckBox
+            android:id="@+id/CB_shop_campus"
+            style="@style/sale_top_rad"
+            android:checked="false"
+            android:text="西苑校区"/>
+
+        <ImageView
+            android:layout_width="0.5dip"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="#ffffff"
+            android:adjustViewBounds="true"
+            android:scaleY="5"
+            android:src="@drawable/sale_top_line"/>
+
+        <CheckBox
+            android:id="@+id/CB_shop_classification"
+            style="@style/sale_top_rad"
+            android:checked="false"
+            android:text="书籍"/>
+
+        <CheckBox
+            android:id="@+id/shop_off"
+            android:layout_width="0.1dip"
+            android:layout_height="match_parent"
+            android:checked="false"/>
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <FrameLayout
+        android:id="@+id/sale_bottom_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+        <LinearLayout
+            android:id="@+id/search_store_lin"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/bighdp"
+            android:paddingBottom="@dimen/smallmdp"
+            android:paddingTop="@dimen/activity_horizontal_margin">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:background="@drawable/searchallcity_shap"
+                android:orientation="horizontal" >
+
+                <TextView
+                    android:layout_width="@dimen/activity_horizontal_margin"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="@dimen/smallmdp"
+                    android:background="@drawable/apollo_ic_search" />
+
+                <EditText
+                    android:id="@+id/ac_top_edi_search"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/mediummdp"
+                    android:layout_marginTop="@dimen/mediummdp"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:gravity="center_vertical"
+                    android:hint="输入商品名称"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/mediumsp" />
+
+                <TextView
+                    android:id="@+id/ac_top_edi_clear"
+                    android:layout_width="@dimen/bigmdp"
+                    android:layout_height="@dimen/bigmdp"
+                    android:layout_gravity="center_vertical"
+                    android:background="@drawable/ic_search_clear"
+                    android:gravity="center_vertical"
+                    android:visibility="gone" />
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

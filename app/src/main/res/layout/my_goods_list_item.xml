@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/hugehxxxxdp"
+              android:background="@color/white"
+                android:id="@+id/my_goods_list_rel"
+    >
+
+    <include layout="@layout/sale_list_item"/>
+    <CheckBox
+        android:id="@+id/is_delect_check"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical|left"
+        android:button="@drawable/sex_selector"/>
+</RelativeLayout>
