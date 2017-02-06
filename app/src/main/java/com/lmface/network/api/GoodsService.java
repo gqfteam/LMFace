@@ -16,7 +16,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -76,7 +75,7 @@ public interface GoodsService {
     //species查询
     @GET("GoodsInfo/getspeciesMsg/{classificationid}")
     Observable<List<goodsspecies>> getspeciesMsg(@Path("classificationid")int classificationid);
-    //college查询
+    //college查询cityId="洛阳市"
     @GET("GoodsInfo/getcollegeMsg/{cityId}")
     Observable<List<collegeinfo>> getcollegeMsg(@Path("cityId")String cityId);
     //campus查询
@@ -85,7 +84,9 @@ public interface GoodsService {
 
 
     @Multipart
-    @POST("GoodsInfo/photoUpload")
-    Observable<ResultCode> photoUpload(@Part MultipartBody.Part file);
+    @POST("GoodsInfo/insertHtdffile")
+    Observable<List<String>> insertHtdffile(@Field("zichifile") MultipartBody.Part[] zichifile,@Field("userId") Integer userId);
+
+    
 
 }

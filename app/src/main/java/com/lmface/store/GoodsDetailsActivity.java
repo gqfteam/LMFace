@@ -1,5 +1,6 @@
 package com.lmface.store;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -20,6 +21,8 @@ import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.goods_msg;
 import com.lmface.pojo.user_msg;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -277,6 +280,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                 addOrJian(2);
                 break;
             case R.id.behavior_commit:
+                behaviorCommit.setEnabled(false);
                 if (statu == 1) {
                     addShopCar(goodsId,buyNum);
                 } else if (statu == 2) {
@@ -345,7 +349,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        behaviorCommit.setEnabled(true);
                     }
 
                     @Override
@@ -356,11 +360,24 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                         }else{
                             Toast.makeText(getApplicationContext(),resultCode.getMsg(),Toast.LENGTH_SHORT).show();
                         }
+                        behaviorCommit.setEnabled(true);
                     }
                 });
         mcompositeSubscription.add(subscription);
     }
     public void buyNow() {
+
         //跳转购买界面，传递goodsid，购买数量，isShopCar=false
+        Intent intent=new Intent(GoodsDetailsActivity.this,OrderGoodsActivity.class);
+        Bundle bundle=new Bundle();
+        ArrayList<Integer> goodsIds=new ArrayList<>();
+        goodsIds.add(goodsId);
+        bundle.putIntegerArrayList("goodsIds",goodsIds);
+        ArrayList<Integer> goodsNums=new ArrayList<>();
+        goodsNums.add(buyNum);
+        bundle.putIntegerArrayList("goodsNums",goodsNums);
+        intent.putExtras(bundle);
+        behaviorCommit.setEnabled(true);
+        startActivity(intent);
     }
 }

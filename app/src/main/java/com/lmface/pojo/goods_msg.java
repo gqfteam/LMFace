@@ -38,10 +38,37 @@ public class goods_msg {
     private String courierName;
 
     private Integer courierMoney;
-    
-    
-    
-    public String getCourierName() {
+    private String userName;
+
+    private String nickname;
+
+    private Integer courierId;
+
+    public Integer getCourierId() {
+        return courierId;
+    }
+
+    public void setCourierId(Integer courierId) {
+        this.courierId = courierId;
+    }
+
+    public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
+	}
+
+	public String getCourierName() {
 		return courierName;
 	}
 
@@ -189,17 +216,16 @@ public class goods_msg {
 
 	@Override
 	public String toString() {
-		return "goods_msg [goodsid=" + goodsid + ", userId=" + userId
-				+ ", goodsname=" + goodsname + ", goodsdetails=" + goodsdetails
-				+ ", goodsimgaddress1=" + goodsimgaddress1
-				+ ", goodsimgaddress3=" + goodsimgaddress3
-				+ ", goodsimgaddress2=" + goodsimgaddress2 + ", userphonenum="
-				+ userphonenum + ", goodsprice=" + goodsprice
-				+ ", shelvestime=" + shelvestime + ", goodscity=" + goodscity
-				+ ", goodsnum=" + goodsnum + ", speciesname=" + speciesname
-				+ ", campusname=" + campusname + ", goodsclassification="
-				+ goodsclassification + ", collegename=" + collegename + "]";
+		return "goods_msg [goodsid=" + goodsid + ", userId=" + userId + ", goodsname=" + goodsname + ", goodsdetails="
+				+ goodsdetails + ", goodsimgaddress1=" + goodsimgaddress1 + ", goodsimgaddress3=" + goodsimgaddress3
+				+ ", goodsimgaddress2=" + goodsimgaddress2 + ", userphonenum=" + userphonenum + ", goodsprice="
+				+ goodsprice + ", shelvestime=" + shelvestime + ", goodscity=" + goodscity + ", goodsnum=" + goodsnum
+				+ ", speciesname=" + speciesname + ", campusname=" + campusname + ", goodsclassification="
+				+ goodsclassification + ", collegename=" + collegename + ", courierName=" + courierName
+				+ ", courierMoney=" + courierMoney + "]";
 	}
+
+	
     
     
 }

@@ -22,4 +22,12 @@ public class SaleChooseModel {
     public void setHave(ArrayList<String> have) {
         this.have = have;
     }
+
+    @Override
+    public String toString() {
+        return "SaleChooseModel{" +
+                "name='" + name + '\'' +
+                ", have=" + have +
+                '}';
+    }
 }

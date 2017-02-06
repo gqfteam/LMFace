@@ -51,4 +51,9 @@ public interface UserService {
     Observable<ResultCode> updateUserInfoMoneyByUserId(@Field("user_id") int user_id,@Field("changeMoney") BigDecimal changeMoney);
 
 
+    //设置用户默认地址
+    @FormUrlEncoded
+    @POST("User/updateUserDefaultAddress")
+    Observable<ResultCode> updateUserDefaultAddress(@Field("userId") int userId,@Field("addressId") int addressId);
+
 }

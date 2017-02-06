@@ -2,42 +2,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <android.support.design.widget.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/address_list_toolbar"
+            android:id="@+id/order_address_list_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/whitesmoke"
             app:popupTheme="@style/ToolbarTheme" >
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/address_list"
+        android:id="@+id/select_address_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="@color/whitesmoke">
 
     </android.support.v7.widget.RecyclerView>
-
-
-    <Button
-        android:id="@+id/add_address_btn"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:gravity="center"
-        android:text="添加收货地址"
-        android:textSize="@dimen/bigsp"
-        android:textColor="@color/white"
-        android:background="@color/orangered"/>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.lmface.store;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +21,7 @@ import com.lmface.network.NetWork;
 import com.lmface.pojo.goods_msg_car;
 import com.lmface.pojo.user_msg;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import butterknife.BindView;
@@ -101,7 +103,8 @@ public class ShopCarActivity extends AppCompatActivity {
 
     public void initPriceView(){
         //获取全部价格
-        allSelectGoodsPrice.setText("¥"+(shopCarListAdapter.getSelectGoodsPrice()+shopCarListAdapter.getSelectGoodsCourier()));
+        BigDecimal bmoney=new BigDecimal(shopCarListAdapter.getSelectGoodsPrice()+shopCarListAdapter.getSelectGoodsCourier()).setScale(2,BigDecimal.ROUND_HALF_DOWN);
+        allSelectGoodsPrice.setText("¥"+bmoney);
         //获取全部邮费
         allSelectGoodsCourier.setText("运费："+shopCarListAdapter.getSelectGoodsCourier()+"元");
     }
@@ -129,7 +132,6 @@ public class ShopCarActivity extends AppCompatActivity {
                 });
         mcompositeSubscription.add(subscription);
     }
-
     public void initListView(List<goods_msg_car> goods_msg_cars) {
         if (shopCarListAdapter == null) {
             shopCarListAdapter = new ShopCarListAdapter(this, goods_msg_cars);
@@ -140,12 +142,10 @@ public class ShopCarActivity extends AppCompatActivity {
                 public void onItemClick(View view, int postion) {
 
                 }
-
                 @Override
                 public void changePrice() {
                     initPriceView();
                 }
-
                 @Override
                 public void isSelectAll(Boolean is) {
                     Log.i("gqf",is+"shopCarSelectAll"+shopCarSelectAll.isChecked());
@@ -159,6 +159,11 @@ public class ShopCarActivity extends AppCompatActivity {
                             shopCarSelectAll.setChecked(false);
                         }
                     }
+                }
+                @Override
+                public void selectNum(int num) {
+                    setToolbar(num+"");
+                    shopCarPay.setText("结算("+num+")");
                 }
             });
         } else {
@@ -225,8 +230,9 @@ public class ShopCarActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.shop_car_pay:
                 //跳转结算界面，获得所有选中的商品的购物车carid，isShopCar=true;
-
-
+                Intent intent=new Intent(ShopCarActivity.this,OrderGoodsActivity.class);
+                intent.putExtras(shopCarListAdapter.getIntent());
+                startActivity(intent);
                 break;
             case R.id.shop_car_delect_all:
                 //调用adapter中的删除函数

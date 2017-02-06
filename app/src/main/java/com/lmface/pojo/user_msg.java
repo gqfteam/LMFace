@@ -1,5 +1,6 @@
 package com.lmface.pojo;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -42,8 +43,17 @@ public class user_msg extends RealmObject{
 
     private String collegeid;
 
-    private Long usermoney;
+    private Double usermoney;
 
+    private Integer defaultaddress;
+    
+    public Integer getDefaultaddress() {
+        return defaultaddress;
+    }
+
+    public void setDefaultaddress(Integer defaultaddress) {
+        this.defaultaddress = defaultaddress;
+    }
     public Integer getUserId() {
         return userId;
     }
@@ -132,15 +142,17 @@ public class user_msg extends RealmObject{
         this.studentnum = studentnum == null ? null : studentnum.trim();
     }
 
+    
+
     public Date getRegistertime() {
-        return registertime;
-    }
+		return registertime;
+	}
 
-    public void setRegistertime(Date registertime) {
-        this.registertime = registertime;
-    }
+	public void setRegistertime(Date registertime) {
+		this.registertime = registertime;
+	}
 
-    public String getClassid() {
+	public String getClassid() {
         return classid;
     }
 
@@ -188,13 +200,13 @@ public class user_msg extends RealmObject{
         this.collegeid = collegeid == null ? null : collegeid.trim();
     }
 
-    public Long getUsermoney() {
-        return usermoney;
-    }
+	public Double getUsermoney() {
+		return usermoney;
+	}
 
-    public void setUsermoney(Long usermoney) {
-        this.usermoney = usermoney;
-    }
+	public void setUsermoney(Double usermoney) {
+		this.usermoney = usermoney;
+	}
 
     @Override
     public String toString() {
@@ -217,7 +229,37 @@ public class user_msg extends RealmObject{
                 ", islogin=" + islogin +
                 ", academicinfoid='" + academicinfoid + '\'' +
                 ", collegeid='" + collegeid + '\'' +
-                ", usermoney=" + usermoney.toString() +
+                ", usermoney=" + usermoney +
+                ", defaultaddress=" + defaultaddress +
                 '}';
     }
+
+    public user_msg(){}
+	public user_msg(Integer userId, String userName, String userPassword, Integer uiId, String realname, Integer age,
+			String nickname, String sex, String headimg, Integer usertype, String studentnum, Timestamp registertime,
+			String classid, String personalnote, String phone, Integer islogin, String academicinfoid, String collegeid,
+                    Double usermoney) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.uiId = uiId;
+		this.realname = realname;
+		this.age = age;
+		this.nickname = nickname;
+		this.sex = sex;
+		this.headimg = headimg;
+		this.usertype = usertype;
+		this.studentnum = studentnum;
+		this.registertime = registertime;
+		this.classid = classid;
+		this.personalnote = personalnote;
+		this.phone = phone;
+		this.islogin = islogin;
+		this.academicinfoid = academicinfoid;
+		this.collegeid = collegeid;
+		this.usermoney = usermoney;
+	}
+
+    
 }

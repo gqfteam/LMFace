@@ -3,6 +3,7 @@ package com.lmface.network.api;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.order_goods_usermsg;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import retrofit2.http.Field;
@@ -22,15 +23,20 @@ public interface GoodsOrderService {
     @FormUrlEncoded
     @POST("GoodsOrder/insertOrder")
     Observable<ResultCode> insertOrder(@Field("userId") Integer userId, @Field("storeUserId")  Integer storeUserId,
-                                       @Field("orderPrice")  Integer orderPrice, @Field("orderGoodsNum")  Integer orderGoodsNum,
+                                       @Field("orderPrice")  BigDecimal orderPrice, @Field("orderGoodsNum")  Integer orderGoodsNum,
                                        @Field("userAddressId")  Integer userAddressId, @Field("goodsId")  Integer goodsId, @Field("courierId")  Integer courierId);
+
+    //批量新增订单状态为00
+    @FormUrlEncoded
+    @POST("GoodsOrder/insertOrders")
+    Observable<ResultCode> insertOrders(@Field("orderJsons") String orderJsons );
 
     //修改订单只能修改订单状态为00的订单
     @FormUrlEncoded
     @POST("GoodsOrder/updateOrder")
-    Observable<ResultCode> updateOrder(@Field("orderId") Integer orderId,@Field("userId") Integer userId,@Field("storeUserId")  Integer storeUserId,
-                                   @Field("orderPrice")  Integer orderPrice,@Field("orderGoodsNum")  Integer orderGoodsNum,
-                                   @Field("userAddressId")  Integer userAddressId,@Field("goodsId")  Integer goodsId);
+    Observable<ResultCode> updateOrder(@Field("orderId") Integer orderId, @Field("userId") Integer userId, @Field("storeUserId")  Integer storeUserId,
+                                       @Field("orderPrice") BigDecimal orderPrice, @Field("orderGoodsNum")  Integer orderGoodsNum,
+                                       @Field("userAddressId")  Integer userAddressId, @Field("goodsId")  Integer goodsId);
 
     //删除订单只能删除订单状态为00的订单
     @FormUrlEncoded

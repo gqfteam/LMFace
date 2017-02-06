@@ -46,7 +46,10 @@ public interface UserAddressService {
 
     //查询用户的所有收货地址
     @GET("UserAddress/selectUserAddressByUserId/{userId}")
-    Observable<List<user_address>> selectByUserName(@Path("userId")int userId);
+    Observable<List<user_address>> selectUserAddressByUserId(@Path("userId")int userId);
 
 
+    //查询单条地址
+    @GET("UserAddress/selectUserAddressById/{addressId}")
+    Observable<user_address> selectUserAddressById(@Path("addressId")int addressId);
 }

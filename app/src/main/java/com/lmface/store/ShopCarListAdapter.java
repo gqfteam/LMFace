@@ -1,6 +1,7 @@
 package com.lmface.store;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -186,7 +187,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if (gmc.getCarGoodsNum() == datas.get(batchEdi.get(position)).getCarGoodsNum()) {
             Log.i("gqf","updata1");
             //数据没有变化
-            this.notifyDataSetChanged();
+
         } else {
             //数据有变化
             Log.i("gqf","updata");
@@ -411,21 +412,29 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 break;
             }
         }
-        Log.i("gqf",gmc.getGoodsnum()+"-----"+gmc.getCarGoodsNum());
-        if(gmc.getCarGoodsNum()==gmc.getGoodsnum()){
-            mHolder.shopCarAdd.setEnabled(false);
-            mHolder.shopCarJian.setEnabled(true);
-        }
-        else if(gmc.getCarGoodsNum()>1&&gmc.getCarGoodsNum()<gmc.getGoodsnum()&&gmc.getGoodsnum()>1){
-            mHolder.shopCarAdd.setEnabled(true);
-            mHolder.shopCarJian.setEnabled(true);
-        }else if(gmc.getCarGoodsNum()==1&&gmc.getGoodsnum()!=1){
-            mHolder.shopCarAdd.setEnabled(true);
-            mHolder.shopCarJian.setEnabled(false);
-        }
-        if(gmc.getGoodsnum()==1){
-            mHolder.shopCarAdd.setEnabled(false);
-            mHolder.shopCarJian.setEnabled(false);
+        if(gmc.getCarGoodsNum()>gmc.getGoodsnum()){
+            gmc.setCarGoodsNum(gmc.getGoodsnum());
+            updata(gmc,position);
+        }else {
+
+            if (gmc.getCarGoodsNum() == gmc.getGoodsnum()) {
+                mHolder.shopCarAdd.setEnabled(false);
+                mHolder.shopCarJian.setEnabled(true);
+            } else if (gmc.getCarGoodsNum() > 1 && gmc.getCarGoodsNum() < gmc.getGoodsnum() && gmc.getGoodsnum() > 1) {
+                mHolder.shopCarAdd.setEnabled(true);
+                mHolder.shopCarJian.setEnabled(true);
+            } else if (gmc.getCarGoodsNum() == 1 && gmc.getGoodsnum() != 1) {
+                mHolder.shopCarAdd.setEnabled(true);
+                mHolder.shopCarJian.setEnabled(false);
+            }
+            if (gmc.getGoodsnum() == 1) {
+                mHolder.shopCarAdd.setEnabled(false);
+                mHolder.shopCarJian.setEnabled(false);
+            }
+            if(gmc.getGoodsnum()<=0){
+                mHolder.shopCarGoodsPrice.setText("失效");
+                mHolder.shopCarEdi.setEnabled(false);
+            }
         }
         mHolder.shopCarBuyNum.setText(gmc.getCarGoodsNum() + "");
 
@@ -529,7 +538,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         batchDelects.remove(index);
                         if (mItemClickListener != null) {
                             mItemClickListener.isSelectAll(false);
-                            Log.i("gqf", "isSelectAll" + "false");
+
                         }
                     }
                 }
@@ -537,6 +546,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 //通知activity更新底部价格数据
                 if(mItemClickListener!=null){
                     mItemClickListener.changePrice();
+                    mItemClickListener.selectNum(batchDelects.size());
                 }
 
             }
@@ -544,6 +554,22 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     }
 
+    public Bundle getIntent(){
+        Bundle bundle=new Bundle();
+        ArrayList<Integer> goodsIds=new ArrayList<>();
+        ArrayList<Integer> goodsNums=new ArrayList<>();
+        for(int i=0;i<batchDelects.size();i++){
+
+            goodsIds.add(datas.get(batchDelects.get(i)).getGoodsid());
+            goodsNums.add(datas.get(batchDelects.get(i)).getCarGoodsNum());
+        }
+
+
+        bundle.putIntegerArrayList("goodsIds",goodsIds);
+        bundle.putIntegerArrayList("goodsNums",goodsNums);
+
+        return bundle;
+    }
     public int addOrJian(int s, int position) {
         //edidata的position
         int buyNum = ediDatas.get(position).getCarGoodsNum();
@@ -610,6 +636,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         public void onItemClick(View view, int postion);
         public void changePrice();
         public void isSelectAll(Boolean is);
+        public void selectNum(int num);
     }
 
 

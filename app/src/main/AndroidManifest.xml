@@ -41,6 +41,20 @@
         <activity android:name=".store.ShopCarActivity"
                   android:launchMode="singleTask"
                   android:screenOrientation="portrait"/>
+
+        <activity android:name=".address.AddressListActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".address.EdiAddressActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait">
+
+        </activity>
+        <activity android:name=".store.OrderGoodsActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".address.SelectAddressActivity"
+                  android:screenOrientation="portrait"/>
+
     </application>
 
 </manifest>

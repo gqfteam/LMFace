@@ -151,4 +151,21 @@ public class user_address {
     public void setPhone(String phone) {
         this.phone = phone == null ? null : phone.trim();
     }
+
+    @Override
+    public String toString() {
+        return "user_address{" +
+                "addressId=" + addressId +
+                ", userId=" + userId +
+                ", countries='" + countries + '\'' +
+                ", provinces='" + provinces + '\'' +
+                ", city='" + city + '\'' +
+                ", county='" + county + '\'' +
+                ", street='" + street + '\'' +
+                ", addressTxt='" + addressTxt + '\'' +
+                ", addressTime=" + addressTime +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                '}';
+    }
 }
