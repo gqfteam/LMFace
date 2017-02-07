@@ -26,9 +26,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -161,6 +163,25 @@ public class StoreListFragment extends Fragment {
         runingAnim();
         Subscription subscription = NetWork.getGoodsService().selectByChoose(goodscity, colloegename, campusname, classificationname, speciesname)
                 .subscribeOn(Schedulers.io())
+                //列表类型转化
+                .flatMap(new Func1<List<goods_msg>, Observable<goods_msg>>() {
+                    @Override
+                    public Observable<goods_msg> call(List<goods_msg> seats) {
+
+                        return Observable.from(seats);
+                    }
+                })
+                //过滤
+                .filter(new Func1<goods_msg, Boolean>() {
+                    @Override
+                    public Boolean call(goods_msg ogms) {
+                       if(ogms.getGoodsnum()==-1){
+                           return false;
+                       }
+                        return true;
+                    }
+                })
+                .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
         mcompositeSubscription.add(subscription);
@@ -169,6 +190,25 @@ public class StoreListFragment extends Fragment {
     public void getByName(String name) {
         Subscription subscription = NetWork.getGoodsService().selectByGoodsName(name)
                 .subscribeOn(Schedulers.io())
+                //列表类型转化
+                .flatMap(new Func1<List<goods_msg>, Observable<goods_msg>>() {
+                    @Override
+                    public Observable<goods_msg> call(List<goods_msg> seats) {
+
+                        return Observable.from(seats);
+                    }
+                })
+                //过滤
+                .filter(new Func1<goods_msg, Boolean>() {
+                    @Override
+                    public Boolean call(goods_msg ogms) {
+                        if(ogms.getGoodsnum()==-1){
+                            return false;
+                        }
+                        return true;
+                    }
+                })
+                .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(observer);
         mcompositeSubscription.add(subscription);

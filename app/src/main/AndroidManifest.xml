@@ -55,6 +55,12 @@
         <activity android:name=".address.SelectAddressActivity"
                   android:screenOrientation="portrait"/>
 
+        <activity android:name=".order.MyOrderListActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".order.MyStoreOrderListActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

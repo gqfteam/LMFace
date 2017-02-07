@@ -11,6 +11,8 @@ import android.widget.LinearLayout;
 import com.lmface.R;
 import com.lmface.User.MyGoodsListActivity;
 import com.lmface.address.AddressListActivity;
+import com.lmface.order.MyOrderListActivity;
+import com.lmface.order.MyStoreOrderListActivity;
 import com.lmface.store.ShopCarActivity;
 
 import butterknife.BindView;
@@ -64,7 +66,7 @@ public class UserFragment extends Fragment {
         return view;
     }
 
-    @OnClick({R.id.my_address_list_lin,R.id.my_goods_list_lin, R.id.my_shop_car_lin, R.id.my_order_list_lin})
+    @OnClick({R.id.my_address_list_lin,R.id.my_goods_list_lin, R.id.my_shop_car_lin, R.id.my_order_list_lin,R.id.my_store_order_list_lin})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.my_goods_list_lin:
@@ -74,9 +76,13 @@ public class UserFragment extends Fragment {
                 mListener.changeActivity(ShopCarActivity.class);
                 break;
             case R.id.my_order_list_lin:
+                mListener.changeActivity(MyOrderListActivity.class);
                 break;
             case R.id.my_address_list_lin:
                 mListener.changeActivity(AddressListActivity.class);
+                break;
+            case R.id.my_store_order_list_lin:
+                mListener.changeActivity(MyStoreOrderListActivity.class);
                 break;
         }
     }
