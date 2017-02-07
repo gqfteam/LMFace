@@ -26,7 +26,7 @@ public interface UserService {
     //注册
     @FormUrlEncoded
     @POST("User/registeredUsers")
-    Observable<user_msg> registeredUsers(@Field("userName") String user_name, @Field("userPassword") String user_password);
+    Observable<ResultCode> registeredUsers(@Field("userName") String user_name, @Field("userPassword") String user_password);
 
     //注册名字查重
     @GET("User/selectByUserName/{userName}")

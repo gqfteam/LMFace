@@ -33,4 +33,10 @@
 
     <string name="add">上架</string>
     <string name="delect">删除</string>
+
+    <!--注册-->
+    <string name="r_phoneNum">手机号</string>
+    <string name="r_password">密码</string>
+    <string name="r_password2">确认密码</string>
+    <string name="r_regist">注册</string>
 </resources>

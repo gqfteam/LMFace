@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.lmface.R;
 import com.lmface.User.MyGoodsListActivity;
+import com.lmface.User.UserInfoActivity;
 import com.lmface.pojo.user_msg;
 import com.lmface.store.ShopCarActivity;
 
@@ -75,8 +76,10 @@ public class UserFragment extends Fragment {
         Log.e("Daniel",userMsg.toString());
         if (userMsg.getNickname()==null) {
             userNameTv.setText(userMsg.getUserName());
+        }else {
+
+            userNameTv.setText(userMsg.getNickname());
         }
-        userNameTv.setText(userMsg.getNickname());
         userIdTv.setText("学生Id:"+userMsg.getUserId());
 
         return view;
@@ -93,12 +96,16 @@ public class UserFragment extends Fragment {
                 mListener.changeActivity(ShopCarActivity.class);
                 break;
             case R.id.my_order_list_lin:
+
                 break;
             case R.id.image:
+                mListener.changeActivity(UserInfoActivity.class);
                 break;
             case R.id.userName_tv:
+                mListener.changeActivity(UserInfoActivity.class);
                 break;
             case R.id.userId_tv:
+                mListener.changeActivity(UserInfoActivity.class);
                 break;
         }
     }
