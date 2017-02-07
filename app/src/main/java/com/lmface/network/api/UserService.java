@@ -40,10 +40,7 @@ public interface UserService {
     //修改用户详情信息
     @FormUrlEncoded
     @POST("User/updateUserInfoByUserId")
-    Observable<ResultCode> updateUserInfoByUserId(@Field("userId") Integer userId,@Field("realname") String realname,
-                                  @Field("age") Integer age,@Field("userName") String userName,@Field("sex") String sex,@Field("headimg") String headimg,
-                                  @Field("usertype") Integer usertype,@Field("studentnum") String studentnum,@Field("personalnote") String personalnote,
-                                  @Field("classid") String classid,@Field("phone") String phone);
+    Observable<ResultCode> updateUserInfoByUserId(@Field("userInfoJson") String userInfoJson);
 
     //增加或减少用户金钱
     @FormUrlEncoded

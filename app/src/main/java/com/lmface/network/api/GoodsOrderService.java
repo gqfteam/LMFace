@@ -31,7 +31,7 @@ public interface GoodsOrderService {
     @POST("GoodsOrder/insertOrders")
     Observable<ResultCode> insertOrders(@Field("orderJsons") String orderJsons );
 
-    //修改订单只能修改订单状态为00的订单
+    //修改订单只能修改订单状态为00和02的快递号的订单
     @FormUrlEncoded
     @POST("GoodsOrder/updateOrder")
     Observable<ResultCode> updateOrder(@Field("orderId") Integer orderId, @Field("userId") Integer userId, @Field("storeUserId")  Integer storeUserId,
@@ -51,14 +51,14 @@ public interface GoodsOrderService {
     @GET("GoodsOrder/selectByStoreUserId/{store_user_id}")
     Observable<List<order_goods_usermsg>> selectByStoreUserId(@Path("store_user_id")int store_user_id);
 
-    //修改订单状态为卖家确认订单01
+    //修改订单状态为卖家确认订单01,卖家确定交易这笔交易后
     //修改订单状态为卖家取消订单-1,这时需要同时修改商品数量
-    //修改订单状态为买家收货03
+    //修改订单状态为买家收货03,付款后
     @FormUrlEncoded
     @POST("GoodsOrder/updateOrderStatus")
     Observable<ResultCode> updateOrderStatus(@Field("orderId") Integer orderId,@Field("orderStatus") Integer orderStatus);
 
-    //修改订单状态为卖家发货02,加入快递号
+    //修改订单状态为卖家发货02,加入快递号,发货后
     @FormUrlEncoded
     @POST("GoodsOrder/updateOrderStatusAndCourierNum")
     Observable<ResultCode> updateOrderStatusAndCourierNum(@Field("orderId") Integer orderId,@Field("orderStatus") Integer orderStatus,@Field("courierNum") String courierNum);
