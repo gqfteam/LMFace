@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="16dp"
-                tools:context="com.lmface.Login.LoginActivity"
-                android:background="@drawable/s001"
+                android:background="@drawable/login_bg"
     >
 
     <ScrollView
@@ -27,8 +25,8 @@
                 android:src="@drawable/logintop"
                 android:layout_gravity="center"
                 android:layout_marginTop="16dp"
-                android:scaleY="0.8"
-                android:scaleX="0.8"
+                android:scaleX="0.6"
+                android:scaleY="0.6"
                 />
 
 
@@ -39,10 +37,10 @@
                 >
 
                 <EditText
-                    android:id="@+id/login_name_et"
+                    android:id="@+id/regist_phone_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/username"
+                    android:hint="@string/r_phoneNum"
                     android:textColor="@color/white"
                     android:imeOptions="actionNext"
                     android:inputType="text"
@@ -56,10 +54,10 @@
                 android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/login_password_et"
+                    android:id="@+id/regist_password_et"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/password"
+                    android:hint="@string/r_password"
                     android:textColor="@color/white"
                     android:imeActionId="@+id/login"
                     android:imeOptions="actionGo"
@@ -68,63 +66,35 @@
                     />
 
             </android.support.design.widget.TextInputLayout>
-
-            <RelativeLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                >
 
-                <CheckBox
-                    android:id="@+id/login_rememberPassword"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/regist_password2_et"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:hint="@string/r_password2"
                     android:textColor="@color/white"
-                    android:text="@string/rememberPassword" />
+                    android:imeOptions="actionNext"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    />
 
-                <CheckBox
-                    android:id="@+id/login_auto_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/white"
-                    android:text="@string/autoLogin" />
-            </RelativeLayout>
+            </android.support.design.widget.TextInputLayout>
+
 
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/login_bt"
-                android:textColor="@color/colorPrimary"
+                android:id="@+id/regist_bt"
+                android:textColor="@color/colorAccent"
                 android:enabled="true"
-                android:text="登录"
+                android:text="@string/r_regist"
                 android:background="@drawable/login_btn_selector"
                 android:layout_marginTop="16dp"
                 />
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:layout_margin="@dimen/bigmdp"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="还没有账号？"
-                    android:textColor="@color/colorAccent"
-                    />
-                <TextView
-                    android:id="@+id/home_regist_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:gravity="center"
-                    android:text="快速注冊"
-                    android:lines="1"
-                    android:textColor="@color/colorAccent"
-                    android:clickable="true"
-                    android:background="@drawable/home_applyloan_txt_sel"
-                    android:textSize="@dimen/smallsp"
-                    />
-            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
