@@ -182,12 +182,57 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 });
         mcompositeSubscription.add(subscription);
     }
+    public void updataLess(final goods_msg_car gmc){
+        Subscription subscription = NetWork.getShopCarService().updateShopCarNum(gmc.getCarId(), gmc.getCarGoodsNum())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResultCode>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                    @Override
+                    public void onNext(ResultCode resultCode) {
+
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
     public void updata(final goods_msg_car gmc,final int position) {
         //单个更新，这个position是ediDatas的
         if (gmc.getCarGoodsNum() == datas.get(batchEdi.get(position)).getCarGoodsNum()) {
             Log.i("gqf","updata1");
             //数据没有变化
+            Subscription subscription = NetWork.getShopCarService().updateShopCarNum(ediDatas.get(position).getCarId(), ediDatas.get(position).getCarGoodsNum())
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<ResultCode>() {
+                        @Override
+                        public void onCompleted() {
 
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                        @Override
+                        public void onNext(ResultCode resultCode) {
+                            if (resultCode.getCode() == 10000) {
+                                Log.i("gqf","updata");
+                            } else {
+                                batchEdi.add(position);
+                                ediDatas.add(gmc);
+                                ShopCarListAdapter.this.notifyItemChanged(position);
+                            }
+                        }
+                    });
+            mcompositeSubscription.add(subscription);
         } else {
             //数据有变化
             Log.i("gqf","updata");
@@ -398,6 +443,10 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             }
         });
 
+        mHolder.shopCarGoodsNum.setText("X" + datas.get(position).getCarGoodsNum());
+        mHolder.shopCarGoodsName.setText(datas.get(position).getGoodsname());
+        mHolder.shopCarGoodsClassification.setText("分类：" + datas.get(position).getGoodsclassification() + "/" + datas.get(position).getSpeciesname());
+        mHolder.shopCarGoodsPrice.setText("¥" + datas.get(position).getGoodsprice());
 
         //商品数量判断
         goods_msg_car gmc=null;
@@ -412,31 +461,37 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 break;
             }
         }
-        if(gmc.getCarGoodsNum()>gmc.getGoodsnum()){
-            gmc.setCarGoodsNum(gmc.getGoodsnum());
-            updata(gmc,position);
+        if(gmc.getGoodsnum()<=0){
+            mHolder.shopCarGoodsClassification.setText("失效");
+            mHolder.shopCarEdi.setEnabled(false);
+            mHolder.shopCarBuyNum.setText(0 + "");
         }else {
+            mHolder.shopCarEdi.setEnabled(true);
+            if (gmc.getCarGoodsNum() > gmc.getGoodsnum()) {
+                gmc.setCarGoodsNum(gmc.getGoodsnum());
+                updataLess(gmc);
 
-            if (gmc.getCarGoodsNum() == gmc.getGoodsnum()) {
-                mHolder.shopCarAdd.setEnabled(false);
-                mHolder.shopCarJian.setEnabled(true);
-            } else if (gmc.getCarGoodsNum() > 1 && gmc.getCarGoodsNum() < gmc.getGoodsnum() && gmc.getGoodsnum() > 1) {
-                mHolder.shopCarAdd.setEnabled(true);
-                mHolder.shopCarJian.setEnabled(true);
-            } else if (gmc.getCarGoodsNum() == 1 && gmc.getGoodsnum() != 1) {
-                mHolder.shopCarAdd.setEnabled(true);
-                mHolder.shopCarJian.setEnabled(false);
+            } else {
+
+                if (gmc.getCarGoodsNum() == gmc.getGoodsnum()) {
+                    mHolder.shopCarAdd.setEnabled(false);
+                    mHolder.shopCarJian.setEnabled(true);
+                } else if (gmc.getCarGoodsNum() > 1 && gmc.getCarGoodsNum() < gmc.getGoodsnum() && gmc.getGoodsnum() > 1) {
+                    mHolder.shopCarAdd.setEnabled(true);
+                    mHolder.shopCarJian.setEnabled(true);
+                } else if (gmc.getCarGoodsNum() == 1 && gmc.getGoodsnum() != 1) {
+                    mHolder.shopCarAdd.setEnabled(true);
+                    mHolder.shopCarJian.setEnabled(false);
+                }
+                if (gmc.getGoodsnum() == 1) {
+                    mHolder.shopCarAdd.setEnabled(false);
+                    mHolder.shopCarJian.setEnabled(false);
+                }
+
             }
-            if (gmc.getGoodsnum() == 1) {
-                mHolder.shopCarAdd.setEnabled(false);
-                mHolder.shopCarJian.setEnabled(false);
-            }
-            if(gmc.getGoodsnum()<=0){
-                mHolder.shopCarGoodsPrice.setText("失效");
-                mHolder.shopCarEdi.setEnabled(false);
-            }
+            mHolder.shopCarBuyNum.setText(gmc.getCarGoodsNum() + "");
         }
-        mHolder.shopCarBuyNum.setText(gmc.getCarGoodsNum() + "");
+
 
 
 
@@ -476,12 +531,6 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         } else {
             mHolder.shopCarStoreUserName.setText("物主：" + datas.get(position).getUserName());
         }
-        mHolder.shopCarGoodsNum.setText("X" + datas.get(position).getCarGoodsNum());
-        mHolder.shopCarGoodsName.setText(datas.get(position).getGoodsname());
-        mHolder.shopCarGoodsClassification.setText("分类：" + datas.get(position).getGoodsclassification() + "/" + datas.get(position).getSpeciesname());
-        mHolder.shopCarGoodsPrice.setText("¥" + datas.get(position).getGoodsprice());
-
-
 
         //选中按钮刷新
         boolean isCheck=false;
@@ -497,13 +546,19 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
 
         //图片加载
-        if (datas.get(position).getGoodsimgaddress1() != null) {
-            if (!datas.get(position).getGoodsimgaddress1().equals("")) {
-                Picasso.with(mContext).load(datas.get(position).getGoodsimgaddress1())
-                        .placeholder(R.drawable.ic_launcher)
-                        .error(R.drawable.ic_launcher)
-                        .into(mHolder.shopCarGoodsImg);
-            }
+        String imgPath="";
+        if(!datas.get(position).getGoodsimgaddress1().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress1();
+        }else if(!datas.get(position).getGoodsimgaddress2().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress2();
+        }else if(!datas.get(position).getGoodsimgaddress3().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress3();
+        }
+        if(!imgPath.equals("")) {
+            Picasso.with(mContext).load(imgPath)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(mHolder.shopCarGoodsImg);
         }
 
         //选中checkbox监听

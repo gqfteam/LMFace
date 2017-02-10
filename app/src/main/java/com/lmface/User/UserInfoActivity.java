@@ -13,10 +13,12 @@ import com.lmface.Login.LoginActivity;
 import com.lmface.R;
 import com.lmface.pojo.user_msg;
 import com.lmface.util.SettingsUtils;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 
 public class UserInfoActivity extends AppCompatActivity {
@@ -31,6 +33,8 @@ public class UserInfoActivity extends AppCompatActivity {
     Button logout;
     @BindView(R.id.userInfo_contain)
     LinearLayout userInfoContain;
+    @BindView(R.id.user_head_img)
+    CircleImageView userHeadImg;
     private Realm realm;
 
     @Override
@@ -41,12 +45,21 @@ public class UserInfoActivity extends AppCompatActivity {
         setToolBar();
 
         realm = Realm.getDefaultInstance();
-        user_msg userInfo = realm.where(user_msg.class).findFirst();
-        if (userInfo.getNickname()==null) {
-            userName.setText(userInfo.getUserName());
-        }else {
 
-            userName.setText(userInfo.getNickname());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        user_msg userInfo = realm.where(user_msg.class).findFirst();
+        userName.setText(userInfo.getNickname());
+        if(userInfo.getHeadimg()!=null){
+            if(!userInfo.getHeadimg().equals("")){
+                Picasso.with(this).load(userInfo.getHeadimg())
+                        .placeholder(R.drawable.ic_launcher)
+                        .error(R.drawable.ic_launcher)
+                        .into(userHeadImg);
+            }
         }
     }
 
@@ -62,11 +75,18 @@ public class UserInfoActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({ R.id.user_name, R.id.logout})
+    @OnClick({R.id.user_name_lin,R.id.user_img_lin, R.id.logout})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.user_img_lin:
+                //跳转修改用户头像
+                startActivity(new Intent(UserInfoActivity.this, ChangeUserHeadImgActivity.class));
 
-            case R.id.user_name:
+                break;
+            case R.id.user_name_lin:
+                //跳转修改用户信息页面
+                startActivity(new Intent(UserInfoActivity.this, UpdateUserInfoActivity.class));
+
                 break;
             case R.id.logout:
                 //退出账户是删除此用户
@@ -77,8 +97,8 @@ public class UserInfoActivity extends AppCompatActivity {
                 }
                 realm.commitTransaction();
                 //取消“记住密码，自动登录”
-                SettingsUtils.setPrefAutoLogin(getApplicationContext(),false);
-                SettingsUtils.setPrefRememberPassword(getApplicationContext(),false);
+                SettingsUtils.setPrefAutoLogin(getApplicationContext(), false);
+                SettingsUtils.setPrefRememberPassword(getApplicationContext(), false);
 
                 startActivity(new Intent(UserInfoActivity.this, LoginActivity.class));//跳转到登录页面
                 break;

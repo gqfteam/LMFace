@@ -31,10 +31,13 @@
             >
             <!--头像-->
             <LinearLayout
+                android:id="@+id/user_img_lin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
                 >
 
                 <TextView
@@ -46,8 +49,10 @@
                    />
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/user_head_img"
+                    android:layout_width="?attr/actionBarSize"
                     android:layout_height="match_parent"
+                    android:layout_margin="@dimen/tinymdp"
                     android:src="@drawable/ic_launcher"
                     />
                 <ImageView
@@ -63,10 +68,14 @@
                 android:background="@color/whitesmoke"/>
             <!--昵称-->
             <LinearLayout
+                android:id="@+id/user_name_lin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+
                 >
 
                 <TextView
@@ -74,7 +83,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="昵称"
+                    android:text="修改信息"
                     android:padding="16dp"
                    />
 
@@ -104,6 +113,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 >
 
                 <TextView
@@ -135,6 +145,10 @@
                 android:background="@color/whitesmoke"/>
 
             <!--退出账户-->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
@@ -142,6 +156,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 >
 
                 <Button

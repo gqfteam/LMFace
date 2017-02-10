@@ -2,20 +2,45 @@ package com.lmface.order;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by wjy on 16/8/15.
  *
  */
-public class MyStoreOrderViewPagerAdapter extends FragmentPagerAdapter {
+public class MyStoreOrderViewPagerAdapter extends FragmentStatePagerAdapter {
+
+    List<Fragment> datas;
+
     public MyStoreOrderViewPagerAdapter(FragmentManager fm) {
         super(fm);
+        datas=new ArrayList<>();
     }
 
     @Override
     public Fragment getItem(int position) {
-        return StoreOrderListFragment.newInstance(position);
+        Fragment fragment=StoreOrderListFragment.newInstance(position);
+        boolean isHave=false;
+        for(Fragment f:datas){
+            if(f==fragment){
+                isHave=true;
+            }
+        }
+        if(!isHave) {
+            datas.add(fragment);
+        }
+        ((StoreOrderListFragment)fragment).setOrderChangeLinsener(new StoreOrderListFragment.OrderChangeLinsener() {
+            @Override
+            public void orderChange() {
+                for(Fragment f:datas){
+                    ((StoreOrderListFragment)f).initData();
+                }
+            }
+        });
+        return fragment;
     }
 
     @Override

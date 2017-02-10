@@ -16,6 +16,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import rx.Observable;
 
@@ -85,7 +86,9 @@ public interface GoodsService {
 
     @Multipart
     @POST("GoodsInfo/insertHtdffile")
-    Observable<List<String>> insertHtdffile(@Field("zichifile") MultipartBody.Part[] zichifile,@Field("userId") Integer userId);
+    Observable<ResultCode> insertHtdffile(@Part List<MultipartBody.Part> zichifile,@Part("isAddress1") boolean isAddress1,
+                                          @Part("isAddress2") boolean isAddress2,
+                                          @Part("isAddress3") boolean isAddress3,@Part("goodsId") Integer goodsId);
 
     
 

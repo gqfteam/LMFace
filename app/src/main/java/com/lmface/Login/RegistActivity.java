@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import rx.Observer;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
@@ -63,7 +64,7 @@ public class RegistActivity extends AppCompatActivity {
     }
 
     private void selectByUserName(final String phone, final String password) {
-        NetWork.getUserService().selectByUserName(phone)
+        Subscription logSc = NetWork.getUserService().selectByUserName(phone)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResultCode>() {
@@ -79,17 +80,20 @@ public class RegistActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(ResultCode resultCode) {
+
                         if(resultCode.getCode()==10000){
                             register(phone,password);
+                        }else{
+                            Toast.makeText(getApplicationContext(),resultCode.getMsg(),Toast.LENGTH_SHORT).show();
                         }
-                        Toast.makeText(RegistActivity.this, resultCode.getMsg(), Toast.LENGTH_SHORT).show();
-
                     }
                 });
+
+        compositeSubscription.add(logSc);
     }
 
     private void register(String phone, String password) {
-        NetWork.getUserService().registeredUsers(phone,password)
+        Subscription logSc = NetWork.getUserService().registeredUsers(phone,password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResultCode>() {
@@ -120,6 +124,9 @@ public class RegistActivity extends AppCompatActivity {
 
                     }
                 });
+
+        compositeSubscription.add(logSc);
+
 
     }
 

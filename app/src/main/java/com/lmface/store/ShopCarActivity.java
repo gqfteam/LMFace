@@ -125,7 +125,13 @@ public class ShopCarActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(List<goods_msg_car> goods_msg_cars) {
-                        Log.i("gqf",goods_msg_cars.toString());
+                        for(int i=0;i<goods_msg_cars.size();i++){
+                            if(goods_msg_cars.get(i).getGoodsnum()<=0){
+                                goods_msg_car gmc=goods_msg_cars.get(i);
+                                goods_msg_cars.remove(i);
+                                goods_msg_cars.add(gmc);
+                            }
+                        }
 
                         initListView(goods_msg_cars);
                     }

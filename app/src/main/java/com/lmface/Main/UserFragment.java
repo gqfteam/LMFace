@@ -7,11 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.lmface.R;
 import com.lmface.User.MyGoodsListActivity;
+import com.lmface.User.UserInfoActivity;
 import com.lmface.address.AddressListActivity;
+import com.lmface.order.MyOrderListActivity;
+import com.lmface.order.MyStoreOrderListActivity;
+import com.lmface.pojo.user_msg;
 import com.lmface.store.ShopCarActivity;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -69,21 +75,28 @@ public class UserFragment extends Fragment {
         ButterKnife.bind(this, view);
         realm = Realm.getDefaultInstance();
         userMsg = realm.where(user_msg.class).findFirst();
-        Log.e("Daniel",userMsg.toString());
-        if (userMsg.getNickname()==null) {
-            userNameTv.setText(userMsg.getUserName());
-        }else {
 
-            userNameTv.setText(userMsg.getNickname());
-        }
-        userIdTv.setText("学生Id:"+userMsg.getUserId());
 
         return view;
     }
 
-    @OnClick({R.id.my_address_list_lin,R.id.my_goods_list_lin, R.id.my_shop_car_lin, R.id.my_order_list_lin,R.id.my_store_order_list_lin})
+    @Override
+    public void onStart() {
+        super.onStart();
+        userMsg = realm.where(user_msg.class).findFirst();
+        userNameTv.setText(userMsg.getNickname());
+        userIdTv.setText(userMsg.getPersonalnote());
+        if(userMsg.getHeadimg()!=null){
+            if(!userMsg.getHeadimg().equals("")){
+                Picasso.with(getActivity()).load(userMsg.getHeadimg())
+                        .placeholder(R.drawable.ic_launcher)
+                        .error(R.drawable.ic_launcher)
+                        .into(image);
+            }
+        }
+    }
 
-    @OnClick({R.id.my_goods_list_lin, R.id.my_shop_car_lin, R.id.my_order_list_lin,R.id.image, R.id.userName_tv, R.id.userId_tv})
+    @OnClick({R.id.my_address_list_lin,R.id.my_goods_list_lin, R.id.my_shop_car_lin, R.id.my_order_list_lin,R.id.my_store_order_list_lin,R.id.image, R.id.userName_tv, R.id.userId_tv})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.my_goods_list_lin:
@@ -106,6 +119,9 @@ public class UserFragment extends Fragment {
                 break;
             case R.id.my_store_order_list_lin:
                 mListener.changeActivity(MyStoreOrderListActivity.class);
+                break;
+            case R.id.my_address_list_lin:
+                mListener.changeActivity(AddressListActivity.class);
                 break;
         }
     }

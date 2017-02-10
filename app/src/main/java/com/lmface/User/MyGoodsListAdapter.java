@@ -47,6 +47,7 @@ public class MyGoodsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.selectDelectId = selectDelectId;
     }
 
+
     public void isEdi(boolean isEdi) {
         this.isEdi = isEdi;
         this.notifyDataSetChanged();
@@ -90,26 +91,33 @@ public class MyGoodsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ViewHoder mHolder = (ViewHoder) holder;
-        if (datas.get(position).getGoodsimgaddress1() != null) {
-            if (!datas.get(position).getGoodsimgaddress1().equals("")) {
-                Picasso.with(mContext).load(datas.get(position).getGoodsimgaddress1())
-                        .placeholder(R.drawable.ic_launcher)
-                        .error(R.drawable.ic_launcher)
-                        .into(mHolder.goodsItemImg);
-            }
+        String imgPath="";
+        if(!datas.get(position).getGoodsimgaddress1().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress1();
+        }else if(!datas.get(position).getGoodsimgaddress2().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress2();
+        }else if(!datas.get(position).getGoodsimgaddress3().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress3();
         }
-
+        mHolder.goodsItemImg.setImageBitmap(null);
+        if(!imgPath.equals("")) {
+            Picasso.with(mContext).load(imgPath)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(mHolder.goodsItemImg);
+        }
         mHolder.itemsName.setText(datas.get(position).getGoodsname());
         mHolder.itemsClassification.setText(datas.get(position).getGoodsclassification() + "/" + datas.get(position).getSpeciesname());
-
         mHolder.itemsMaster.setText("联系人" + datas.get(position).getUserphonenum());
         mHolder.itemsPhonenumber.setVisibility(View.GONE);
         mHolder.itemsPhonenumber.setText("联系电话:" + datas.get(position).getUserphonenum());
         mHolder.itemsPrice.setText(""+datas.get(position).getGoodsprice());
         if (isEdi) {
             mHolder.isDelectCheck.setVisibility(View.VISIBLE);
+            mHolder.itemsPrice.setPadding(0,0,300,0);
         } else {
             mHolder.isDelectCheck.setVisibility(View.GONE);
+            mHolder.itemsPrice.setPadding(0,0,150,0);
         }
         if (selectDelectId.size() == 0) {
             mHolder.isDelectCheck.setChecked(false);
@@ -147,8 +155,6 @@ public class MyGoodsListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 }
             }
         });
-
-
     }
 
     @Override

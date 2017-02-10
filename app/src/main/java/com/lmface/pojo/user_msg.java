@@ -173,7 +173,7 @@ public class user_msg extends RealmObject{
     }
 
     public void setPhone(String phone) {
-        this.phone = phone == null ? null : phone.trim();
+        this.phone = phone;
     }
 
     public Integer getIslogin() {

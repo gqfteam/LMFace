@@ -36,13 +36,21 @@ public class OrderListFragment extends Fragment {
     private static final String ARG_TYPE = "type";
     @BindView(R.id.order_list_RecyclerView)
     RecyclerView orderListRecyclerView;
-    private int type;//-1.商户取消订单，0.商户未确认，1.商户已确认，2.商户已发货，3.用户已收货
+    private int type;//-1.商户用户取消订单，0.商户未确认，1.商户已确认，2.商户已发货，3.用户已收货
     private Realm realm;
     private Unbinder unbinder;
     private CompositeSubscription mcompositeSubscription;
     private MyOrderListAdapter myOrderListAdapter;
 
+    private OrderChangeLinsener orderChangeLinsener;
 
+    public interface OrderChangeLinsener{
+        public void orderChange();
+    }
+
+    public void setOrderChangeLinsener(OrderChangeLinsener orderChangeLinsener) {
+        this.orderChangeLinsener = orderChangeLinsener;
+    }
 
     public static OrderListFragment newInstance(int type) {
         OrderListFragment fragment = new OrderListFragment();
@@ -75,10 +83,15 @@ public class OrderListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        initData();
+
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
 
     public void initData(){
         Subscription subscription = NetWork.getGoodsOrderService().selectByUserId(realm.where(user_msg.class).findFirst().getUserId())
@@ -138,7 +151,9 @@ public class OrderListFragment extends Fragment {
         myOrderListAdapter.setOnItemClickListener(new MyOrderListAdapter.MyItemClickListener() {
             @Override
             public void onChangeStatu() {
-                initData();
+                if(orderChangeLinsener!=null){
+                    orderChangeLinsener.orderChange();
+                }
             }
         });
     }

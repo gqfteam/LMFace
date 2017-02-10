@@ -74,14 +74,19 @@ public class StoreListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ViewHoder mHolder = (ViewHoder) holder;
 
-
-        if(datas.get(position).getGoodsimgaddress1()!=null) {
-            if(!datas.get(position).getGoodsimgaddress1().equals("")) {
-                Picasso.with(mContext).load(datas.get(position).getGoodsimgaddress1())
-                        .placeholder(R.drawable.ic_launcher)
-                        .error(R.drawable.ic_launcher)
-                        .into(mHolder.goodsItemImg);
-            }
+        String imgPath="";
+        if(!datas.get(position).getGoodsimgaddress1().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress1();
+        }else if(!datas.get(position).getGoodsimgaddress2().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress2();
+        }else if(!datas.get(position).getGoodsimgaddress3().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress3();
+        }
+        if(!imgPath.equals("")) {
+            Picasso.with(mContext).load(imgPath)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(mHolder.goodsItemImg);
         }
         mHolder.itemsPrice.setText(""+datas.get(position).getGoodsprice());
         mHolder.itemsName.setText(datas.get(position).getGoodsname());

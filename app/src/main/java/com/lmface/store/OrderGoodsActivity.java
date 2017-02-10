@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.lmface.R;
@@ -139,26 +140,33 @@ public class OrderGoodsActivity extends AppCompatActivity {
     }
 
     public void initAddressData(int id) {
-        Subscription subscription = NetWork.getUserAddressService().selectUserAddressById(id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<user_address>() {
-                    @Override
-                    public void onCompleted() {
+        if(id==0){
+            userNameTxt.setText("当前没有选择收货地址");
+            userPhoneTxt.setText("");
+            orderAddressMsgTxt.setText("点击设置收货地址");
+            selectAddressRel.setEnabled(true);
+        }else {
+            Subscription subscription = NetWork.getUserAddressService().selectUserAddressById(id)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Observer<user_address>() {
+                        @Override
+                        public void onCompleted() {
 
-                    }
+                        }
 
-                    @Override
-                    public void onError(Throwable e) {
+                        @Override
+                        public void onError(Throwable e) {
 
-                    }
+                        }
 
-                    @Override
-                    public void onNext(user_address user_address) {
-                        initAddressLin(user_address);
-                    }
-                });
-        mcompositeSubscription.add(subscription);
+                        @Override
+                        public void onNext(user_address user_address) {
+                            initAddressLin(user_address);
+                        }
+                    });
+            mcompositeSubscription.add(subscription);
+        }
     }
 
     public void initAddressLin(user_address user_address) {
@@ -275,7 +283,11 @@ public class OrderGoodsActivity extends AppCompatActivity {
                 break;
             case R.id.behavior_commit:
                 //提交订单
-                commitOrder();
+                if(addressId!=0) {
+                    commitOrder();
+                }else{
+                    Toast.makeText(getApplicationContext(),"没有选择收货地址，请选择",Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

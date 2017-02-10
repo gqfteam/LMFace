@@ -206,7 +206,7 @@ public class GoodsDetailsActivity extends AppCompatActivity {
         goodsDetailsNum.setText("数量：" + goods_msg.getGoodsnum());
         goodsDetailsLoaction.setText(goods_msg.getGoodscity() + "/" + goods_msg.getCollegename() + "/" + goods_msg.getCampusname());
         goodsDetailsPhone.setText(goods_msg.getUserphonenum() + "");
-        goodsDetailsTxt.setText(goods_msg.getGoodsdetails());
+        goodsDetailsTxtDetails.setText(goods_msg.getGoodsdetails());
         goodsDetailsPrice.setText(goods_msg.getGoodsprice() + "元");
         behaviorGoodsNum.setText("库存：" + goods_msg.getGoodsnum());
         behaviorGoodsName.setText(goods_msg.getGoodsname());

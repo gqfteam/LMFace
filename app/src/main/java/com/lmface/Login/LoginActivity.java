@@ -8,6 +8,9 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.utils.ScreenUtils;
@@ -25,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import io.realm.Realm;
 import rx.Observable;
 import rx.Observer;
@@ -55,6 +59,12 @@ public class LoginActivity extends AppCompatActivity {
     CheckBox loginAutoLogin;
     @BindView(R.id.login_bt)
     Button loginBt;
+    @BindView(R.id.home_regist_btn)
+    TextView homeRegistBtn;
+    @BindView(R.id.login_form)
+    ScrollView loginForm;
+    @BindView(R.id.login_progress)
+    ProgressBar loginProgress;
 
     private Realm realm;
 
@@ -90,7 +100,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void call(Boolean aBoolean) {
                         SettingsUtils.setPrefRememberPassword(getApplicationContext(), aBoolean);
-                        if(aBoolean==false){
+                        if (aBoolean == false) {
                             loginAutoLogin.setChecked(false);
                             SettingsUtils.setPrefAutoLogin(getApplicationContext(), aBoolean);
                         }
@@ -102,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void call(Boolean aBoolean) {
                         SettingsUtils.setPrefAutoLogin(getApplicationContext(), aBoolean);
-                        if(aBoolean==true){
+                        if (aBoolean == true) {
                             SettingsUtils.setPrefRememberPassword(getApplicationContext(), aBoolean);
                             loginRememberPassword.setChecked(true);
                         }
@@ -110,29 +120,23 @@ public class LoginActivity extends AppCompatActivity {
                 });
 
 
-
-        demoLogin();
-//        if (SettingsUtils.isRememberPassword(getApplicationContext())) {
-//            user_msg userInfo = realm.where(user_msg.class).findFirst();
-//            name = userInfo.getUserName();
-//            LMFaceApplication.username = name;
-//            password = userInfo.getUserPassword();
-//            loginNameEt.setText(name);
-//            loginPasswordEt.setText(password);
-//            loginBt.setEnabled(true);
-//            if (SettingsUtils.isAutoLogin(getApplicationContext())) {
-//                doLogin();
-//            }
-//        }
+                if (SettingsUtils.isRememberPassword(getApplicationContext())) {
+                    user_msg userInfo = realm.where(user_msg.class).findFirst();
+                    name = userInfo.getUserName();
+                    LMFaceApplication.username = name;
+                    password = userInfo.getUserPassword();
+                    loginNameEt.setText(name);
+                    loginPasswordEt.setText(password);
+                    loginBt.setEnabled(true);
+                    if (SettingsUtils.isAutoLogin(getApplicationContext())) {
+                        doLogin();
+                    }
+                }
 
     }
 
-    public void demoLogin(){
-        deletUser();
-        name="gqf";
-        password="123";
-        doLogin();
-    }
+
+
     /**
      * 对输入框是否为null进行控制
      */
@@ -217,7 +221,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void doLogin() {
-        Log.i("gqf",name+password);
+        Log.i("gqf", name + password);
         Subscription logSc = NetWork.getUserService().loginUsers(name, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -229,7 +233,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.i("gqf","onError"+e.getMessage());
+                        Log.i("gqf", "onError" + e.getMessage());
                         Toast.makeText(LoginActivity.this, "登录失败，服务器响应失败", Toast.LENGTH_SHORT).show();
                         deletUser();
                     }
@@ -241,7 +245,7 @@ public class LoginActivity extends AppCompatActivity {
                             deletUser();
                         } else {
                             user_msg user = realm.where(user_msg.class).findFirst();
-                            if(user!=null) {
+                            if (user != null) {
                                 if (user.getUserId() != userInfo.getUserId()) {
 
                                 } else {
@@ -258,7 +262,7 @@ public class LoginActivity extends AppCompatActivity {
                             realm.beginTransaction();
                             userInfo.setUserPassword(password);
                             userInfo.setUserName(name);
-                            Log.i("gqf","userInfo"+userInfo.toString());
+                            Log.i("gqf", "userInfo" + userInfo.toString());
                             realm.copyToRealmOrUpdate(userInfo);
                             realm.commitTransaction();
                             Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
@@ -276,5 +280,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onDestroy();
         realm.close();
         compositeSubscription.unsubscribe();
+    }
+
+    @OnClick(R.id.home_regist_btn)
+    public void onClick() {
+        startActivity(new Intent(LoginActivity.this,RegistActivity.class));
     }
 }

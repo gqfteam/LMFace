@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,15 @@ public class StoreOrderListFragment extends Fragment {
     private MyStoreOrderListAdapter myOrderListAdapter;
 
 
+    private OrderChangeLinsener orderChangeLinsener;
+
+    public interface OrderChangeLinsener{
+        public void orderChange();
+    }
+
+    public void setOrderChangeLinsener(OrderChangeLinsener orderChangeLinsener) {
+        this.orderChangeLinsener = orderChangeLinsener;
+    }
 
     public static StoreOrderListFragment newInstance(int type) {
         StoreOrderListFragment fragment = new StoreOrderListFragment();
@@ -75,6 +85,12 @@ public class StoreOrderListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("gqf","onResume"+type);
         initData();
     }
 
@@ -136,7 +152,9 @@ public class StoreOrderListFragment extends Fragment {
         myOrderListAdapter.setOnItemClickListener(new MyStoreOrderListAdapter.MyItemClickListener() {
             @Override
             public void onChangeStatu() {
-                initData();
+               if(orderChangeLinsener!=null){
+                   orderChangeLinsener.orderChange();
+               }
             }
 
             @Override
@@ -152,6 +170,8 @@ public class StoreOrderListFragment extends Fragment {
             }
         });
     }
+
+
 
     @Override
     public void onDestroyView() {

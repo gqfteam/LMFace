@@ -1,7 +1,9 @@
 package com.lmface.address;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -88,6 +90,24 @@ public class SelectAddressActivity extends AppCompatActivity {
         mcompositeSubscription.add(subscription);
     }
     public void initList(List<user_address> user_addresses){
+        if(user_addresses.size()==0){
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            alert.setTitle("当前用户没有地址")
+                    .setMessage("是否去设置收货地址")
+                    .setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            startActivity(new Intent(SelectAddressActivity.this, AddressListActivity.class));
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("否",new DialogInterface.OnClickListener(){
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                            dialog.dismiss();
+                        }
+                    });
+            alert.create().show();
+        }
         if(selectAddressAdapter==null){
             selectAddressAdapter=new SelectAddressAdapter(this,user_addresses);
             selectAddressList.setLayoutManager(new LinearLayoutManager(this));

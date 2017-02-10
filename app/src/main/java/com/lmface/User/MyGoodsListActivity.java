@@ -26,9 +26,11 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -173,6 +175,25 @@ public class MyGoodsListActivity extends AppCompatActivity {
     public void initData() {
         Subscription subscription = NetWork.getGoodsService().selectByUserId(realm.where(user_msg.class).findFirst().getUserId())
                 .subscribeOn(Schedulers.io())
+                //列表类型转化
+                .flatMap(new Func1<List<goods_msg>, Observable<goods_msg>>() {
+                    @Override
+                    public Observable<goods_msg> call(List<goods_msg> seats) {
+
+                        return Observable.from(seats);
+                    }
+                })
+                //过滤
+                .filter(new Func1<goods_msg, Boolean>() {
+                    @Override
+                    public Boolean call(goods_msg ogms) {
+                        if(ogms.getGoodsnum()==-1){
+                            return false;
+                        }
+                        return true;
+                    }
+                })
+                .toList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<goods_msg>>() {
                     @Override
@@ -194,7 +215,7 @@ public class MyGoodsListActivity extends AppCompatActivity {
     }
 
     public void initList(List<goods_msg> goods_msgs) {
-        if (myGoodsListAdapter == null) {
+
             myGoodsListAdapter = new MyGoodsListAdapter(this, goods_msgs);
             myGoodsList.setLayoutManager(new LinearLayoutManager(this));
             myGoodsList.setAdapter(myGoodsListAdapter);
@@ -216,9 +237,7 @@ public class MyGoodsListActivity extends AppCompatActivity {
                 }
             });
 
-        } else {
-            myGoodsListAdapter.update(goods_msgs);
-        }
+
     }
 
     @Override

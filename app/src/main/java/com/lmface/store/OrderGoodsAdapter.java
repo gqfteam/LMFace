@@ -84,13 +84,19 @@ public class OrderGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         mHolder.shopCarGoodsPrice.setText(datas.get(position).getGoodsprice()+"");
         mHolder.shopCarStoreUserName.setText("物主："+datas.get(position).getUserName());
 
-        if(datas.get(position).getGoodsimgaddress1()!=null){
-            if(!datas.get(position).getGoodsimgaddress1().equals("")){
-                Picasso.with(mContext).load(datas.get(position).getGoodsimgaddress1())
-                        .placeholder(R.drawable.ic_launcher)
-                        .error(R.drawable.ic_launcher)
-                        .into(mHolder.shopCarGoodsImg);
-            }
+        String imgPath="";
+        if(!datas.get(position).getGoodsimgaddress1().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress1();
+        }else if(!datas.get(position).getGoodsimgaddress2().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress2();
+        }else if(!datas.get(position).getGoodsimgaddress3().equals("")){
+            imgPath=datas.get(position).getGoodsimgaddress3();
+        }
+        if(!imgPath.equals("")) {
+            Picasso.with(mContext).load(imgPath)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(mHolder.shopCarGoodsImg);
         }
         mHolder.shopCarCheck.setVisibility(View.GONE);
         mHolder.shopCarAtUser.setVisibility(View.GONE);

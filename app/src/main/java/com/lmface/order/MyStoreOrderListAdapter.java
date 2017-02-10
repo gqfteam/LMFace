@@ -18,6 +18,7 @@ import com.lmface.R;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.order_goods_usermsg;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -92,7 +93,7 @@ public class MyStoreOrderListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
                     @Override
                     public void onNext(ResultCode resultCode) {
-                        if(resultCode.getCode()==1000){
+                        if(resultCode.getCode()==10000){
                             //通知fragment刷新
                             if(mItemClickListener!=null){
                                 mItemClickListener.onChangeStatu();
@@ -120,7 +121,7 @@ public class MyStoreOrderListAdapter extends RecyclerView.Adapter<RecyclerView.V
                     }
                     @Override
                     public void onNext(ResultCode resultCode) {
-                        if(resultCode.getCode()==1000){
+                        if(resultCode.getCode()==10000){
                             //通知fragment刷新
                             if(mItemClickListener!=null){
                                 mItemClickListener.onChangeStatu();
@@ -160,6 +161,20 @@ public class MyStoreOrderListAdapter extends RecyclerView.Adapter<RecyclerView.V
         mHolder.myOrderGoodsPrice.setText(""+datas.get(p).getGoodsprice());
         mHolder.myOrderPrice.setText(""+datas.get(p).getOrderPrice());
 
+        String imgPath="";
+        if(!datas.get(p).getGoodsimgaddress1().equals("")){
+            imgPath=datas.get(p).getGoodsimgaddress1();
+        }else if(!datas.get(p).getGoodsimgaddress2().equals("")){
+            imgPath=datas.get(p).getGoodsimgaddress2();
+        }else if(!datas.get(p).getGoodsimgaddress3().equals("")){
+            imgPath=datas.get(p).getGoodsimgaddress3();
+        }
+        if(!imgPath.equals("")) {
+            Picasso.with(mContext).load(imgPath)
+                    .placeholder(R.drawable.ic_launcher)
+                    .error(R.drawable.ic_launcher)
+                    .into(mHolder.myOrderGoodsImg);
+        }
         switch (datas.get(p).getOrderStatus()){
             case -1:
                 mHolder.myOrderStatu.setText("订单已取消");
