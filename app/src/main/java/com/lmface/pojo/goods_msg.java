@@ -40,7 +40,7 @@ public class goods_msg {
     private Integer courierMoney;
     private String userName;
 
-    private String nickname;
+    private String nickname="";
 
     private Integer courierId;
 

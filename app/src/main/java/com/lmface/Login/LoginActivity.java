@@ -2,6 +2,8 @@ package com.lmface.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.utils.ScreenUtils;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
 import com.jakewharton.rxbinding.view.RxView;
 import com.jakewharton.rxbinding.widget.RxCompoundButton;
 import com.jakewharton.rxbinding.widget.RxTextView;
@@ -129,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
                     loginPasswordEt.setText(password);
                     loginBt.setEnabled(true);
                     if (SettingsUtils.isAutoLogin(getApplicationContext())) {
+
                         doLogin();
                     }
                 }
@@ -136,6 +141,69 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    public void hxLogin(){
+       EMClient.getInstance().login(name,ui_msg.getHxpassword(),new EMCallBack() {//回调
+            @Override
+            public void onSuccess() {
+                EMClient.getInstance().groupManager().loadAllGroups();
+                EMClient.getInstance().chatManager().loadAllConversations();
+                Log.d("main", "登录聊天服务器成功！");
+                Message msg=new Message();
+                msg.what=3;
+                mHandler.sendMessage(msg);
+
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                Message msg=new Message();
+                msg.what=2;
+                mHandler.sendMessage(msg);
+            }
+        });
+    }
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+             if(msg.what==2){
+                Log.d("gqf", "登录聊天服务器失败！");
+                Toast.makeText(getApplicationContext(),"登录失败hx",Toast.LENGTH_SHORT).show();
+            }
+            else if(msg.what==3){
+                //环信登录成功后
+                user_msg user = realm.where(user_msg.class).findFirst();
+                if (user != null) {
+                    if (user.getUserId() != ui_msg.getUserId()) {
+
+                    } else {
+                        //如果是子自动登录，保存账户密码
+                        name = user.getUserName();
+                        password = user.getUserPassword();
+                    }
+                    //删除本地之前保存的用户信息
+                    realm.beginTransaction();
+                    user.deleteFromRealm();
+                    realm.commitTransaction();
+                }
+                LMFaceApplication.username = name;
+                realm.beginTransaction();
+                 ui_msg.setUserPassword(password);
+                 ui_msg.setUserName(name);
+                Log.i("gqf", "userInfo" + ui_msg.toString());
+                realm.copyToRealmOrUpdate(ui_msg);
+                realm.commitTransaction();
+                Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                LoginActivity.this.finish();
+            }
+        }
+    };
 
     /**
      * 对输入框是否为null进行控制
@@ -220,6 +288,7 @@ public class LoginActivity extends AppCompatActivity {
         compositeSubscription.add(mloginBt);
     }
 
+    user_msg ui_msg;
     private void doLogin() {
         Log.i("gqf", name + password);
         Subscription logSc = NetWork.getUserService().loginUsers(name, password)
@@ -244,30 +313,8 @@ public class LoginActivity extends AppCompatActivity {
                             Toast.makeText(LoginActivity.this, "登录失败,用户名密码错误", Toast.LENGTH_SHORT).show();
                             deletUser();
                         } else {
-                            user_msg user = realm.where(user_msg.class).findFirst();
-                            if (user != null) {
-                                if (user.getUserId() != userInfo.getUserId()) {
-
-                                } else {
-                                    //如果是子自动登录，保存账户密码
-                                    name = user.getUserName();
-                                    password = user.getUserPassword();
-                                }
-                                //删除本地之前保存的用户信息
-                                realm.beginTransaction();
-                                user.deleteFromRealm();
-                                realm.commitTransaction();
-                            }
-                            LMFaceApplication.username = name;
-                            realm.beginTransaction();
-                            userInfo.setUserPassword(password);
-                            userInfo.setUserName(name);
-                            Log.i("gqf", "userInfo" + userInfo.toString());
-                            realm.copyToRealmOrUpdate(userInfo);
-                            realm.commitTransaction();
-                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            LoginActivity.this.finish();
+                            ui_msg=userInfo;
+                           hxLogin();
                         }
                     }
                 });

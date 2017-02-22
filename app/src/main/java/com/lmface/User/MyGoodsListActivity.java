@@ -170,6 +170,8 @@ public class MyGoodsListActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         initData();
+        isEdi = false;
+        invalidateOptionsMenu();
     }
 
     public void initData() {

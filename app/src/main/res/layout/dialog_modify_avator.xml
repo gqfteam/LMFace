@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_pop_content"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/mediummdp"
+    android:orientation="vertical" android:background="@color/white">
+    
+    <TextView
+        android:id="@+id/photo_pop_tv_capture"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/mediumhdp"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/camera"
+        android:textColor="@color/black"
+        android:textSize="@dimen/mediumxsp" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1px"
+        android:background="@color/gray_light" />
+
+    <TextView
+        android:id="@+id/photo_pop_tv_album"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/mediumhdp"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/chat_photo_tip"
+        android:textColor="@color/black"
+        android:textSize="@dimen/mediumxsp" />
+
+    <TextView
+        android:id="@+id/photo_pop_tv_cancel"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/mediumhdp"
+        android:layout_marginTop="13dp"
+        android:background="?android:selectableItemBackground"
+        android:gravity="center"
+        android:text="@string/cancle"
+        android:textColor="@color/black"
+        android:textSize="@dimen/mediumxsp" />
+
+</LinearLayout>

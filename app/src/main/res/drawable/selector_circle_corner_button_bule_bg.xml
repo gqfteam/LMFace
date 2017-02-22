@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><!-- 单个按钮效果 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 按下时 -->
+    <item android:state_pressed="true">
+        <shape>
+            <!-- 填充色 -->
+            <solid android:color="#3CC3F5" />
+            <!--
+                 按钮四个圆角
+                 radius:半径
+            -->
+            <!-- 边角的弧度尺寸 -->
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+    <!-- 未按下时 -->
+    <item android:state_pressed="false">
+        <shape>
+            <solid android:color="#499BF7" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+    <!-- 未按下时 -->
+    <item android:state_activated="false">
+        <shape>
+            <solid android:color="#666666" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+    <!-- 默认样式 -->
+    <item>
+        <shape>
+            <solid android:color="#499BF7" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+
+</selector>

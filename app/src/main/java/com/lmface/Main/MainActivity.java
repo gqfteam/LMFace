@@ -1,12 +1,20 @@
 package com.lmface.Main;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,13 +25,23 @@ import android.widget.TextView;
 import com.ashokvarma.bottomnavigation.BottomNavigationBar;
 import com.ashokvarma.bottomnavigation.BottomNavigationItem;
 import com.blankj.utilcode.utils.KeyboardUtils;
+import com.hyphenate.EMContactListener;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.lmface.R;
+import com.lmface.User.EdiDialogFragment;
 import com.lmface.application.LMFaceApplication;
+import com.lmface.huanxin.AddFriendsListActivity;
+import com.lmface.huanxin.ContactActivity;
+import com.lmface.pojo.AddFriendMsg;
 import com.lmface.pojo.ChangeActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +51,7 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.lmface.R.id.toolbar;
 
-public class MainActivity extends AppCompatActivity implements StoreFragment.mListener,UserFragment.mListener{
+public class MainActivity extends AppCompatActivity implements StoreFragment.mListener, UserFragment.mListener {
 
     private static final String HOME_TAG = "home_flag";
     private static final String STORE_TAG = "store_flag";
@@ -49,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
     BottomNavigationBar bottomBar;
     @BindView(R.id.toolbar_text)
     TextView toolbarText;
-
+    EdiDialogFragment editNameDialog;
     private void setToolbar(String toolstr, int position) {
 
 
@@ -73,14 +91,34 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        int itemId=item.getItemId();
-                        if(itemId==R.id.action_search){
-                            if(storeFragment!=null){
-                                storeFragment.showOrHideSearch();
-                            }
-                        }else{
-                            //跳转到消息中心
+                        int itemId = item.getItemId();
+                        if (itemId == R.id.action_search) {
+                            if (storeFragment != null) {
+                                //弹出dialog输入模糊查询名称
+                                editNameDialog = new EdiDialogFragment();
+                                editNameDialog.setTitle("查询商品");
+                                editNameDialog.setInputType( InputType.TYPE_CLASS_TEXT);
+                                editNameDialog.show(getSupportFragmentManager(), "EditNameDialog");
+                                editNameDialog.setDimssLinsener(new EdiDialogFragment.DimssLinsener() {
+                                    @Override
+                                    public void fragmentDimss() {
+                                        editNameDialog=null;
+                                    }
 
+                                    @Override
+                                    public void onOk(String ediTxt) {
+                                        if(storeFragment!=null) {
+                                            editNameDialog.setEnd(true);
+                                            storeFragment.getByName(ediTxt);
+                                        }
+                                    }
+                                });
+                                //调用fragment的查询
+
+                            }
+                        } else {
+                            //跳转到消息中心
+                            startActivity(new Intent(MainActivity.this,ContactActivity.class));
                         }
                         return false;
                     }
@@ -100,11 +138,12 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search).setVisible((bottomBar.getCurrentSelectedPosition()==1));
-        menu.findItem(R.id.action_notification).setVisible((bottomBar.getCurrentSelectedPosition()==1));
+        menu.findItem(R.id.action_search).setVisible((bottomBar.getCurrentSelectedPosition() == 1));
+        menu.findItem(R.id.action_notification).setVisible((bottomBar.getCurrentSelectedPosition() == 1));
         invalidateOptionsMenu();
         return super.onPrepareOptionsMenu(menu);
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.base_toolbar_menu, menu);
@@ -123,14 +162,15 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
         mcompositeSubscription = new CompositeSubscription();
         setToolbar("校园首页", 0);
         initBotomBar();
-
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        initAddFriend();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void startActivity(ChangeActivity activity) {
-        Intent intent=new Intent(MainActivity.this,activity.getActivity());
-        if(activity.getGoodsId()!=-1){
-            intent.putExtra("goodsId",activity.getGoodsId());
+        Intent intent = new Intent(MainActivity.this, activity.getActivity());
+        if (activity.getGoodsId() != -1) {
+            intent.putExtra("goodsId", activity.getGoodsId());
         }
         startActivity(intent);
     }
@@ -177,6 +217,40 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
         });
     }
 
+    EMMessageListener msgListener = new EMMessageListener() {
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+            Log.i("gqf", "onMessageReceived");
+            for (EMMessage emMessage : messages) {
+                Log.i("gqf", emMessage.getBody().toString());
+                Message msg=new Message();
+                msg.what=4;
+                msg.obj=emMessage;
+                mHandler.sendMessage(msg);
+            }
+
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+
+        }
+
+        @Override
+        public void onMessageRead(List<EMMessage> messages) {
+
+        }
+
+        @Override
+        public void onMessageDelivered(List<EMMessage> messages) {
+
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+
+        }
+    };
     /**
      * 页面切换
      *
@@ -185,6 +259,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
     HomeFragment homeFragment;
     StoreFragment storeFragment;
     UserFragment userFragment;
+
     private void setContent(int contentHome) {
         switch (contentHome) {
             case CONTENT_HOME:
@@ -233,15 +308,139 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this);
         realm.close();
         KeyboardUtils.hideSoftInput(this);
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         if (mcompositeSubscription != null && !mcompositeSubscription.isUnsubscribed()) {
             mcompositeSubscription.unsubscribe();
         }
     }
+
     public void changeActivity(
-            Class activityClass){
-        startActivity(new Intent(MainActivity.this,activityClass));
+            Class activityClass) {
+        startActivity(new Intent(MainActivity.this, activityClass));
+    }
+
+    Handler mHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==1){
+                String username=((AddFriendMsg)msg.obj).getName();
+                String reason=((AddFriendMsg)msg.obj).getMsg();
+
+                if (realm.where(AddFriendMsg.class).equalTo("name", username).findFirst() == null) {
+                    Log.i("gqf", "onContactInvited        realm");
+                    AddFriendMsg userFriend = new AddFriendMsg();
+                    userFriend.setName(username);
+                    userFriend.setMsg(reason);
+                    if (realm.where(AddFriendMsg.class).findFirst() == null) {
+                        userFriend.setMsgId(1);
+                    } else {
+                        int id = 0;
+                        for (AddFriendMsg addFriendMsg : realm.where(AddFriendMsg.class).findAll()) {
+                            if (addFriendMsg.getMsgId() > id) {
+                                id = addFriendMsg.getMsgId();
+                            }
+                        }
+                        userFriend.setMsgId(id+1);
+                    }
+                    realm.beginTransaction();
+                    realm.insertOrUpdate(userFriend);
+                    realm.commitTransaction();
+                }else{
+                    realm.beginTransaction();
+                    AddFriendMsg addFriendMsg= realm.where(AddFriendMsg.class).equalTo("name", username).findFirst();
+                    addFriendMsg.setMsg(reason);
+                    realm.insertOrUpdate(addFriendMsg);
+                    realm.commitTransaction();
+                }
+                SendNotification(username + "请求加你为好友", "", AddFriendsListActivity.class, false);
+                EventBus.getDefault().post(realm.where(AddFriendMsg.class).equalTo("name", username).findFirst());
+                Log.i("gqf", "onContactInvited" + realm.where(AddFriendMsg.class).findFirst().toString());
+            }else if(msg.what==2){
+                SendNotification(msg.obj.toString() + "接受了你的好友请求", "", ContactActivity.class, false);
+            }
+            else if(msg.what==3){
+                SendNotification(msg.obj.toString() + "拒绝了你的好友请求", "", ContactActivity.class, false);
+            }
+            else if(msg.what==4){
+                EMMessage emMessage=(EMMessage)msg.obj;
+                SendNotification(emMessage.getFrom() + "发来了一条消息", "内容：" + emMessage.getBody().toString(), ContactActivity.class, false);
+            }
+        }
+    };
+
+
+    public void initAddFriend() {
+        EMClient.getInstance().contactManager().setContactListener(new EMContactListener() {
+            @Override
+            public void onContactAdded(String username) {
+                //好友请求被同意
+                Log.i("gqf", "onContactAdded" + username);
+
+            }
+
+            @Override
+            public void onContactDeleted(String username) {
+                Log.i("gqf", "onContactDeleted" + username);
+                //被删除时回调此方法
+            }
+
+            @Override
+            public void onContactInvited(String username, String reason) {
+                //收到好友邀请
+                Log.i("gqf", reason + "onContactInvited" + username);
+                Message msg=new Message();
+                msg.what=1;
+                AddFriendMsg userFriend = new AddFriendMsg();
+                userFriend.setName(username);
+                userFriend.setMsg(reason);
+                msg.obj=userFriend;
+                mHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onFriendRequestAccepted(String username) {
+                //好友请求被接受
+                Log.i("gqf", "onFriendRequestAccepted" + username);
+                Message msg=new Message();
+                msg.what=2;
+                msg.obj=username;
+                mHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onFriendRequestDeclined(String username) {
+                //好友请求被拒绝
+                Log.i("gqf", "onFriendRequestDeclined" + username);
+                Message msg=new Message();
+                msg.what=3;
+                msg.obj=username;
+                mHandler.sendMessage(msg);
+
+            }
+        });
+    }
+
+    private void SendNotification(String username, String message, Class<?> cls, boolean isGroup) {
+
+        //点击通知栏跳转界面
+        Intent updateIntent = new Intent(getApplicationContext(), cls);
+        PendingIntent updatePendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, updateIntent, 0);
+
+        //下载通知
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(getApplicationContext())
+                .setSmallIcon(R.drawable.edi_img)
+                .setContentTitle(username)
+                .setContentText(message)
+                .setContentIntent(updatePendingIntent)
+                .setAutoCancel(true);
+
+        notificationManager.notify(0, notificationBuilder.build());
+
     }
 }

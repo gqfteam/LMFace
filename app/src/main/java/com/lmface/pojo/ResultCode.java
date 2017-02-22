@@ -4,7 +4,7 @@ public class ResultCode {
 
 	int code=10000;
 	String msg="";
-	
+
 	public ResultCode(){}
 	
 	public ResultCode(int code,String msg){

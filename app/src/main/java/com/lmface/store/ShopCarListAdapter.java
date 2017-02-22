@@ -366,6 +366,14 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mHolder.shopCarDelect.setVisibility(View.GONE);
             mHolder.topLin.setVisibility(View.GONE);
         }
+        mHolder.shopCarAtUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mItemClickListener!=null){
+                    mItemClickListener.onItemClick(null,position);
+                }
+            }
+        });
 
         //编辑按钮监听
         mHolder.shopCarEdi.setOnClickListener(new View.OnClickListener() {

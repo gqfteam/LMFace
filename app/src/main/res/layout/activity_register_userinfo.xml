@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <com.lmface.view.TitleBarView
+        android:id="@+id/title_bar"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"/>
+    <EditText
+        android:id="@+id/et_add_id"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:inputType="number"
+        android:padding="5dp"
+        android:hint="@string/add_id"
+        android:background="@drawable/register_phone_bg"/>
+    <TextView 
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/gary_dark"
+        android:textSize="16sp"
+        android:text="@string/tv_tips_id"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"/>
+    
+    <EditText
+        android:id="@+id/et_add_reason"
+        android:layout_height="100dp"
+        android:layout_width="match_parent"
+        android:layout_margin="20dp"
+        android:gravity="left|top"
+        android:lineSpacingExtra="5dp"
+        android:lines="3"
+        android:maxLength="50"
+
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:hint="@string/add_reason"
+        android:background="@drawable/register_phone_bg"/>
+
+    <TextView 
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textColor="@color/gary_dark"
+        android:textSize="16sp"
+        android:text="@string/tv_tips_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp"/>
+    <Button 
+        android:id="@+id/register_complete"
+        android:layout_height="60dp"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/selector_circle_corner_button_bule_bg"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        android:text="@string/add_confirm"/>
+
+</LinearLayout>

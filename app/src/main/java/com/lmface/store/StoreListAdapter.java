@@ -92,7 +92,13 @@ public class StoreListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         mHolder.itemsName.setText(datas.get(position).getGoodsname());
         mHolder.itemsClassification.setText(datas.get(position).getGoodsclassification() + "/" + datas.get(position).getSpeciesname());
 
-        mHolder.itemsMaster.setText("联系人" + datas.get(position).getUserphonenum());
+        String goodsUserName="" ;
+        if(datas.get(position).getNickname().equals("")){
+            goodsUserName=datas.get(position).getNickname();
+        }else{
+            goodsUserName=datas.get(position).getUserName();
+        }
+        mHolder.itemsMaster.setText("联系人:" + goodsUserName);
         mHolder.itemsPhonenumber.setText("联系电话:" + datas.get(position).getUserphonenum());
         mHolder.GoodsListItemLin.setOnClickListener(new View.OnClickListener() {
             @Override

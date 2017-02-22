@@ -45,7 +45,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="头像"
-                    android:padding="16dp"
+                    android:padding="@dimen/activity_horizontal_margin"
                    />
 
                 <de.hdodenhof.circleimageview.CircleImageView
@@ -59,7 +59,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/go_in"
-                    android:padding="16dp"
+                    android:padding="@dimen/activity_horizontal_margin"
                     />
             </LinearLayout>
             <View
@@ -84,7 +84,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:text="修改信息"
-                    android:padding="16dp"
+                    android:padding="@dimen/activity_horizontal_margin"
                    />
 
                 <TextView
@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/go_in"
-                    android:padding="16dp"
+                    android:padding="@dimen/activity_horizontal_margin"
                     />
 
 
@@ -107,34 +107,76 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/whitesmoke"/>
-            <!--生日-->
             <LinearLayout
+                android:id="@+id/update_user_password_lin"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
                 >
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="生日"
-                    android:padding="16dp"
-                    android:id="@+id/textView3"/>
+                    android:text="修改密码"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="1988-01-05"
+                    android:text=""
                     android:gravity="center_vertical"
                     />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:src="@drawable/go_in"
-                    android:padding="16dp"
+                    android:padding="@dimen/activity_horizontal_margin"
+                    />
+
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/whitesmoke"/>
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:visibility="visible"
+                android:clickable="true"
+                android:background="?android:selectableItemBackground"
+                >
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="账户余额"
+                    android:padding="@dimen/activity_horizontal_margin"
+                   />
+
+                <TextView
+                    android:id="@+id/user_money_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="¥0"
+                    android:textColor="@color/colorPrimary"
+                    android:gravity="center_vertical"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/go_in"
+                    android:padding="@dimen/activity_horizontal_margin"
                     />
 
 
@@ -153,8 +195,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:layout_below="@+id/userInfo_contain"
-                android:paddingLeft="16dp"
-                android:paddingRight="16dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="30dp"
                 android:layout_marginBottom="@dimen/activity_horizontal_margin"
                 >

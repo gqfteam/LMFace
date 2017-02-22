@@ -35,4 +35,5 @@
     <dimen name="hugehxxxxxxxdp">160dp</dimen>
     <dimen name="hugehxxxxxxxxdp">180dp</dimen>
     <dimen name="hugehxxxxxxxxxdp">200dp</dimen>
+    <dimen name="alert_width">290dp</dimen>
 </resources>

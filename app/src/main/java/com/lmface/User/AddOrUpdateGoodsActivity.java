@@ -2,16 +2,13 @@ package com.lmface.User;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -36,6 +33,8 @@ import android.widget.Toast;
 
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.lmface.R;
+import com.lmface.dialog.BaseDialog;
+import com.lmface.dialog.SweetAlertDialog;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.campusinfo;
@@ -44,6 +43,8 @@ import com.lmface.pojo.goods_msg;
 import com.lmface.pojo.goodsclassification;
 import com.lmface.pojo.goodsspecies;
 import com.lmface.pojo.user_msg;
+import com.lmface.util.DialogUtils;
+import com.lmface.util.PhotoGet;
 import com.lmface.util.ReadJson;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -70,7 +71,6 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 import static com.lmface.R.id.commit_btn;
-import static com.lmface.User.ChangeUserHeadImgActivity.RESULT_LOAD_IMAGE;
 
 /**
  * Created by johe on 2017/1/27.
@@ -161,6 +161,10 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
     @BindView(R.id.courier_radioGroup)
     RadioGroup courierRadioGroup;
 
+
+    private PhotoGet photoGet;
+    BaseDialog baseDialog;
+    SweetAlertDialog sweetAlertDialog;
     public void setToolbar(int statu) {
         if (statu == 0) {
             addGoodsToolbar.setTitle("上架商品");
@@ -199,7 +203,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
             setToolbar(0);
         }
         initButton();
-
+        baseDialog=new BaseDialog(this);
     }
 
     public void initButton() {
@@ -270,6 +274,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         addgoodsPhonenumberEdi.setText(goods_msg.getUserphonenum());
         addgoodsGoodstxtEdi.setText(goods_msg.getGoodsdetails());
         addgoodsGoodspriceEdi.setText(goods_msg.getGoodsprice()+"");
+        addgoodsGoodspriceEdi.setEnabled(false);
         addgoodsGoodsnumEdi.setText(goods_msg.getGoodsnum()+"");
         for(int i=0;i<courierRadioGroup.getChildCount();i++){
             RadioButton r=(RadioButton)courierRadioGroup.getChildAt(i);
@@ -442,10 +447,12 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                 //在所选imgview中天加图片
                 //跳转页面选择图片
                 if(selectImgIndex>0) {
-                    Intent i = new Intent(
-                            Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(i,RESULT_LOAD_IMAGE);
+//                    Intent i = new Intent(
+//                            Intent.ACTION_PICK,
+//                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                    startActivityForResult(i,RESULT_LOAD_IMAGE);
+                    photoGet=PhotoGet.getInstance();
+                    photoGet.showAvatarDialog(AddOrUpdateGoodsActivity.this, baseDialog);
 
                 }else{
                     Toast.makeText(getApplicationContext(),"请点击上方方框选择一个位置进行添加",Toast.LENGTH_SHORT).show();
@@ -493,6 +500,11 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                     commitBtn.setEnabled(true);
                 }
                 else {
+                    this.sweetAlertDialog= DialogUtils.getInstance().DialogLoading(this);
+                    sweetAlertDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
+                    sweetAlertDialog.setTitleText("Loading...")
+                            .showCancelButton(false)
+                            .show();
                     if(goodsId!=-1){
                         update();
                     }else{
@@ -556,6 +568,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         }else{
             Toast.makeText(getApplicationContext(),name+"失败",Toast.LENGTH_SHORT).show();
             commitBtn.setEnabled(true);
+            sweetAlertDialog.dismissWithAnimation();
         }
 
     }
@@ -619,6 +632,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                                 Toast.makeText(getApplicationContext(), name + "失败", Toast.LENGTH_SHORT).show();
                             }
                             commitBtn.setEnabled(true);
+                            sweetAlertDialog.dismissWithAnimation();
                         }
                     });
             mcompositeSubscription.add(subscription);
@@ -677,43 +691,90 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
 
     }
     List<File> bitmaps;
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        Log.i("gqf","onActivityResult");
+//        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+//            Uri selectedImage = data.getData();
+//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//            Cursor cursor = getContentResolver().query(selectedImage,
+//                    filePathColumn, null, null, null);
+//            cursor.moveToFirst();
+//
+//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//            String picturePath = cursor.getString(columnIndex);
+//            Log.i("gqf","onActivityResult"+picturePath);
+//            cursor.close();
+//            if(selectImgIndex==1) {
+//                addgoodsGoodsimgImg1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//                bitmaps.remove(0);
+//                bitmaps.add(0,new File(picturePath));
+//            }
+//            if(selectImgIndex==2) {
+//                addgoodsGoodsimgImg2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//                bitmaps.remove(1);
+//                bitmaps.add(1,new File(picturePath));
+//            }
+//            if(selectImgIndex==3) {
+//                bitmaps.remove(2);
+//                addgoodsGoodsimgImg3.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+//                bitmaps.add(2,new File(picturePath));
+//            }
+//            isFile=true;
+//        }
+//
+//    }
+    private static final int TAKEPHOTO = 1; // 拍照
+    private static final int GALLERY = 2; // 从相册中选择
+    private static final int PHOTO_REQUEST_CUT = 3; // 结果
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case TAKEPHOTO:
+                String headIconPath=photoGet.getHeadIconPath();
+                if (headIconPath!=null)
+                    photoGet.startPhotoZoom(Uri.fromFile(new File(headIconPath)), 150);
+                break;
+            case GALLERY:
+                if (data != null) {
+                    photoGet.startPhotoZoom(data.getData(), 150);
+                }
+                break;
+            case PHOTO_REQUEST_CUT:
+                if (data != null) {
+                    ImageView userHeadImg=null;
+                    if(selectImgIndex==1) {
+                        addgoodsGoodsimgImg1.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
+                        userHeadImg=addgoodsGoodsimgImg1;
+                        photoGet.saveImage(data,userHeadImg);
+                        bitmaps.remove(0);
+                        bitmaps.add(0,photoGet.getHeadFile());
+                    }
+                    else if(selectImgIndex==2) {
+                        addgoodsGoodsimgImg2.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
+                        userHeadImg=addgoodsGoodsimgImg2;
+                        photoGet.saveImage(data,userHeadImg);
+                        bitmaps.remove(1);
+                        bitmaps.add(1,photoGet.getHeadFile());
+                    }
+                    else if(selectImgIndex==3) {
+                        bitmaps.remove(2);
+                        addgoodsGoodsimgImg3.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
+                        userHeadImg=addgoodsGoodsimgImg3;
+                        photoGet.saveImage(data,userHeadImg);
+                        bitmaps.add(2,photoGet.getHeadFile());
+                    }
+                    isFile=true;
 
-        Log.i("gqf","onActivityResult");
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            String picturePath = cursor.getString(columnIndex);
-            Log.i("gqf","onActivityResult"+picturePath);
-            cursor.close();
-            if(selectImgIndex==1) {
-                addgoodsGoodsimgImg1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                bitmaps.remove(0);
-                bitmaps.add(0,new File(picturePath));
-            }
-            if(selectImgIndex==2) {
-                addgoodsGoodsimgImg2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                bitmaps.remove(1);
-                bitmaps.add(1,new File(picturePath));
-            }
-            if(selectImgIndex==3) {
-                bitmaps.remove(2);
-                addgoodsGoodsimgImg3.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-                bitmaps.add(2,new File(picturePath));
-            }
-            isFile=true;
+                }
+                break;
         }
-
+        super.onActivityResult(requestCode, resultCode, data);
     }
-
 
 
     ListView popupList;

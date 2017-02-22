@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--gqf-->
+<!--通讯录界面-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:orientation="vertical"
+              android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/colorPrimary">
+        <TextView
+            android:id="@+id/contact_back_txt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:drawableLeft="@drawable/ic_comment_photo_browser_back"/>
+        <RadioGroup
+            android:layout_width="@dimen/hugehxxxxxxxdp"
+            android:layout_height="@dimen/tinyhdp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:background="@drawable/contact_top_radgrop_shap"
+
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/contact_top_msg_rad"
+                android:background="@drawable/contact_top_rad_left"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:text="消息"
+                android:checked="true"
+                android:gravity="center"
+                android:textSize="@dimen/mediumsp"
+                android:textColor="@color/color_redio_blue_white"
+                android:layout_height="match_parent"/>
+            <RadioButton
+                android:id="@+id/contact_top_friend_rad"
+                android:background="@drawable/contact_top_rad_right"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:text="联系人"
+                android:gravity="center"
+                android:textSize="@dimen/mediumsp"
+                android:textColor="@color/color_redio_blue_white"
+                android:layout_height="match_parent"/>
+        </RadioGroup>
+        <ImageView
+            android:id="@+id/contact_top_add_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_add"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin"
+            />
+    </RelativeLayout>
+    <FrameLayout
+        android:id="@+id/contact_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+</LinearLayout>

@@ -187,6 +187,7 @@ public class StoreListFragment extends Fragment {
         mcompositeSubscription.add(subscription);
     }
 
+
     public void getByName(String name) {
         Subscription subscription = NetWork.getGoodsService().selectByGoodsName(name)
                 .subscribeOn(Schedulers.io())

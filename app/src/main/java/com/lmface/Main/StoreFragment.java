@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.lmface.R;
 import com.lmface.store.ChooseStoreSwoListFragment;
@@ -22,9 +18,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
-
-import static com.lmface.R.id.ac_top_edi_clear;
-import static com.lmface.R.id.ac_top_edi_search;
 
 /**
  * Created by johe on 2017/1/5.
@@ -42,14 +35,6 @@ public class StoreFragment extends Fragment {
     CheckBox shopOff;
     @BindView(R.id.shop_rad_group)
     LinearLayout shopRadGroup;
-    @BindView(ac_top_edi_search)
-    EditText acTopEdiSearch;
-    @BindView(ac_top_edi_clear)
-    TextView acTopEdiClear;
-    @BindView(R.id.search_store_lin)
-    LinearLayout searchStoreLin;
-    @BindView(R.id.store_lin)
-    LinearLayout storeLin;
 
     public static StoreFragment newInstance(String param1) {
         StoreFragment fragment = new StoreFragment();
@@ -76,6 +61,12 @@ public class StoreFragment extends Fragment {
 
     }
 
+    public void getByName(String edi){
+        if(storeListFragment!=null){
+            storeListFragment.getByName(edi);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -91,8 +82,6 @@ public class StoreFragment extends Fragment {
         getChildFragmentManager().beginTransaction()
                 .add(R.id.sale_bottom_fragment, storeListFragment).commit();
         initChackBox();
-        showOrHideSearch();
-        initEdi();
 
         return view;
     }
@@ -119,12 +108,10 @@ public class StoreFragment extends Fragment {
                     CBShopClassification.setChecked(false);
                     initChackBox();
                     chooseStoreSwoListFragment.setShow(false);
-                    if(searchStoreLin.getTag()!=null) {
-                        //进行查询
+
                         storeListFragment.getByChoose(ChooseStoreSwoListFragment.mSearchConditions.getCity(),ChooseStoreSwoListFragment.mSearchConditions.getUniversity(),
                                 ChooseStoreSwoListFragment.mSearchConditions.getCampus(),ChooseStoreSwoListFragment.mSearchConditions.getClassification(),ChooseStoreSwoListFragment.mSearchConditions.getSpecies());
 
-                    }
                 }
             });
         } else if (cb.isChecked() == false) {
@@ -137,8 +124,7 @@ public class StoreFragment extends Fragment {
             chooseStoreSwoListFragment.setRadioBtnId(id);
             chooseStoreSwoListFragment.setShow(true);
         }
-        searchStoreLin.setTag(null);
-        showOrHideSearch();
+
     }
 
     @OnClick({R.id.CB_shop_city, R.id.CB_shop_campus, R.id.CB_shop_classification})
@@ -171,52 +157,6 @@ public class StoreFragment extends Fragment {
 
     }
 
-    public void showOrHideSearch() {
-        searchStoreLin.setVisibility(View.VISIBLE);
 
-         if (searchStoreLin.getTag() != null) {
-             searchStoreLin.setVisibility(View.VISIBLE);
-             searchStoreLin.setTag(null);
-             if(chooseStoreSwoListFragment!=null&&chooseStoreSwoListFragment.isShow()){
-                 chooseStoreSwoListFragment.hide();
-             }
-         } else {
-             searchStoreLin.setVisibility(View.GONE);
-             searchStoreLin.setTag("searchStoreLin");
-         }
-    }
-    public void initEdi() {
-        acTopEdiSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-                                      int arg3) {
 
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence arg0, int arg1,
-                                          int arg2, int arg3) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                //模糊查询
-                if(arg0.toString()!=null){
-                    acTopEdiClear.setVisibility(View.VISIBLE);
-                    storeListFragment.getByName(arg0.toString());
-                }
-            }
-        });
-
-    }
-    @OnClick({ R.id.ac_top_edi_clear })
-    public void OnClick(View v) {
-        if (v.getId() ==R.id.ac_top_edi_clear) {
-            // 清楚顶部fragment
-            acTopEdiClear.setVisibility(View.GONE);
-            acTopEdiSearch.setText("");
-            showOrHideSearch();
-        }
-    }
 }

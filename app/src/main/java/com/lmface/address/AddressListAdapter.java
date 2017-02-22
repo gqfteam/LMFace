@@ -80,16 +80,12 @@ public class AddressListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             userDefultAddressId = AddressId;
                             user_msg um=realm.where(user_msg.class).findFirst();
                             realm.beginTransaction();
-                            um.deleteFromRealm();
-                            realm.commitTransaction();
-                            realm.beginTransaction();
                             um.setDefaultaddress(AddressId);
                             realm.copyToRealmOrUpdate(um);
                             realm.commitTransaction();
                             Log.i("gqf","userDefultAddressId"+userDefultAddressId);
                             Log.i("gqf","userDefultAddressId"+realm.where(user_msg.class).findFirst().getDefaultaddress());
                         }
-                        userDefultAddressId=realm.where(user_msg.class).findFirst().getDefaultaddress();
                         AddressListAdapter.this.notifyDataSetChanged();
                     }
                 });

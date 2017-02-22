@@ -21,4 +21,8 @@
 
     <color name="orangered">#ff4500</color> <!-- 红橙色 -->
     <color name="darkorange">#ff8c00</color> <!-- 暗桔黄色 -->
+    <color name="common_title">#F9F9F9</color>
+    <color name="success_stroke_color">#A5DC86</color>
+    <color name="red_btn_bg_color">#DD6B55</color>
+    <color name="red_btn_bg_pressed_color">#CD5B55</color>
 </resources>

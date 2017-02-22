@@ -2,11 +2,16 @@ package com.lmface.Login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.lmface.R;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.ResultCode;
@@ -82,7 +87,7 @@ public class RegistActivity extends AppCompatActivity {
                     public void onNext(ResultCode resultCode) {
 
                         if(resultCode.getCode()==10000){
-                            register(phone,password);
+                            registerHx(phone,password);
                         }else{
                             Toast.makeText(getApplicationContext(),resultCode.getMsg(),Toast.LENGTH_SHORT).show();
                         }
@@ -92,6 +97,44 @@ public class RegistActivity extends AppCompatActivity {
         compositeSubscription.add(logSc);
     }
 
+    public void registerHx(final String phone,final String password){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Log.i("gqf","HyphenateException"+"registerHx1");
+                    EMClient.getInstance().createAccount(phone, password);
+                    Log.i("gqf","HyphenateException"+"registerHx2");
+                    Message message = new Message();
+                    message.what = 1;
+                    Bundle b=new Bundle();
+                    b.putString("phone",phone);
+                    b.putString("password",password);
+                    message.setData(b);
+                    mLoghHndler.sendMessage(message);
+
+                }catch (HyphenateException e){
+                    Log.i("gqf","HyphenateException"+e.getMessage());
+                    Message message = new Message();
+                    message.what = 2;
+                    mLoghHndler.sendMessage(message);
+                }
+            }
+        }).start();
+
+    }
+    private Handler mLoghHndler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == 1){
+                Bundle b=msg.getData();
+                register(b.getString("phone"),b.getString("password"));
+            }else if(msg.what == 2){
+                Toast.makeText(getApplicationContext(),"注册失败",Toast.LENGTH_SHORT);
+            }
+
+        }
+    };
     private void register(String phone, String password) {
         Subscription logSc = NetWork.getUserService().registeredUsers(phone,password)
                 .subscribeOn(Schedulers.io())

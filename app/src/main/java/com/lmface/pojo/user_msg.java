@@ -23,7 +23,7 @@ public class user_msg extends RealmObject{
 
     private String sex;
 
-    private String headimg;
+    private String headimg="";
 
     private Integer usertype;
 
@@ -46,7 +46,17 @@ public class user_msg extends RealmObject{
     private Double usermoney;
 
     private Integer defaultaddress;
-    
+
+    private String hxpassword;
+
+    public String getHxpassword() {
+        return hxpassword;
+    }
+
+    public void setHxpassword(String hxpassword) {
+        this.hxpassword = hxpassword;
+    }
+
     public Integer getDefaultaddress() {
         return defaultaddress;
     }
@@ -235,6 +245,18 @@ public class user_msg extends RealmObject{
     }
 
     public user_msg(){}
+
+    public user_msg(String userName){
+        this.userName=userName;
+
+    }
+    public user_msg(String nickname,String headimg,String sex,String phone){
+        this.nickname=nickname;
+        this.headimg=headimg;
+        this.sex=sex;
+        this.phone=phone;
+
+    }
 	public user_msg(Integer userId, String userName, String userPassword, Integer uiId, String realname, Integer age,
 			String nickname, String sex, String headimg, Integer usertype, String studentnum, Timestamp registertime,
 			String classid, String personalnote, String phone, Integer islogin, String academicinfoid, String collegeid,

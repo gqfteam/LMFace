@@ -15,13 +15,16 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lmface.R;
+import com.lmface.huanxin.ChatActivity;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.goods_msg_car;
 import com.lmface.pojo.user_msg;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -146,6 +149,11 @@ public class ShopCarActivity extends AppCompatActivity {
             shopCarListAdapter.setOnItemClickListener(new ShopCarListAdapter.MyItemClickListener() {
                 @Override
                 public void onItemClick(View view, int postion) {
+                    //at物主，跳转聊天界面
+                    Intent _intent = new Intent(ShopCarActivity.this, ChatActivity.class);
+                    _intent.putExtra("friendName", shopCarListAdapter.getDataItem(postion).getUserName());
+                    _intent.putExtra("FriendList_to_ChatFragment", true);
+                    startActivity(_intent);
 
                 }
                 @Override
@@ -236,9 +244,15 @@ public class ShopCarActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.shop_car_pay:
                 //跳转结算界面，获得所有选中的商品的购物车carid，isShopCar=true;
-                Intent intent=new Intent(ShopCarActivity.this,OrderGoodsActivity.class);
-                intent.putExtras(shopCarListAdapter.getIntent());
-                startActivity(intent);
+                Bundle bundle=shopCarListAdapter.getIntent();
+                ArrayList<Integer> goodsIds=bundle.getIntegerArrayList("goodsIds");
+                if(goodsIds.size()>0) {
+                    Intent intent = new Intent(ShopCarActivity.this, OrderGoodsActivity.class);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }else{
+                    Toast.makeText(this, "没有选择购买商品", Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.shop_car_delect_all:
                 //调用adapter中的删除函数

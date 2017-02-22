@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lmface.R;
+import com.lmface.huanxin.ChatActivity;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.goods_msg;
@@ -253,6 +254,11 @@ public class GoodsDetailsActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.goods_details_atgoodsuser:
                 //跳转聊天页面
+                Intent _intent = new Intent(this, ChatActivity.class);
+                _intent.putExtra("friendName",goodsMsg.getUserName());
+                _intent.putExtra("FriendList_to_ChatFragment", true);
+                startActivity(_intent);
+
                 break;
             case R.id.goods_details_foundlike:
                 //跳转主页，并传值gqf

@@ -294,10 +294,13 @@ public class OrderGoodsActivity extends AppCompatActivity {
 
     public void commitOrder() {
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
         if(!realm.where(user_msg.class).findFirst().getUserPassword().equals(userPasswordEdi.getText().toString())){
             //密码不正确，弹出dialog
             orderGoodsPay.setEnabled(true);
             createDialog("密码不正确",0);
+        }else if(orderMoney>realm.where(user_msg.class).findFirst().getUsermoney()){
+            Toast.makeText(this, "对不起，账号余额不足，支付失败", Toast.LENGTH_SHORT).show();
         }else{
             Gson g=new Gson();
             Subscription subscription = NetWork.getGoodsOrderService().insertOrders(g.toJson(goodsOrders))

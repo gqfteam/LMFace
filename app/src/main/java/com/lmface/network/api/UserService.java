@@ -49,13 +49,22 @@ public interface UserService {
     //增加或减少用户金钱
     @FormUrlEncoded
     @POST("User/updateUserInfoMoneyByUserId")
-    Observable<ResultCode> updateUserInfoMoneyByUserId(@Field("user_id") int user_id,@Field("changeMoney") BigDecimal changeMoney);
+    Observable<ResultCode> updateUserInfoMoneyByUserId(@Field("userId") int userId,@Field("changeMoney") BigDecimal changeMoney);
 
+    //修改用户密码
+    @FormUrlEncoded
+    @POST("User/updateUserPassword")
+    Observable<ResultCode> updateUserPassword(@Field("userId") int userId,@Field("passWord") String passWord);
 
     //设置用户默认地址
     @FormUrlEncoded
     @POST("User/updateUserDefaultAddress")
     Observable<ResultCode> updateUserDefaultAddress(@Field("userId") int userId,@Field("addressId") int addressId);
+
+    //根据用户名查询信息
+    @FormUrlEncoded
+    @POST("User/selectUserByName")
+    Observable<user_msg> selectUserByName(@Field("userName") String userName);
 
     //修改用戶头像
     @POST("User/changeUserHeadImg2")
