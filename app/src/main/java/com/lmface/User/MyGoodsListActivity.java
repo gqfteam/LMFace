@@ -18,7 +18,6 @@ import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.goods_msg;
 import com.lmface.pojo.user_msg;
 import com.lmface.store.GoodsDetailsActivity;
-import com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +46,6 @@ public class MyGoodsListActivity extends AppCompatActivity {
 
     @BindView(R.id.my_goods_list)
     RecyclerView myGoodsList;
-    @BindView(R.id.my_goods_list_ptr)
-    PtrClassicFrameLayout myGoodsListPtr;
 
     MyGoodsListAdapter myGoodsListAdapter;
 
@@ -169,9 +166,9 @@ public class MyGoodsListActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        initData();
         isEdi = false;
         invalidateOptionsMenu();
+        initData();
     }
 
     public void initData() {

@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_poi_off, R.string.store))
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_user_off, R.string.my))
                 .initialise();
-
+        setContent(0);
         bottomBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -265,11 +265,15 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
             case CONTENT_HOME:
                 String home_str = getResources().getString(R.string.firstPage);
                 setToolbar("校园首页", contentHome);
+                Log.i("gqf","校园首页");
                 homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOME_TAG);
                 if (homeFragment == null) {
                     homeFragment = HomeFragment.newInstance(home_str);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.container, homeFragment,HOME_TAG).commit();
+                }else {
+                    setFragment(homeFragment, HOME_TAG);
                 }
-                setFragment(homeFragment, HOME_TAG);
                 break;
             case CONTENT_ORDERS:
                 String orders_str = getResources().getString(R.string.store);
@@ -277,8 +281,11 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 storeFragment = (StoreFragment) getSupportFragmentManager().findFragmentByTag(STORE_TAG);
                 if (storeFragment == null) {
                     storeFragment = StoreFragment.newInstance(orders_str);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.container, storeFragment,STORE_TAG).commit();
+                }else {
+                    setFragment(storeFragment, STORE_TAG);
                 }
-                setFragment(storeFragment, STORE_TAG);
                 break;
             case CONTENT_MY:
                 String my_str = getResources().getString(R.string.my);
@@ -286,8 +293,11 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 userFragment = (UserFragment) getSupportFragmentManager().findFragmentByTag(MY_TAG);
                 if (userFragment == null) {
                     userFragment = UserFragment.newInstance(my_str);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.container, userFragment,MY_TAG).commit();
+                }else {
+                    setFragment(userFragment, MY_TAG);
                 }
-                setFragment(userFragment, MY_TAG);
                 break;
         }
 
@@ -301,10 +311,27 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
     @DebugLog
     private void setFragment(Fragment fragment, String tag) {
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, fragment, tag);
-        fragmentTransaction.commit();
-    }
+        //fragmentTransaction.replace(R.id.container, fragment, tag);
 
+                for (int i = 0; i < getSupportFragmentManager().getFragments().size(); i++) {
+
+                    Fragment f = getSupportFragmentManager().getFragments().get(i);
+
+                    if (f == fragment) {
+                        fragmentTransaction.show(f);
+
+                    } else {
+                        if(!f.getTag().contains(tag)){
+                            fragmentTransaction.hide(f);
+
+                        }
+
+                    }
+
+                }
+        fragmentTransaction.commit();
+
+    }
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -444,3 +471,16 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

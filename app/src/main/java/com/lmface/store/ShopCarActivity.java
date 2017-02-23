@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lmface.R;
 import com.lmface.huanxin.ChatActivity;
 import com.lmface.network.NetWork;
@@ -124,18 +125,21 @@ public class ShopCarActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
 
+                        Log.i("gqf","onError"+e.getMessage());
                     }
 
                     @Override
                     public void onNext(List<goods_msg_car> goods_msg_cars) {
+
+                        Gson g=new Gson();
                         for(int i=0;i<goods_msg_cars.size();i++){
                             if(goods_msg_cars.get(i).getGoodsnum()<=0){
-                                goods_msg_car gmc=goods_msg_cars.get(i);
+                                String json=g.toJson(goods_msg_cars.get(i));
+                                goods_msg_cars.add(g.fromJson(json,goods_msg_car.class));
                                 goods_msg_cars.remove(i);
-                                goods_msg_cars.add(gmc);
                             }
+                            Log.i("gqf","onNext"+goods_msg_cars.get(i).toString());
                         }
-
                         initListView(goods_msg_cars);
                     }
                 });
@@ -259,6 +263,9 @@ public class ShopCarActivity extends AppCompatActivity {
                 shopCarListAdapter.batchDelect();
                 ediChange(false);
                 shopCarSelectAll.setChecked(false);
+                //重新加载数据
+                inifShopCarData();
+
                 break;
         }
     }

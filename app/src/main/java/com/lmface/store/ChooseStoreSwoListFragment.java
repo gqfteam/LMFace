@@ -85,7 +85,7 @@ public class ChooseStoreSwoListFragment extends Fragment {
         return view;
     }
     public void initList(int id) {
-        //读取json
+        //读取json,加载数据
         String json = null;
         String nowStr=null;
         if (id == 0) {
@@ -150,6 +150,9 @@ public class ChooseStoreSwoListFragment extends Fragment {
                         mChooseSaleTwoAdapter.setCity(have.getHave().get(position));
                         ChooseStoreSwoListFragment.mSearchConditions.setCity(have.getHave().get(position));
                         ChooseStoreSwoListFragment.mSearchConditions.setProvince(have.getName());
+                        //可对学校数据联动
+
+
                     } else if (RadioBtnId == 1) {
                         mChooseSaleTwoAdapter.setCampus(have.getHave().get(position));
                         ChooseStoreSwoListFragment.mSearchConditions.setCampus(have.getHave().get(position));

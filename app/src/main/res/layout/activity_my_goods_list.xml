@@ -21,11 +21,7 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout
-        android:id="@+id/my_goods_list_ptr"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/whitesmoke">
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/my_goods_list"
@@ -35,6 +31,5 @@
             android:dividerHeight="@dimen/mediummdp"
             android:headerDividersEnabled="true"
             android:divider="@color/whitesmoke"/>
-    </com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout>
 
 </LinearLayout>

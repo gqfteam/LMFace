@@ -254,11 +254,14 @@ public class GoodsDetailsActivity extends AppCompatActivity {
         switch (view.getId()) {
             case R.id.goods_details_atgoodsuser:
                 //跳转聊天页面
-                Intent _intent = new Intent(this, ChatActivity.class);
-                _intent.putExtra("friendName",goodsMsg.getUserName());
-                _intent.putExtra("FriendList_to_ChatFragment", true);
-                startActivity(_intent);
-
+                if(!goodsMsg.getUserName().equals(realm.where(user_msg.class).findFirst().getUserName())) {
+                    Intent _intent = new Intent(this, ChatActivity.class);
+                    _intent.putExtra("friendName", goodsMsg.getUserName());
+                    _intent.putExtra("FriendList_to_ChatFragment", true);
+                    startActivity(_intent);
+                }else{
+                    Toast.makeText(getApplicationContext(),"商品主人无法at自己",Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.goods_details_foundlike:
                 //跳转主页，并传值gqf
@@ -286,11 +289,15 @@ public class GoodsDetailsActivity extends AppCompatActivity {
                 addOrJian(2);
                 break;
             case R.id.behavior_commit:
-                behaviorCommit.setEnabled(false);
-                if (statu == 1) {
-                    addShopCar(goodsId,buyNum);
-                } else if (statu == 2) {
-                    buyNow();
+                if(!goodsMsg.getUserName().equals(realm.where(user_msg.class).findFirst().getUserName())) {
+                    behaviorCommit.setEnabled(false);
+                    if (statu == 1) {
+                        addShopCar(goodsId, buyNum);
+                    } else if (statu == 2) {
+                        buyNow();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), "物主无法购买或添加购物车", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }

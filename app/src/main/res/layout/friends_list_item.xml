@@ -25,6 +25,8 @@
             android:id="@+id/friends_list_item_img"
             android:layout_width="@dimen/smallhdp"
             android:layout_height="match_parent"
+            android:src="@drawable/ic_launcher"
+            android:scaleType="centerCrop"
             />
         <TextView
             android:id="@+id/friends_list_item_name"

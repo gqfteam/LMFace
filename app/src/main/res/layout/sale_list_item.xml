@@ -18,6 +18,8 @@
         android:layout_width="@dimen/hugehxxdp"
         android:layout_height="@dimen/hugehxxdp"
         android:layout_margin="@dimen/mediummdp"
+        android:src="@drawable/ic_launcher"
+        android:scaleType="centerCrop"
         />
     <RelativeLayout
         android:layout_width="match_parent"

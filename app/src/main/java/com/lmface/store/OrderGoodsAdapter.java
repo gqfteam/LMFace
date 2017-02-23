@@ -28,8 +28,6 @@ import butterknife.ButterKnife;
 
 public class OrderGoodsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-
-
     private Context mContext;
     private List<goods_msg> datas;
     private ArrayList<Integer> goodsNums;

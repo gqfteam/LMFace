@@ -88,7 +88,11 @@ public class StoreFragment extends Fragment {
 
     private void initChackBox() {
         CBShopCity.setText(ChooseStoreSwoListFragment.mSearchConditions.getCity());
-        CBShopCampus.setText(ChooseStoreSwoListFragment.mSearchConditions.getCampus());
+        if(ChooseStoreSwoListFragment.mSearchConditions.getCampus().equals("全部")){
+            CBShopCampus.setText(ChooseStoreSwoListFragment.mSearchConditions.getUniversity());
+        }else {
+            CBShopCampus.setText(ChooseStoreSwoListFragment.mSearchConditions.getCampus());
+        }
         CBShopClassification.setText(ChooseStoreSwoListFragment.mSearchConditions.getClassification() + "/" + ChooseStoreSwoListFragment.mSearchConditions.getSpecies());
     }
 

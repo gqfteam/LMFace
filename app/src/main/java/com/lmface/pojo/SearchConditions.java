@@ -10,7 +10,7 @@ public class SearchConditions {
     String province="河南省";
     String city="洛阳市";
     String university="河南科技大学";
-    String campus="西苑校区";
+    String campus="全部";
     String classification="电子产品";
     String species="全部";
 

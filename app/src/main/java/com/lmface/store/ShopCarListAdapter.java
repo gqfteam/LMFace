@@ -69,6 +69,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             for(Integer i:batchDelects){
                 carIds.add(datas.get(i).getCarId());
             }
+
             Subscription subscription = NetWork.getShopCarService().delectShopCarByListCarId(carIds)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -84,13 +85,26 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                         @Override
                         public void onNext(ResultCode resultCode) {
                             if (resultCode.getCode() == 10000) {
-                                datas=new ArrayList<goods_msg_car>();
+                                //删除成功后删除数据
+                                List<Integer> carIds=new ArrayList<>();
+                                for(Integer i:batchDelects){
+                                    carIds.add(datas.get(i).getCarId());
+                                }
+                                for(int i=0;i<datas.size();i++){
+                                    for(int n=0;n<carIds.size();n++){
+                                        if(datas.get(i).getCarId()==carIds.get(n)){
+                                            datas.remove(i);
+                                            i--;
+                                        }
+                                    }
+                                }
                                 Log.i("gqf","onNext");
                             }else{
                                 Log.i("gqf",resultCode.getMsg());
                             }
-                            //批量删除之后初始化
+                            //初始化编辑数据
                             initData();
+                            //更新列表
                             update(datas);
                         }
                     });
@@ -472,14 +486,21 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         if(gmc.getGoodsnum()<=0){
             mHolder.shopCarGoodsClassification.setText("失效");
             mHolder.shopCarEdi.setEnabled(false);
+            //加减按钮失效
+            mHolder.shopCarAdd.setEnabled(false);
+            mHolder.shopCarJian.setEnabled(false);
+
             mHolder.shopCarBuyNum.setText(0 + "");
         }else {
             mHolder.shopCarEdi.setEnabled(true);
+            //加减按钮可用
+            mHolder.shopCarAdd.setEnabled(true);
+            mHolder.shopCarJian.setEnabled(true);
             if (gmc.getCarGoodsNum() > gmc.getGoodsnum()) {
                 gmc.setCarGoodsNum(gmc.getGoodsnum());
                 updataLess(gmc);
 
-            } else {
+            } else {//加减按钮判断
 
                 if (gmc.getCarGoodsNum() == gmc.getGoodsnum()) {
                     mHolder.shopCarAdd.setEnabled(false);

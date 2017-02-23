@@ -56,7 +56,9 @@ public class RegistActivity extends AppCompatActivity {
         String _password2 = registPassword2Et.getText().toString();
         if (Phone.IsMobileNO(_phone)){
             if (_password.equals(_password2)) {
-                selectByUserName(_phone,_password2);
+                //开始注册
+                registBt.setEnabled(false);
+                register(_phone,_password);
             }else {
                 Toast.makeText(this, "两次密码输入不一致！", Toast.LENGTH_SHORT).show();
                 registPasswordEt.setText("");
@@ -68,34 +70,6 @@ public class RegistActivity extends AppCompatActivity {
         }
     }
 
-    private void selectByUserName(final String phone, final String password) {
-        Subscription logSc = NetWork.getUserService().selectByUserName(phone)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<ResultCode>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(ResultCode resultCode) {
-
-                        if(resultCode.getCode()==10000){
-                            registerHx(phone,password);
-                        }else{
-                            Toast.makeText(getApplicationContext(),resultCode.getMsg(),Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
-        compositeSubscription.add(logSc);
-    }
 
     public void registerHx(final String phone,final String password){
         new Thread(new Runnable() {
@@ -127,15 +101,34 @@ public class RegistActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == 1){
-                Bundle b=msg.getData();
-                register(b.getString("phone"),b.getString("password"));
+                //注册成功
+                registBt.setEnabled(true);
+                registBt.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        RegistSuccessDialogFragment registSuccessDialogFragment = new RegistSuccessDialogFragment();
+                        registSuccessDialogFragment.setDialogFragmentDismissLinsener(new DialogFragmentDismissLinsener() {
+                            @Override
+                            public void dialogDismiss() {
+                                startActivity(new Intent(RegistActivity.this,LoginActivity.class));
+                            }
+                        });
+                        registSuccessDialogFragment.show(getFragmentManager(),"registSuccessDialogFragment");
+                    }
+                });
             }else if(msg.what == 2){
-                Toast.makeText(getApplicationContext(),"注册失败",Toast.LENGTH_SHORT);
+                registBt.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),"注册失败",Toast.LENGTH_SHORT);
+                    }
+                });
+                registBt.setEnabled(true);
             }
 
         }
     };
-    private void register(String phone, String password) {
+    private void register(final  String phone,final String password) {
         Subscription logSc = NetWork.getUserService().registeredUsers(phone,password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -148,23 +141,18 @@ public class RegistActivity extends AppCompatActivity {
                     @Override
                     public void onError(Throwable e) {
 
+                        Log.i("gqf","onError"+e.getMessage());
                     }
 
                     @Override
                     public void onNext(ResultCode resultCode) {
+                        Log.i("gqf","onNext"+resultCode.toString());
                         if(resultCode.getCode()==10000){
-                            RegistSuccessDialogFragment registSuccessDialogFragment = new RegistSuccessDialogFragment();
-                            registSuccessDialogFragment.setDialogFragmentDismissLinsener(new DialogFragmentDismissLinsener() {
-                                @Override
-                                public void dialogDismiss() {
-                                    startActivity(new Intent(RegistActivity.this,LoginActivity.class));
-                                }
-                            });
-                            registSuccessDialogFragment.show(getFragmentManager(),"registSuccessDialogFragment");
+                            registerHx(phone,password);
                         }else {
                             Toast.makeText(RegistActivity.this, resultCode.getMsg(), Toast.LENGTH_SHORT).show();
+                            registBt.setEnabled(true);
                         }
-
                     }
                 });
 
