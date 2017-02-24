@@ -21,17 +21,26 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.lmface.R;
+import com.lmface.network.NetWork;
 import com.lmface.pojo.ChatMsgEntity;
+import com.lmface.pojo.UserFriend;
 import com.lmface.pojo.user_msg;
 import com.lmface.util.TimeUtils;
 import com.lmface.util.ToastUtil;
 import com.lmface.view.TitleBarView;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import io.realm.Realm;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+import rx.subscriptions.CompositeSubscription;
 
 public class ChatActivity extends Activity implements OnClickListener {
 
@@ -47,37 +56,65 @@ public class ChatActivity extends Activity implements OnClickListener {
     Realm realm;
     //private MyReceiver myBroadcastReceiver;
     private int type;
-
+    user_msg friendMsg=null;
+    CompositeSubscription compositeSubscription;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_chat);
         realm = Realm.getDefaultInstance();
+        compositeSubscription=new CompositeSubscription();
         getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initView();
         initTitleView();
         initData();
-        getOldMessage(username);
+
         //iniMsg();
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
     }
 
+
+    public void  initFriendMsg(){
+        Subscription logSc = NetWork.getUserService().selectUserByName(username)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<user_msg>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(user_msg user_msg) {
+                        friendMsg=user_msg;
+                        if(mAdapter!=null){
+                            mAdapter.setHeadImg(realm.where(user_msg.class).findFirst().getHeadimg(),friendMsg.getHeadimg());
+                        }
+                    }
+                });
+        compositeSubscription.add(logSc);
+    }
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 ChatMsgEntity entity = (ChatMsgEntity) msg.obj;
-                int id=1;
-                for(ChatMsgEntity c:realm.where(ChatMsgEntity.class).equalTo("name",entity.getName()).findAll()){
-                    if(id<c.getChatId()){
-                        id=c.getChatId();
-                    }
-                }
-                entity.setChatId(id+1);
-                realm.beginTransaction();
-                realm.insertOrUpdate(entity);
-                realm.commitTransaction();
+//                int id=1;
+//                for(ChatMsgEntity c:realm.where(ChatMsgEntity.class).equalTo("name",entity.getName()).findAll()){
+//                    if(id<c.getChatId()){
+//                        id=c.getChatId();
+//                    }
+//                }
+//                entity.setChatId(id+1);
+//                realm.beginTransaction();
+//                realm.insertOrUpdate(entity);
+//                realm.commitTransaction();
                 mAdapter.addChat(entity);
                 mListView.smoothScrollToPosition(mListView.getChildCount()-1);
             }
@@ -149,6 +186,12 @@ public class ChatActivity extends Activity implements OnClickListener {
         });
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initData();
+    }
+
     public void initView() {
         type = getIntent().getIntExtra("type", 0);
         username = getIntent().getStringExtra("friendName");
@@ -160,12 +203,18 @@ public class ChatActivity extends Activity implements OnClickListener {
         mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
     }
 
+    //从本地数据库这种获取聊天记录
     public void initData() {
         for (ChatMsgEntity chatMsgEntity : realm.where(ChatMsgEntity.class).equalTo("name", username).findAll()) {
             mDataArrays.add(chatMsgEntity);
         }
         mAdapter = new ChatMsgAdapter(this, mDataArrays);
         mListView.setAdapter(mAdapter);
+        //getOldMessage(username);
+        if(friendMsg==null) {
+            //更新头像
+            initFriendMsg();
+        }
     }
 
     @Override
@@ -222,6 +271,9 @@ public class ChatActivity extends Activity implements OnClickListener {
             mAdapter.notifyDataSetChanged();
             mEditTextContent.setText("");
             mListView.setSelection(mListView.getCount() - 1);
+
+
+
         } else
             ToastUtil.showToast("消息不能为空！");
     }
@@ -303,6 +355,12 @@ public class ChatActivity extends Activity implements OnClickListener {
         EMClient.getInstance().chatManager().sendMessage(message);
         //conversation.appendMessage(message);
 
+        //发送广播给msglist页面
+        UserFriend userFriend=new UserFriend(username);
+        List<EMMessage> myEmMessages=new ArrayList<>();
+        myEmMessages.add(message);
+        userFriend.setMessages(myEmMessages);
+        EventBus.getDefault().post(userFriend);
     }
 
     /**
@@ -330,12 +388,18 @@ public class ChatActivity extends Activity implements OnClickListener {
                 entity.setText(message_news);
                 mDataArrays.add(entity);
                 mAdapter.notifyDataSetChanged();
+
+
+
+
+
+
             }
+
         }
 
     }
-
-
+  
 
     @Override
     protected void onDestroy() {

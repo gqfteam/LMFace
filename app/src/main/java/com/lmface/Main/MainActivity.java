@@ -36,11 +36,15 @@ import com.lmface.huanxin.AddFriendsListActivity;
 import com.lmface.huanxin.ContactActivity;
 import com.lmface.pojo.AddFriendMsg;
 import com.lmface.pojo.ChangeActivity;
+import com.lmface.pojo.ChatMsgEntity;
+import com.lmface.pojo.UserFriend;
+import com.lmface.util.TimeUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -187,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_poi_off, R.string.store))
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_user_off, R.string.my))
                 .initialise();
-        setContent(0);
+        setContent(CONTENT_HOME);
         bottomBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position) {
@@ -221,14 +225,38 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
             Log.i("gqf", "onMessageReceived");
-            for (EMMessage emMessage : messages) {
-                Log.i("gqf", emMessage.getBody().toString());
-                Message msg=new Message();
-                msg.what=4;
-                msg.obj=emMessage;
-                mHandler.sendMessage(msg);
-            }
+            for (int i = 0; i < messages.size(); i++) {
+                Log.i("gqf", "messages" + messages.get(i).toString());
+                ChatMsgEntity entity = new ChatMsgEntity();
+                entity.setDate(TimeUtils.getFormaDatass(messages.get(i).getMsgTime()));
+                //				if (!realm.where(user_msg.class).findFirst().getUserName().equals(messages.get(i).getFrom())) {
+                //					entity.setMsgType(true);
+                //					entity.setName(messages.get(i).getFrom());
+                //				} else {
+                entity.setMsgType(true);
 
+                entity.setName(messages.get(i).getFrom());
+                entity.setFromName(messages.get(i).getTo());
+
+                int startIndex = messages.get(i).getBody().toString().toString().lastIndexOf("txt:\"");
+                String message_news = messages.get(i).getBody().toString().toString().substring(startIndex + 5,
+                        messages.get(i).getBody().toString().toString().length() - 1);
+                entity.setText(message_news);
+
+                Log.i("gqf", "messages" + entity.toString());
+                Message msg = new Message();
+                msg.what = 4;
+                msg.obj = entity;
+                mHandler.sendMessage(msg);
+
+                //发送广播给msglist页面
+                UserFriend userFriend=new UserFriend(messages.get(i).getFrom());
+                List<EMMessage> myEmMessages=new ArrayList<>();
+                myEmMessages.add(messages.get(i));
+                userFriend.setMessages(myEmMessages);
+                EventBus.getDefault().post(userFriend);
+
+            }
         }
 
         @Override
@@ -393,8 +421,24 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 SendNotification(msg.obj.toString() + "拒绝了你的好友请求", "", ContactActivity.class, false);
             }
             else if(msg.what==4){
-                EMMessage emMessage=(EMMessage)msg.obj;
-                SendNotification(emMessage.getFrom() + "发来了一条消息", "内容：" + emMessage.getBody().toString(), ContactActivity.class, false);
+               // EMMessage emMessage=(EMMessage)msg.obj;
+                //存入本地数据库
+                ChatMsgEntity entity = (ChatMsgEntity) msg.obj;
+                int id=1;
+                for(ChatMsgEntity c:realm.where(ChatMsgEntity.class).equalTo("name",entity.getName()).findAll()){
+                    if(id<c.getChatId()){
+                        id=c.getChatId();
+                    }
+                }
+                entity.setChatId(id+1);
+                realm.beginTransaction();
+                realm.insertOrUpdate(entity);
+                realm.commitTransaction();
+                SendNotification(entity.getName() + "发来了一条消息", "内容：" + entity.getText(), ContactActivity.class, false);
+
+                //发送广播给msgList页面
+
+
             }
         }
     };

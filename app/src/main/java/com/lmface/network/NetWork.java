@@ -70,5 +70,4 @@ public class NetWork {
                 .addCallAdapterFactory(rxJavaCallAdapterFactory)
                 .build();
     }
-
 }

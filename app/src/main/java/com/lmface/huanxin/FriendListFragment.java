@@ -67,7 +67,7 @@ public class FriendListFragment extends Fragment {
     }
 
     public void initFriendsData(){
-        mThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -80,12 +80,11 @@ public class FriendListFragment extends Fragment {
                 }
 
             }
-        });
-        mThread.start();
-    };
+        }).start();
+    }
 
     public void delectFriend(final String username){
-        mThread = new Thread(new Runnable() {
+       new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -98,8 +97,7 @@ public class FriendListFragment extends Fragment {
                 }
 
             }
-        });
-        mThread.start();
+        }).start();
     }
 
     Handler myHandler = new Handler() {
@@ -166,6 +164,14 @@ public class FriendListFragment extends Fragment {
 
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            initFriendsData();
+        }
+    }
+
     public void initList(){
         if(mFriendsListAdapter==null) {
             mFriendsListAdapter = new FriendsListAdapter(getContext(), users);
@@ -175,7 +181,7 @@ public class FriendListFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                     Intent _intent = new Intent(getActivity(), ChatActivity.class);
-                    _intent.putExtra("friendName", usernames.get(i));
+                    _intent.putExtra("friendName", mFriendsListAdapter.getDatas().get(i).getUserName());
                     _intent.putExtra("FriendList_to_ChatFragment", true);
                     startActivity(_intent);
                 }

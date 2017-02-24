@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lmface.R;
 import com.lmface.pojo.ChatMsgEntity;
 import com.lmface.util.FaceConversionUtil;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -33,6 +35,15 @@ public class ChatMsgAdapter extends BaseAdapter {
 	private List<ChatMsgEntity> coll;
 	private LayoutInflater mInflater;
 	private Context context;
+
+	public String userImg="";
+	public String friendImg="";
+
+	public void setHeadImg(String user,String friend){
+		userImg=user;
+		friendImg=friend;
+	}
+
 	public ChatMsgAdapter(Context context, List<ChatMsgEntity> coll) {
 		this.coll = coll;
 		mInflater = LayoutInflater.from(context);
@@ -86,6 +97,9 @@ public class ChatMsgAdapter extends BaseAdapter {
 					.findViewById(R.id.tv_sendtime);
 			viewHolder.tvContent = (TextView) convertView
 					.findViewById(R.id.tv_chatcontent);
+			viewHolder.iv_userhead = (ImageView) convertView
+					.findViewById(R.id.iv_userhead);
+
 			viewHolder.isComMsg = isComMsg;
 
 			convertView.setTag(viewHolder);
@@ -96,6 +110,23 @@ public class ChatMsgAdapter extends BaseAdapter {
 		viewHolder.tvSendTime.setText(entity.getDate());
 		SpannableString spannableString = FaceConversionUtil.getInstace().getExpressionString(context, entity.getText());
 		viewHolder.tvContent.setText(spannableString);
+
+		if(isComMsg){
+			if(!friendImg.equals("")){
+				Picasso.with(context).load(friendImg)
+						.placeholder(R.drawable.ic_launcher)
+						.error(R.drawable.ic_launcher)
+						.into(viewHolder.iv_userhead);
+			}
+		}else{
+			if(!userImg.equals("")){
+				Picasso.with(context).load(userImg)
+						.placeholder(R.drawable.ic_launcher)
+						.error(R.drawable.ic_launcher)
+						.into(viewHolder.iv_userhead);
+			}
+		}
+
 
 		return convertView;
 	}
@@ -108,6 +139,7 @@ public class ChatMsgAdapter extends BaseAdapter {
 	class ViewHolder {
 		public TextView tvSendTime;
 		public TextView tvContent;
+		public ImageView iv_userhead;
 		public boolean isComMsg = true;
 	}
 

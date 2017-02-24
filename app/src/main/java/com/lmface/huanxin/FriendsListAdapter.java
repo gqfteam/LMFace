@@ -32,6 +32,10 @@ public class FriendsListAdapter extends BaseAdapter {
         this.notifyDataSetChanged();
     }
 
+    public ArrayList<UserFriend> getDatas() {
+        return datas;
+    }
+
     public FriendsListAdapter(Context context, ArrayList<UserFriend> datas) {
         this.mContext = context;
         this.datas = datas;

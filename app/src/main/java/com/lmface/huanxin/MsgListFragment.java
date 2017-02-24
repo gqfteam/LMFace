@@ -22,6 +22,10 @@ import com.lmface.network.NetWork;
 import com.lmface.pojo.UserFriend;
 import com.lmface.pojo.user_msg;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,7 +62,7 @@ public class MsgListFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_msg_list, container, false);
         ButterKnife.bind(this, view);
-
+        EventBus.getDefault().register(this);
         mcompositeSubscription=new CompositeSubscription();
         initAllConversations();
 
@@ -66,7 +70,7 @@ public class MsgListFragment extends Fragment {
         return view;
     }
     public void initAllConversations(){
-        mThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
@@ -81,8 +85,7 @@ public class MsgListFragment extends Fragment {
                     myHandler.sendMessage(message);
                 }
             }
-        });
-        mThread.start();
+        }).start();
     }
 
 
@@ -93,12 +96,48 @@ public class MsgListFragment extends Fragment {
                     initList();
                     break;
                 case 2:
-                    initAllConversations();
+                    //initAllConversations();
+                    msgListAdapter.delectDataByName(msg.obj.toString());
                     break;
             }
             super.handleMessage(msg);
         }
     };
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.i("gqf","hidden"+hidden);
+        if(!hidden){
+            //界面跳转回来后刷新
+            initAllConversations();
+        }
+    }
+    //接收广播刷新
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getNewHXMsg(UserFriend userFriend){
+        if(mUserFriends==null){
+            mUserFriends=new ArrayList<>();
+            mUserFriends.add(userFriend);
+        }else {
+            boolean isHave=false;
+            for (int i = 0; i < mUserFriends.size(); i++) {
+                //有信息则更新
+                if (mUserFriends.get(i).getUserName().equals(userFriend.getUserName())) {
+                    mUserFriends.remove(i);
+                    mUserFriends.add(i, userFriend);
+                    isHave=true;
+                    break;
+                }
+            }
+            //没有信息则直接添加
+            if(!isHave){
+                mUserFriends.add(userFriend);
+            }
+        }
+        initList(mUserFriends);
+    }
+
 
     public void initList() {
         mContext = getActivity();
@@ -125,24 +164,31 @@ public class MsgListFragment extends Fragment {
         contactMsgList.setAdapter(msgListAdapter);
     }
     public void delectConversations(final String name){
-        mThread = new Thread(new Runnable() {
+        new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     //删除和某个user会话，如果需要保留聊天记录，传false
                     EMClient.getInstance().chatManager().deleteConversation(name, true);
+                    //删除后重新加载，或单独删除list中item
+                    if (conversations.size() != 0) {
+                        Message message = new Message();
+                        message.what = 2;
+                        message.obj=name;
+                        myHandler.sendMessage(message);
+                    }
                 } catch (Exception e) {
+
                 }
-                if (conversations.size() != 0) {
-                    Message message = new Message();
-                    message.what = 2;
-                    myHandler.sendMessage(message);
-                }
+
             }
-        });
-        mThread.start();
+        }).start();
     }
     public void initList(ArrayList<UserFriend> users){
+        //根据用户名查找用户信息
+        if(mUserFriends.size()>0) {
+            initUserMsgList(mUserFriends.get(0).getUserName());
+        }
         if(msgListAdapter==null){
             msgListAdapter = new MsgListAdapter(getContext(), users);
             contactMsgList.setAdapter(msgListAdapter);
@@ -218,13 +264,17 @@ public class MsgListFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        initList(mUserFriends);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         mcompositeSubscription.unsubscribe();
+        EventBus.getDefault().unregister(this);
     }
+
+    //接收用户聊天信息后列表更新
+
 
 }
