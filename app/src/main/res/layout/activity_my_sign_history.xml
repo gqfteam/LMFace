@@ -10,7 +10,7 @@
         android:theme="@style/AppTheme.AppBarOverlay">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/my_initiate_sign_toolbar"
+            android:id="@+id/my_sign_history_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/whitesmoke"
@@ -21,14 +21,14 @@
 
     <android.support.design.widget.TabLayout
 
-        android:id="@+id/my_initiate_sign_tablayout"
+        android:id="@+id/my_sign_history_tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </android.support.design.widget.TabLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/my_initiate_sign_viewpager"
+        android:id="@+id/my_sign_history_viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

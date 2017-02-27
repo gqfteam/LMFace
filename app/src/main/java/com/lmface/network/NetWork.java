@@ -3,6 +3,7 @@ package com.lmface.network;
 import com.lmface.network.api.GoodsOrderService;
 import com.lmface.network.api.GoodsService;
 import com.lmface.network.api.ShopCarService;
+import com.lmface.network.api.SignService;
 import com.lmface.network.api.UserAddressService;
 import com.lmface.network.api.UserService;
 
@@ -21,9 +22,19 @@ public class NetWork {
     private static ShopCarService shopCarService;
     private static GoodsService goodsService;
     private static GoodsOrderService goodsOrderService;
+    private static SignService signService;
 
     private static final int URL_TYPE_MFACE=1;
     private static final int URL_TYPE_SIGN_FACE=2;
+
+
+    public static SignService getSignService() {
+        if (signService == null) {
+            Retrofit retrofit = getRetrofit(URL_TYPE_SIGN_FACE);
+            signService = retrofit.create(SignService.class);
+        }
+        return signService;
+    }
     public static UserService getUserService() {
         if (userService == null) {
             Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);

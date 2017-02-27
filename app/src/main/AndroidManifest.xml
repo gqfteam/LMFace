@@ -140,7 +140,21 @@
         <activity android:name=".User.UpdateUserPassWordActivity"
                   android:launchMode="singleTask"
                   android:screenOrientation="portrait"/>
-
+        <activity android:name=".signin.NowSignEndMsgActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".signin.myInitiateSign.DaliySignEndMsgActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".signin.myInitiateSign.MyInItateSignActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".signin.mySignHistory.MySignHistoryActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".signin.NowNeedSignListActivity"
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

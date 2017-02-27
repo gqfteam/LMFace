@@ -2,9 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/now_sign_end_msg_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/whitesmoke"
+            app:popupTheme="@style/ToolbarTheme" >
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout
+        android:id="@+id/now_sign_end_msg_sc_ptr"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/whitesmoke">
 
     <ScrollView
+        android:id="@+id/now_sign_end_msg_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -23,4 +46,6 @@
         </LinearLayout>
 
     </ScrollView>
+
+    </com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout>
 </LinearLayout>
