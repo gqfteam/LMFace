@@ -22,9 +22,11 @@ public class NetWork {
     private static GoodsService goodsService;
     private static GoodsOrderService goodsOrderService;
 
+    private static final int URL_TYPE_MFACE=1;
+    private static final int URL_TYPE_SIGN_FACE=2;
     public static UserService getUserService() {
         if (userService == null) {
-            Retrofit retrofit = getRetrofit();
+            Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);
             userService = retrofit.create(UserService.class);
         }
         return userService;
@@ -32,21 +34,21 @@ public class NetWork {
 
     public static UserAddressService getUserAddressService() {
         if (userAddressService == null) {
-            Retrofit retrofit = getRetrofit();
+            Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);
             userAddressService = retrofit.create(UserAddressService.class);
         }
         return userAddressService;
     }
     public static ShopCarService getShopCarService() {
         if (shopCarService == null) {
-            Retrofit retrofit = getRetrofit();
+            Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);
             shopCarService = retrofit.create(ShopCarService.class);
         }
         return shopCarService;
     }
     public static GoodsService getGoodsService() {
         if (goodsService == null) {
-            Retrofit retrofit = getRetrofit();
+            Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);
             goodsService = retrofit.create(GoodsService.class);
         }
         return goodsService;
@@ -54,7 +56,7 @@ public class NetWork {
 
     public static GoodsOrderService getGoodsOrderService() {
         if (goodsOrderService == null) {
-            Retrofit retrofit = getRetrofit();
+            Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);
             goodsOrderService = retrofit.create(GoodsOrderService.class);
         }
         return goodsOrderService;
@@ -63,9 +65,16 @@ public class NetWork {
     private static Converter.Factory gsonConverterFactory = GsonConverterFactory.create();
     private static CallAdapter.Factory rxJavaCallAdapterFactory = RxJavaCallAdapterFactory.create();
 
-    private static Retrofit getRetrofit() {
+    private static Retrofit getRetrofit(int index) {
+        String url="";
+        if(index==URL_TYPE_MFACE){
+            url="http://101.201.116.99:8081/mface/";
+        }else if(index==URL_TYPE_SIGN_FACE){
+            url="http://101.201.116.99:8081/signface/";
+        }
+
         return new Retrofit.Builder()
-                .baseUrl("http://192.168.56.1:8080/mface/")
+                .baseUrl(url)
                 .addConverterFactory(gsonConverterFactory)
                 .addCallAdapterFactory(rxJavaCallAdapterFactory)
                 .build();

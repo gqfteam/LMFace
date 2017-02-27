@@ -1,0 +1,203 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	font-family: "微软雅黑";
+}
+
+html {
+	box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+	box-sizing: inherit;
+}
+
+.container-fluid {
+	padding: 0;
+}
+
+header {
+	background: url(../img/def_top1.jpg)no-repeat;
+	width: 100%;
+	height: auto;
+	background-size: cover;
+	padding-top: 17%;
+}
+
+:root {
+	font-size: calc(1vw+ 1vh+ .5vmin);
+}
+
+body {
+	font: 1rem/1.6 sans-serif;
+}
+
+
+/*nav begin*/
+
+header nav {
+	width: 100%;
+	background: linear-gradient( #003677, #002e65);
+}
+
+nav ul {
+	width: 74%;
+	margin: 0 auto;
+}
+
+nav li {
+	display: inline-block;
+	margin: 0 1%;
+	padding: 0 2%;
+	text-align: center;
+}
+
+nav li a {
+	color: white;
+}
+
+nav li:hover,
+li:checked {
+	background-color: #002e65;
+}
+
+nav li a:hover,
+nav li a:checked {
+	color: white;
+	text-decoration: none;
+}
+
+
+/*nav end*/
+
+
+/*轮播图 begin*/
+
+.carousel-indicators {
+	bottom: -13px;
+}
+
+/*轮播图 end*/
+
+/*面板 begin*/
+.panel{
+	border-radius:0;
+	margin-bottom: 0;
+}
+.panel-heading{
+	border-top-left-radius: 0; 
+	border-top-right-radius: 0;
+}
+
+.panel-default>.panel-heading{
+	background-color: white;
+}
+.panel-heading h3,a{
+	line-height: 17px;
+	height: 17px;
+
+}
+.panel-title>.small, .panel-title>small{
+	color: #9E9E9E;
+	
+}
+.panel-body ul li{
+	list-style: none;
+	width: 100%;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height:1.75rem;
+}
+.panel-body ul li a{
+	color: #000000;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	padding:0;
+}
+
+#more ul li span{
+	text-align: right;	
+}
+/*面板 end*/
+
+/*图片 begin*/
+.qlinks{
+	width: 100%;
+    height: 16.3rem;
+    margin-bottom: 0.5rem;
+	background-color: white;
+}
+.qlinks li{
+	list-style: none;
+}
+.qlinks li a {
+    color: #fff;
+    display: block;
+    text-decoration: none;
+    text-align: center;
+    line-height: 12rem;
+    font-size: 1.30rem;
+}
+.links178-178 a {
+    height: 16rem;
+    background: url(../img/qlinks_lyw.jpg) no-repeat;
+    background-size: cover;
+    
+}
+.links178-85 a {
+  
+    height: 8rem;
+    background: url(../img/xsgz.jpg) no-repeat;
+    background-size: cover;
+    
+}
+.links-a-huilan a {
+    background: #ab4181;
+}
+.links85-85 a {
+    height: 7.4rem;
+}
+.links-a-caolv2 a {
+    background: #199b31;
+    background: url(../img/zyzx1.jpg) no-repeat;
+    background-size: cover;
+    
+}
+.col-xs-6,.col-xs-3{
+	padding: 0.3rem;
+}
+.pic{
+	width: 100%;
+    margin-bottom: 0.5rem;
+    background-color: white;
+}
+/*图片 end*/
+/*footer begin*/
+footer{
+	width: 100%;
+	color: white;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	height: 10rem;
+	border-top: 1rem solid #002b5e;
+
+}
+footer div{
+	width: 100%;
+	height: 10rem;
+	background-color: #0f4992;
+	margin: 0;
+}
+footer div p{
+	padding: 0;
+	margin: 0;
+}
+.col-xs-12{
+	padding: 0;
+}
+/*footer end*/

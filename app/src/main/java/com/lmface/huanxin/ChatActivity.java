@@ -48,6 +48,7 @@ public class ChatActivity extends Activity implements OnClickListener {
     public static boolean isActive = false;
     private EditText mEditTextContent;
     private TitleBarView mTitleBarView;
+    private TextView user_id_txt;
     private ListView mListView;
     private TextView tv_new_news;
     private ChatMsgAdapter mAdapter;
@@ -93,6 +94,15 @@ public class ChatActivity extends Activity implements OnClickListener {
                     public void onNext(user_msg user_msg) {
                         friendMsg=user_msg;
                         if(mAdapter!=null){
+                            String name="";
+                            if(user_msg.getNickname().equals("")){
+                                name=user_msg.getNickname()+"("+username+")";
+                                user_id_txt.setText("");
+                            }else{
+                                name=username;
+                                user_id_txt.setText("("+username+")");
+                            }
+                            mTitleBarView.setTitleText(name);
                             mAdapter.setHeadImg(realm.where(user_msg.class).findFirst().getHeadimg(),friendMsg.getHeadimg());
                         }
                     }
@@ -201,6 +211,8 @@ public class ChatActivity extends Activity implements OnClickListener {
         mBtnSend = (Button) findViewById(R.id.btn_send);
         mBtnSend.setOnClickListener(this);
         mEditTextContent = (EditText) findViewById(R.id.et_sendmessage);
+        user_id_txt=(TextView)findViewById(R.id.user_id_txt);
+        user_id_txt.setText("");
     }
 
     //从本地数据库这种获取聊天记录
