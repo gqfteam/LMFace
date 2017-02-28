@@ -3,6 +3,8 @@ package com.lmface.network.api;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.TemporarySignMsg;
 import com.lmface.pojo.UserDailySignMsg;
+import com.lmface.pojo.courseinfo;
+import com.lmface.pojo.sign_user_msg;
 import com.lmface.pojo.temporary_sign_msg;
 
 import java.util.List;
@@ -27,7 +29,7 @@ public interface SignService {
 
     //查询用户下所有正在使用的课程或团体事件名
     @GET("Sign/selectCouresByUserId/{userId}")
-    Observable<ResultCode> selectCouresByUserId(@Path("userId")int userId);
+    Observable<List<courseinfo>> selectCouresByUserId(@Path("userId")int userId);
 
     //删除用户课程或团体事件,修改statu为0
     @FormUrlEncoded
@@ -67,7 +69,11 @@ public interface SignService {
 
     //获取用户发起的日常签到历史
 
+    //获取用户发起临时签到统计
 
+    //获取该用户在当前时间之后的所有未签到信息
+    @GET("Sign/selectSignUserMagByUserId/{userId}")
+    Observable<List<sign_user_msg>> selectSignUserMagByUserId(@Path("userId")int userId);
 
 
 }

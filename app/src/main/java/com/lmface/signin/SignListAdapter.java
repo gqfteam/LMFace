@@ -4,19 +4,32 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.lmface.R;
+import com.lmface.network.NetWork;
+import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.sign_user_msg;
+import com.lmface.pojo.user_msg;
+import com.lmface.pojo.user_sign;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.realm.Realm;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -31,6 +44,7 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private final LayoutInflater mLayoutInflater;
     private MyItemClickListener mItemClickListener;
 
+    Realm realm;
     private CompositeSubscription mcompositeSubscription;
 
 
@@ -50,6 +64,7 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public SignListAdapter(Context mContext, List<sign_user_msg> mDatas) {
         this.mContext = mContext;
         this.datas = mDatas;
+        realm=Realm.getDefaultInstance();
         mLayoutInflater = LayoutInflater.from(mContext);
         mcompositeSubscription = new CompositeSubscription();
     }
@@ -82,13 +97,12 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mItemClickListener = listener;
     }
 
-
     public void showDialog(String str, final int positio, final boolean statu) {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setTitle(str)
                 .setPositiveButton("是", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
+                        sign(positio);
                     }
                 })
                 .setNegativeButton("否", new DialogInterface.OnClickListener() {
@@ -97,6 +111,46 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 });
         alert.create().show();
+    }
+
+    public void sign(final int position){
+
+        Gson g=new Gson();
+        user_sign user_sign=new user_sign();
+        user_sign.setUserId(realm.where(user_msg.class).findFirst().getUserId());
+        user_sign.setSignStatu(1);
+        user_sign.setSignTime(new Timestamp(System.currentTimeMillis()));
+        user_sign.setInitialsignininfoid(datas.get(position).getSigninfoid());
+        user_sign.setSignlatitude("34.432423");
+        user_sign.setSignlongitude("35.5345345");
+
+        Subscription subscription = NetWork.getSignService().sign(g.toJson(user_sign))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResultCode>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(ResultCode data) {
+                        Log.i("gqf","onNext"+datas.toString());
+                        if(data.getCode()==10000){
+                            datas.remove(position);
+                            SignListAdapter.this.notifyDataSetChanged();
+                        }else{
+                            Toast.makeText(mContext,data.getMsg(),Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+
     }
 
     @Override
@@ -113,7 +167,6 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mHolder.temporarySignListCourseName.setText(datas.get(p).getCoursename());
         mHolder.temporarySignListIntervalTime.setText("持续时间:" + datas.get(p).getSignintervaltime());
         mHolder.temporarySignListStartTime.setText("开始时间" + datas.get(p).getSignstarttime());
-
 
         String name = "";
         name = datas.get(p).getUserName();
@@ -132,6 +185,12 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         mHolder.temporarySignListPurpose.setText(datas.get(p).getSigngoal());
 
+        //判断开始时间是否小于或等于当前时间
+        if(datas.get(p).getSignstarttime().getTime()<=System.currentTimeMillis()){
+            mHolder.temporarySignCommitBtn.setEnabled(false);
+        }else{
+            mHolder.temporarySignCommitBtn.setEnabled(true);
+        }
 
     }
 

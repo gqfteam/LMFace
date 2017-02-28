@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        menu.findItem(R.id.action_search).setVisible((bottomBar.getCurrentSelectedPosition() == 1));
-        menu.findItem(R.id.action_notification).setVisible((bottomBar.getCurrentSelectedPosition() == 1));
+        menu.findItem(R.id.action_search).setVisible((bottomBar.getCurrentSelectedPosition() == CONTENT_ORDERS));
+        menu.findItem(R.id.action_notification).setVisible((bottomBar.getCurrentSelectedPosition() == CONTENT_ORDERS));
         invalidateOptionsMenu();
         return super.onPrepareOptionsMenu(menu);
     }

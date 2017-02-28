@@ -2,20 +2,31 @@ package com.lmface.signin;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 
 import com.lmface.R;
+import com.lmface.network.NetWork;
+import com.lmface.pojo.sign_user_msg;
+import com.lmface.pojo.user_msg;
 import com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout;
 import com.lmface.util.in.srain.cube.views.ptr.PtrDefaultHandler;
 import com.lmface.util.in.srain.cube.views.ptr.PtrFrameLayout;
 import com.lmface.util.in.srain.cube.views.ptr.PtrHandler;
 import com.lmface.util.myPullToRefreshHeader;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -66,6 +77,7 @@ public class NowNeedSignListActivity extends AppCompatActivity {
                     public void run() {
                         mPtrFrame.refreshComplete();
                         //刷新
+                        initData();
                     }
                 }, 2000);
             }
@@ -97,11 +109,45 @@ public class NowNeedSignListActivity extends AppCompatActivity {
         //EventBus.getDefault().register(this);
         realm = Realm.getDefaultInstance();
         mcompositeSubscription = new CompositeSubscription();
-        setToolbar("签到详情");
-        //下拉刷新
-        initPullToRefresh();
+        setToolbar("当前可签");
 
+        initData();
 
+    }
+    public void initData(){
+        Subscription subscription = NetWork.getSignService().selectSignUserMagByUserId(realm.where(user_msg.class).findFirst().getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<sign_user_msg>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<sign_user_msg> datas) {
+
+                        Log.i("gqf","onNext"+datas.toString());
+                        initListView(datas);
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
+    public void initListView(List<sign_user_msg> datas){
+        if(signListAdapter==null){
+            signListAdapter=new SignListAdapter(this,datas);
+            nowNeedSignList.setLayoutManager(new LinearLayoutManager(this));
+            nowNeedSignList.setAdapter(signListAdapter);
+            //下拉刷新
+            initPullToRefresh();
+        }else{
+            signListAdapter.update(datas);
+        }
     }
 
     @Override

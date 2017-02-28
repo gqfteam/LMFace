@@ -2,15 +2,25 @@ package com.lmface.signin.myInitiateSign;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lmface.R;
+import com.lmface.network.NetWork;
+import com.lmface.pojo.courseinfo;
+import com.lmface.pojo.user_msg;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -52,15 +62,61 @@ public class MtInitiateSignFragment  extends Fragment {
 
         if(type==0){
             //查询我发起的临时签到
-
+            initTemporaryData();
         }else{
             //查询我发起的日常签到
-
+            initDailyCourseData();
         }
 
         return view;
     }
+    public void initTemporaryData(){
+        Subscription subscription = NetWork.getSignService().selectCouresByUserId(realm.where(user_msg.class).findFirst().getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<courseinfo>>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<courseinfo> datas) {
+
+                        Log.i("gqf","onNext"+datas.toString());
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
+
+    public void initDailyCourseData(){
+        Subscription subscription = NetWork.getSignService().selectCouresByUserId(realm.where(user_msg.class).findFirst().getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<courseinfo>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<courseinfo> datas) {
+
+                        Log.i("gqf","onNext"+datas.toString());
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
 
     @Override
     public void onDestroyView() {

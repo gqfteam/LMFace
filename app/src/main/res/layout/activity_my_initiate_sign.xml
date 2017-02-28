@@ -13,7 +13,7 @@
             android:id="@+id/my_initiate_sign_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/whitesmoke"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ToolbarTheme" >
         </android.support.v7.widget.Toolbar>
 
