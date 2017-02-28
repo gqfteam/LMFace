@@ -13,6 +13,8 @@
     <string name="store">校卖</string>
     <!--我的-->
     <string name="my">我的</string>
+    <!--工具-->
+    <string name="sign">工具</string>
 
     <string name="my_goods_list_title">我的商品</string>
 

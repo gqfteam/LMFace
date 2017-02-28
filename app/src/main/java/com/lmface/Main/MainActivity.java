@@ -55,18 +55,20 @@ import rx.subscriptions.CompositeSubscription;
 
 import static com.lmface.R.id.toolbar;
 
-public class MainActivity extends AppCompatActivity implements StoreFragment.mListener, UserFragment.mListener {
+public class MainActivity extends AppCompatActivity implements StoreFragment.mListener, UserFragment.mListener,SignFragment.mListener {
 
     private static final String HOME_TAG = "home_flag";
     private static final String STORE_TAG = "store_flag";
     private static final String MY_TAG = "my_flag";
+    private static final String SIGN_TAG = "sign_flag";
     Realm realm;
     CompositeSubscription mcompositeSubscription;
     @BindView(toolbar)
     Toolbar mToolbar;
-    private static final int CONTENT_ORDERS = 1;
-    private static final int CONTENT_MY = 2;
+    private static final int CONTENT_ORDERS = 2;
+    private static final int CONTENT_MY = 3;
     private static final int CONTENT_HOME = 0;
+    private static final int CONTENT_SIGN = 1;
     @BindView(R.id.bottomBar)
     BottomNavigationBar bottomBar;
     @BindView(R.id.toolbar_text)
@@ -76,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
 
 
         switch (position) {
-            case 0:
+            case CONTENT_HOME:
                 mToolbar.setTitle(toolstr);
                 mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 mToolbar.setTitleTextColor(Color.WHITE);
@@ -84,7 +86,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 this.getWindow().invalidatePanelMenu(Window.FEATURE_OPTIONS_PANEL);
                 setSupportActionBar(mToolbar);
                 break;
-            case 1:
+            case CONTENT_ORDERS:
                 mToolbar.setBackgroundColor(getResources().getColor(R.color.whitesmoke));
                 toolbarText.setVisibility(View.VISIBLE);
                 toolbarText.setText(toolstr);
@@ -128,7 +130,16 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                     }
                 });
                 break;
-            case 2:
+            case CONTENT_MY:
+                mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                toolbarText.setVisibility(View.VISIBLE);
+                toolbarText.setText(toolstr);
+                toolbarText.setTextColor(getResources().getColor(R.color.white));
+                mToolbar.setTitle("");
+                toolbarText.setGravity(Gravity.CENTER);
+                setSupportActionBar(mToolbar);
+                break;
+            case CONTENT_SIGN:
                 mToolbar.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                 toolbarText.setVisibility(View.VISIBLE);
                 toolbarText.setText(toolstr);
@@ -188,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                 .setBarBackgroundColor(R.color.whitesmoke);
 
         bottomBar.addItem(new BottomNavigationItem(R.drawable.ic_menu_deal_off, R.string.firstPage))
+                .addItem(new BottomNavigationItem(R.drawable.ic_menu_tool_off, R.string.sign))
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_poi_off, R.string.store))
                 .addItem(new BottomNavigationItem(R.drawable.ic_menu_user_off, R.string.my))
                 .initialise();
@@ -201,9 +213,12 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
 
                         break;
                     case 1:
-                        setContent(CONTENT_ORDERS);
+                        setContent(CONTENT_SIGN);
                         break;
                     case 2:
+                        setContent(CONTENT_ORDERS);
+                        break;
+                    case 3:
                         setContent(CONTENT_MY);
                         break;
                 }
@@ -288,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
     StoreFragment storeFragment;
     UserFragment userFragment;
 
+    SignFragment signFragment;
     private void setContent(int contentHome) {
         switch (contentHome) {
             case CONTENT_HOME:
@@ -325,6 +341,18 @@ public class MainActivity extends AppCompatActivity implements StoreFragment.mLi
                             .add(R.id.container, userFragment,MY_TAG).commit();
                 }else {
                     setFragment(userFragment, MY_TAG);
+                }
+                break;
+            case CONTENT_SIGN:
+                String tool_str = getResources().getString(R.string.sign);
+                setToolbar("校园工具", contentHome);
+                signFragment = (SignFragment) getSupportFragmentManager().findFragmentByTag(SIGN_TAG);
+                if (signFragment == null) {
+                    signFragment = SignFragment.newInstance(tool_str);
+                    getSupportFragmentManager().beginTransaction()
+                            .add(R.id.container, signFragment,SIGN_TAG).commit();
+                }else {
+                    setFragment(signFragment, SIGN_TAG);
                 }
                 break;
         }

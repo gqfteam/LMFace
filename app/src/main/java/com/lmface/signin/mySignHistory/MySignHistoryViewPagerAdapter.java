@@ -42,9 +42,9 @@ public class MySignHistoryViewPagerAdapter extends FragmentStatePagerAdapter {
     public CharSequence getPageTitle(int position) {
         switch (position){
             case 0:
-                return "临时签到统计";
+                return "临时签到历史";
             case 1:
-                return "日常签到统计";
+                return "日常签到历史";
 
         }
         return super.getPageTitle(position);

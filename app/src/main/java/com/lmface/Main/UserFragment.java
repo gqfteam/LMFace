@@ -75,11 +75,11 @@ public class UserFragment extends Fragment {
                 Class activityClass);
     }
 
-    private StoreFragment.mListener mListener;
+    private mListener mListener;
 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        mListener = (StoreFragment.mListener) activity;
+        mListener = (mListener) activity;
 
     }
 
