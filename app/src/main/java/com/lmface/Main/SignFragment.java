@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.lmface.R;
 import com.lmface.pojo.user_msg;
+import com.lmface.signin.NowNeedSignListActivity;
 import com.lmface.signin.SponporSignIn;
 import com.lmface.signin.myInitiateSign.MyInItateSignActivity;
 import com.lmface.signin.mySignHistory.MySignHistoryActivity;
@@ -40,10 +41,13 @@ public class SignFragment extends Fragment {
         return fragment;
     }
 
-    @OnClick({R.id.sign_lin, R.id.my_initiate_sign_lin, R.id.my_sign_history_lin})
+    @OnClick({R.id.sign_lin,R.id.initiate_sign_lin, R.id.my_initiate_sign_lin, R.id.my_sign_history_lin})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_lin:
+                mListener.changeActivity(NowNeedSignListActivity.class);
+                break;
+            case R.id.initiate_sign_lin:
                 mListener.changeActivity(SponporSignIn.class);
                 break;
             case R.id.my_initiate_sign_lin:
@@ -54,6 +58,7 @@ public class SignFragment extends Fragment {
                 break;
         }
     }
+
 
 
     public interface mListener {
@@ -79,11 +84,11 @@ public class SignFragment extends Fragment {
         compositeSubscription = new CompositeSubscription();
 
 
-
-
         return view;
     }
+
     private user_msg userMsg;
+
     @Override
     public void onStart() {
         super.onStart();
