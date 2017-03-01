@@ -4,6 +4,7 @@ import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.user_msg;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.http.Body;
@@ -76,4 +77,14 @@ public interface UserService {
             @Part MultipartBody.Part file,
             @Part("userId") Integer userId
             );
+
+    //根据用户名集合查询用户
+    @FormUrlEncoded
+    @POST("User/selectUserByListName")
+    Observable<List<user_msg>> selectUserByListName(@Field("userNames") List<String> userNames);
+
+    //根据用户id集合查询用户
+    @FormUrlEncoded
+    @POST("User/selectUserByListId")
+    Observable<List<user_msg>> selectUserByListId(@Field("userIds") List<Integer> userIds);
 }
