@@ -82,17 +82,21 @@ public class MsgListAdapter extends BaseAdapter {
             mHolder = (ViewHolder) arg1.getTag();
         }
 
-        boolean isNikName=false;
+        String name=datas.get(arg0).getUserName();
+
         if(datas.get(arg0).getNickname()!=null){
             if(!datas.get(arg0).getNickname().equals("")){
-                isNikName=true;
+                name=datas.get(arg0).getNickname();
             }
         }
-        if(isNikName){
-            mHolder.msgListItemName.setText(datas.get(arg0).getNickname());
-        }else{
-            mHolder.msgListItemName.setText(datas.get(arg0).getUserName());
+        if(datas.get(arg0).getRealeName()!=null){
+            if(!datas.get(arg0).getRealeName().equals("")){
+                name=datas.get(arg0).getRealeName();
+            }
         }
+
+        mHolder.msgListItemName.setText(name);
+
 
         if (datas.size() != 0) {
             EMMessageBody eb = datas.get(arg0).getMessages().get(datas.get(arg0).getMessages().size() - 1).getBody();

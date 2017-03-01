@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:app="http://schemas.android.com/apk/res-auto">
+              android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,8 +14,8 @@
             android:id="@+id/now_sign_end_msg_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/whitesmoke"
-            app:popupTheme="@style/ToolbarTheme" >
+            android:background="@color/colorPrimary"
+            app:popupTheme="@style/ToolbarTheme">
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
@@ -26,26 +26,35 @@
         android:layout_height="match_parent"
         android:background="@color/whitesmoke">
 
-    <ScrollView
-        android:id="@+id/now_sign_end_msg_scroll"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
+        <ScrollView
+            android:id="@+id/now_sign_end_msg_scroll"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <include layout="@layout/temporary_sign_list_item"/>
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/sign_user_list"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/gray_light">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </android.support.v7.widget.RecyclerView>
-        </LinearLayout>
+                <include layout="@layout/temporary_sign_list_item"/>
 
-    </ScrollView>
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/smallmdp"
+                    android:layout_marginRight="@dimen/smallmdp">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/sign_user_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/gray_light">
+
+                    </android.support.v7.widget.RecyclerView>
+                </android.support.v7.widget.CardView>
+            </LinearLayout>
+
+        </ScrollView>
 
     </com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout>
 </LinearLayout>

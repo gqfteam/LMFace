@@ -8,7 +8,16 @@ public class TemporarySignMsg {
 	int signId;
 	List<Integer> needSignUserIds;
 	List<Integer> signUserIds;
-	
+
+	@Override
+	public String toString() {
+		return "TemporarySignMsg{" +
+				"signId=" + signId +
+				", needSignUserIds=" + needSignUserIds +
+				", signUserIds=" + signUserIds +
+				'}';
+	}
+
 	public TemporarySignMsg(){
 		needSignUserIds=new ArrayList<>();
 		signUserIds=new ArrayList<>();

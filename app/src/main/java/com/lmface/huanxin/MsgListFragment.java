@@ -238,7 +238,7 @@ public class MsgListFragment extends Fragment {
                     @Override
                     public void onNext(user_msg user_msg) {
                         user_msgs.add(user_msg);
-                        mUserFriends.get(user_msgs.size()-1).setMsg(user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone());
+                        mUserFriends.get(user_msgs.size()-1).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
                         if(mUserFriends.size()>user_msgs.size()){
                             initUserMsgList(mUserFriends.get(user_msgs.size()).getUserName());
                         }else{

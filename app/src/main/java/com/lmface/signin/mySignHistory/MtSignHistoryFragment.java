@@ -2,15 +2,26 @@ package com.lmface.signin.mySignHistory;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lmface.R;
+import com.lmface.network.NetWork;
+import com.lmface.pojo.UserDailySignMsg;
+import com.lmface.pojo.temporary_sign_msg;
+import com.lmface.pojo.user_msg;
+
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.realm.Realm;
+import rx.Observer;
+import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -53,16 +64,62 @@ public class MtSignHistoryFragment  extends Fragment {
         mcompositeSubscription=new CompositeSubscription();
 
         if(type==0){
-            //查询我发起的临时签到
-
+            //查询我被发起的临时签到历史
+            initTemporaryData();
         }else{
-            //查询我发起的日常签到
-
+            //查询我被发起的日常签到历史
+            initDailyCourseData();
         }
 
         return view;
     }
+    public void initTemporaryData(){
+        Subscription subscription = NetWork.getSignService().selectTemporarySignByUserId(realm.where(user_msg.class).findFirst().getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<temporary_sign_msg>>() {
+                    @Override
+                    public void onCompleted() {
 
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<temporary_sign_msg> datas) {
+
+                        Log.i("gqf","onNext"+datas.toString());
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
+
+    public void initDailyCourseData(){
+        Subscription subscription = NetWork.getSignService().selectDailySignByUserId(realm.where(user_msg.class).findFirst().getUserId())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<UserDailySignMsg>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.i("gqf","onError"+e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(List<UserDailySignMsg> datas) {
+
+                        Log.i("gqf","onNext"+datas.toString());
+                    }
+                });
+        mcompositeSubscription.add(subscription);
+    }
 
     @Override
     public void onDestroyView() {

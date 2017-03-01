@@ -15,6 +15,9 @@ public class UserFriend {
     private String userName;
 
 
+    private int userId;
+    private String realeName;
+
     private String nickname;
 
     private String sex;
@@ -22,17 +25,56 @@ public class UserFriend {
     private String headimg;
 
     String phone;
+
+    String isUseName="";
+
+    boolean isSingIn=false;
+
+    public boolean isSingIn() {
+        return isSingIn;
+    }
+
+    public void setSingIn(boolean singIn) {
+        isSingIn = singIn;
+    }
+
+    public String getIsUseName() {
+        return isUseName;
+    }
+
+    public void setIsUseName(String isUseName) {
+        this.isUseName = isUseName;
+    }
+
     private int mesCount;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public String getRealeName() {
+        return realeName;
+    }
+
+    public void setRealeName(String realeName) {
+        this.realeName = realeName;
+    }
 
     public UserFriend(String userName) {
         this.userName=userName;
     }
 
-    public void setMsg(String nikename,String headimg,String sex,String phone){
+    public void setMsg(int userId,String nikename,String headimg,String sex,String phone,String realeName){
         this.setNickname(nikename);
         this.setHeadimg(headimg);
         this.setSex(sex);
         this.setPhone(phone);
+        this.setRealeName(realeName);
+        this.setUserId(userId);
     }
 
     public int getMesCount() {
