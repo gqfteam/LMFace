@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.lmface.R;
 import com.lmface.pojo.user_msg;
 import com.lmface.signin.NowNeedSignListActivity;
-import com.lmface.signin.SponporSignIn;
+import com.lmface.signin.SponporSignInActivity;
 import com.lmface.signin.myInitiateSign.MyInItateSignActivity;
 import com.lmface.signin.mySignHistory.MySignHistoryActivity;
 import com.squareup.picasso.Picasso;
@@ -48,7 +48,7 @@ public class SignFragment extends Fragment {
                 mListener.changeActivity(NowNeedSignListActivity.class);
                 break;
             case R.id.initiate_sign_lin:
-                mListener.changeActivity(SponporSignIn.class);
+                mListener.changeActivity(SponporSignInActivity.class);
                 break;
             case R.id.my_initiate_sign_lin:
                 mListener.changeActivity(MyInItateSignActivity.class);
