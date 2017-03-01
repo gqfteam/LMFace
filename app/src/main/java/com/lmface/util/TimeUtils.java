@@ -11,7 +11,7 @@ public class TimeUtils {
         return format.format(time);
     }
     public static String getFormaDatass(long time){
-        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat format=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(time);
     }
 }

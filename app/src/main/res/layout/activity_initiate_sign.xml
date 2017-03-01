@@ -89,6 +89,7 @@
                     android:background="@drawable/seat_eat_num_red_spinner_shap"
                     android:cursorVisible="false"
                     android:digits=""
+                    android:focusableInTouchMode="false"
                     android:hint="选择签到范围"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:textColor="@color/black"
@@ -123,6 +124,7 @@
                     android:cursorVisible="false"
                     android:digits=""
                     android:hint="选择持续时间"
+                    android:focusableInTouchMode="false"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gary_dark"
@@ -146,7 +148,7 @@
                     android:textSize="@dimen/mediumxsp"/>
 
                 <AutoCompleteTextView
-                    android:id="@+id/select__time"
+                    android:id="@+id/select_time"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/smallhdp"
                     android:layout_gravity="center"
@@ -156,6 +158,7 @@
                     android:cursorVisible="false"
                     android:digits=""
                     android:hint="选择开始时间"
+                    android:focusableInTouchMode="false"
                     android:paddingLeft="@dimen/activity_horizontal_margin"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gary_dark"
@@ -189,7 +192,6 @@
                     android:background="@drawable/seat_eat_num_red_spinner_shap"
                     android:cursorVisible="false"
                     android:gravity="top|left"
-                    android:digits=""
                     android:maxLength="32"
                     android:hint="填写具体地址"
                     android:paddingTop="@dimen/smallmdp"
@@ -225,7 +227,6 @@
                     android:background="@drawable/seat_eat_num_red_spinner_shap"
                     android:cursorVisible="false"
                     android:gravity="top|left"
-                    android:digits=""
                     android:maxLength="15"
                     android:hint="填写目的"
                     android:paddingTop="@dimen/smallmdp"
@@ -284,6 +285,59 @@
                     android:layout_marginRight="@dimen/activity_horizontal_margin"/>
 
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="?actionBarSize"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                >
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/activity_horizontal_margin">
+
+                    <TextView
+                        android:id="@+id/signInPerson_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="签到人："
+                        android:textSize="@dimen/smallsp"
+                        android:textColor="@color/black"
+                        android:gravity="center_vertical"
+                        />
+                    <TextView
+                        android:id="@+id/signInPersonFlag_txt"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="未选择"
+                        android:textSize="@dimen/smallsp"
+                        android:textColor="@color/colorPrimary"
+                        android:gravity="center_vertical"
+                        />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/signInPerson_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="获取签到人"
+                    android:textSize="@dimen/mediumsp"
+                    android:background="@drawable/apply_for_selector"
+                    android:textColor="@drawable/apply_for_text_color_selector"
+                    android:layout_marginTop="@dimen/tinymdp"
+                    android:layout_marginBottom="@dimen/tinymdp"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"/>
+
+            </LinearLayout>
+
+
 
 
 
@@ -300,7 +354,6 @@
         android:text="发起"
         android:textSize="@dimen/bigsp"
         android:textColor="@drawable/apply_for_text_color_selector"
-        android:enabled="false"
         android:background="@drawable/apply_for_selector"/>
 
 </LinearLayout>
