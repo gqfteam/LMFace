@@ -90,6 +90,7 @@ public class SponporSignInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCompositeSubscription = new CompositeSubscription();
         setAutoCompleteTextView();
+        //kkkkk
 
 
     }
