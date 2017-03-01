@@ -43,7 +43,7 @@ public interface SignService {
 
     //获得一条用户发起签到信息
     @GET("Sign/selectSignInfoById/{signInfoId}")
-    Observable<ResultCode> selectSignInfoById(@Path("signInfoId")int signInfoId);
+    Observable<sign_user_msg> selectSignInfoById(@Path("signInfoId")int signInfoId);
 
     //用户签到
     @FormUrlEncoded
@@ -65,15 +65,19 @@ public interface SignService {
     //签到信息发起错误紧急删除
     @FormUrlEncoded
     @POST("Sign/delectSignInfo")
-    Observable<ResultCode> delectSignInfo(@Field("signinfoid") String signinfoid);
-
-    //获取用户发起的日常签到历史
-
-    //获取用户发起临时签到统计
+    Observable<ResultCode> delectSignInfo(@Field("signinfoid") int signinfoid);
 
     //获取该用户在当前时间之后的所有未签到信息
     @GET("Sign/selectSignUserMagByUserId/{userId}")
     Observable<List<sign_user_msg>> selectSignUserMagByUserId(@Path("userId")int userId);
+
+    //获取当前用户发起的（发起签到人，签到事件）一个签到课程下面所有的发起过的签到信息(日常)
+    @GET("Sign/selectInitialsigninInfoByCourseIdAndDaily/{courseId}")
+    Observable<List<sign_user_msg>> selectInitialsigninInfoByCourseIdAndDaily(@Path("courseId")int courseId);
+
+    //获取当前用户发起的所有详细信息(临时)
+    @GET("Sign/selectInitialsigninInfoByUserIdAndTemporary/{userId}")
+    Observable<List<sign_user_msg>> selectInitialsigninInfoByUserIdAndTemporary(@Path("userId")int userId);
 
 
 }
