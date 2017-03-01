@@ -241,7 +241,7 @@ public class FriendListFragment extends Fragment {
                     public void onNext(user_msg user_msg) {
                         Log.i("gqf","user_msg"+user_msg.toString());
                         user_msgs.add(user_msg);
-                        users.get(user_msgs.size()-1).setMsg(user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone());
+                        users.get(user_msgs.size()-1).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
                         if(users.size()>user_msgs.size()){
                             initUserMsgList(users.get(user_msgs.size()).getUserName());
                         }else{

@@ -78,17 +78,17 @@ public class NetWork {
 
     private static Retrofit getRetrofit(int index) {
         String url="";
-//        if(index==URL_TYPE_MFACE){
-//            url="http://101.201.116.99:8081/mface/";
-//        }else if(index==URL_TYPE_SIGN_FACE){
-//            url="http://101.201.116.99:8081/signface/";
-//        }
-
         if(index==URL_TYPE_MFACE){
-            url="http://192.168.56.1:8080/mface/";
+            url="http://101.201.116.99:8081/mface/";
         }else if(index==URL_TYPE_SIGN_FACE){
-            url="http://192.168.56.1:8080/signface/";
+            url="http://101.201.116.99:8081/signface/";
         }
+
+//        if(index==URL_TYPE_MFACE){
+//            url="http://192.168.56.1:8080/mface/";
+//        }else if(index==URL_TYPE_SIGN_FACE){
+//            url="http://192.168.56.1:8080/signface/";
+//        }
 
         return new Retrofit.Builder()
                 .baseUrl(url)

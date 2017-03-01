@@ -1,41 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="@dimen/smallhdp"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:layout_marginBottom="1dp">
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
 
-    <TextView
-        android:id="@+id/need_sign_user"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="@dimen/smallhdp"
-        android:gravity="center_vertical"
-        android:text="gqf"
-        android:textSize="@dimen/mediumxsp"
-        android:textColor="@color/black"
+    android:background="@color/white">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/whitesmoke"
+        android:layout_marginRight="@dimen/smallmdp"
+        android:layout_marginLeft="@dimen/smallmdp"
         />
     <TextView
-        android:id="@+id/need_sign_issign"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="@dimen/smallhdp"
+        android:id="@+id/friends_list_item_chart"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/bigmdp"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
-        android:text="未签到"
-        android:textSize="@dimen/mediumxsp"
-        android:textColor="@color/black"
-        />
-    <CheckBox
-        android:id="@+id/need_sign_issign_check"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:button="@drawable/sex_selector"
-        android:text="是否签到"
-        android:textColor="@color/black"
-        android:textSize="@dimen/mediumxsp"
-        />
+        android:paddingLeft="@dimen/smallmdp"
+        android:text="A"
+        android:textColor="@color/white"
+        android:textSize="@dimen/mediumsp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/smallhdp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/smallmdp"
+        android:paddingRight="@dimen/smallmdp">
 
 
+        <TextView
+            android:id="@+id/need_sign_user"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/smallhdp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="gqf"
+            android:textColor="@color/black"
+            android:textSize="@dimen/mediumxsp"
+            />
+
+        <TextView
+            android:id="@+id/need_sign_issign"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/smallhdp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="未签到"
+            android:textColor="@color/black"
+            android:textSize="@dimen/mediumxsp"
+            />
+
+        <CheckBox
+            android:id="@+id/need_sign_issign_check"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:button="@drawable/sex_selector"
+            android:text="是否签到"
+            android:textColor="@color/black"
+            android:textSize="@dimen/mediumxsp"
+            />
+
+    </LinearLayout>
 </LinearLayout>

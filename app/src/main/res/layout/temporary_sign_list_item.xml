@@ -110,7 +110,8 @@
                 android:maxLength="2"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:layout_gravity="center"
+                android:text="西苑"
+                android:layout_gravity="top"
                 />
 
 

@@ -86,17 +86,19 @@ public class FriendsListAdapter extends BaseAdapter {
         }
 
 
-        boolean isNikName=false;
+        String name=datas.get(arg0).getUserName();
+
         if(datas.get(arg0).getNickname()!=null){
             if(!datas.get(arg0).getNickname().equals("")){
-                isNikName=true;
+                name=datas.get(arg0).getNickname();
             }
         }
-        if(isNikName){
-            mHolder.friendsListItemName.setText(datas.get(arg0).getNickname());
-        }else{
-            mHolder.friendsListItemName.setText(datas.get(arg0).getUserName());
+        if(datas.get(arg0).getRealeName()!=null){
+            if(!datas.get(arg0).getRealeName().equals("")){
+                name=datas.get(arg0).getRealeName();
+            }
         }
+        mHolder.friendsListItemName.setText(name);
 
         if(datas.get(arg0).getHeadimg()!=null){
             if(!datas.get(arg0).getHeadimg().equals("")){

@@ -170,7 +170,7 @@ public class DailySignListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         mHolder.temporarySignListAddress.setText(datas.get(p).getSignaddress());
         mHolder.temporarySignListCourseName.setText(datas.get(p).getCoursename());
-        mHolder.temporarySignListIntervalTime.setText("持续时间:" + datas.get(p).getSignintervaltime());
+        mHolder.temporarySignListIntervalTime.setText("持续时间:" + datas.get(p).getSignintervaltime()+"分");
         mHolder.temporarySignListStartTime.setText("开始时间" + datas.get(p).getSignstarttime());
 
         String name = "";
@@ -188,7 +188,7 @@ public class DailySignListAdapter extends RecyclerView.Adapter<RecyclerView.View
 
         mHolder.temporarySignListUserName.setText("发起人：" + name);
 
-        mHolder.temporarySignListPurpose.setText(datas.get(p).getSigngoal());
+        mHolder.temporarySignListPurpose.setText("签到目的："+datas.get(p).getSigngoal());
 
 
 

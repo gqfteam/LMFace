@@ -165,7 +165,7 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         mHolder.temporarySignListAddress.setText(datas.get(p).getSignaddress());
         mHolder.temporarySignListCourseName.setText(datas.get(p).getCoursename());
-        mHolder.temporarySignListIntervalTime.setText("持续时间:" + datas.get(p).getSignintervaltime());
+        mHolder.temporarySignListIntervalTime.setText("持续时间:" + datas.get(p).getSignintervaltime()+"分");
         mHolder.temporarySignListStartTime.setText("开始时间" + datas.get(p).getSignstarttime());
 
         String name = "";
@@ -183,7 +183,7 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         mHolder.temporarySignListUserName.setText("发起人：" + name);
 
-        mHolder.temporarySignListPurpose.setText(datas.get(p).getSigngoal());
+        mHolder.temporarySignListPurpose.setText("签到目的："+datas.get(p).getSigngoal());
 
         //判断开始时间是否小于或等于当前时间
         if(datas.get(p).getSignstarttime().getTime()<=System.currentTimeMillis()){
