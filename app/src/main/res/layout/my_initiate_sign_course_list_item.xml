@@ -34,7 +34,7 @@
                 android:paddingLeft="@dimen/activity_horizontal_margin"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 android:text="删除事件"
-                android:textSize="@dimen/mediumxsp"
+                android:textSize="@dimen/mediumsp"
                 android:textColor="@color/red"
                 android:gravity="center"/>
         </LinearLayout>
@@ -60,7 +60,7 @@
                 android:layout_weight="1"
                 android:text="查看当前事件用户签到统计"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/mediumxsp"
+                android:textSize="@dimen/mediumsp"
                 android:textColor="@color/gary_dark"
                 />
 
@@ -101,7 +101,7 @@
                 android:layout_weight="1"
                 android:text="查看当前事件每次发起的签到"
                 android:padding="@dimen/activity_horizontal_margin"
-                android:textSize="@dimen/mediumxsp"
+                android:textSize="@dimen/mediumsp"
                 android:textColor="@color/gary_dark"
                 />
 

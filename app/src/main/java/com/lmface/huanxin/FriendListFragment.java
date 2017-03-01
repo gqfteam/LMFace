@@ -158,7 +158,11 @@ public class FriendListFragment extends Fragment {
         user_msgs=new ArrayList<>();
         //根据用户名查找用户信息
         if(users.size()>0) {
-            initUserMsgList(users.get(0).getUserName());
+            List<Integer> userNames=new ArrayList<>();
+            for(UserFriend userFriend:users){
+                userNames.add(userFriend.getUserId());
+            }
+            initUserMsgList(userNames);
         }
         initList();
 
@@ -220,13 +224,12 @@ public class FriendListFragment extends Fragment {
     }
 
     List<user_msg> user_msgs;
-    public void initUserMsgList(String userName){
 
-        //多次查询后刷新list
-        Subscription subscription = NetWork.getUserService().selectUserByName(userName)
+    public void initUserMsgList(List<Integer> userNames){
+        Subscription subscription = NetWork.getUserService().selectUserByListId(userNames)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<user_msg>() {
+                .subscribe(new Observer<List<user_msg>>() {
                     @Override
                     public void onCompleted() {
 
@@ -238,20 +241,21 @@ public class FriendListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(user_msg user_msg) {
-                        Log.i("gqf","user_msg"+user_msg.toString());
-                        user_msgs.add(user_msg);
-                        users.get(user_msgs.size()-1).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
-                        if(users.size()>user_msgs.size()){
-                            initUserMsgList(users.get(user_msgs.size()).getUserName());
-                        }else{
-                            initList();
+                    public void onNext(List<user_msg> data) {
+                        Log.i("gqf","user_msg"+data.toString());
+                        user_msgs=data;
+                        for(int i=0;i<data.size();i++){
+                            user_msg user_msg=data.get(i);
+                            users.get(i).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
                         }
+                        initList();
 
                     }
                 });
         mcompositeSubscription.add(subscription);
     }
+
+
 
     @Override
     public void onDestroyView() {

@@ -30,6 +30,25 @@ public class UserFriend {
 
     boolean isSingIn=false;
 
+    int needSignNum;//用户被发起签到的次数
+    int signNum;//用户签到的次数
+
+    public int getNeedSignNum() {
+        return needSignNum;
+    }
+
+    public void setNeedSignNum(int needSignNum) {
+        this.needSignNum = needSignNum;
+    }
+
+    public int getSignNum() {
+        return signNum;
+    }
+
+    public void setSignNum(int signNum) {
+        this.signNum = signNum;
+    }
+
     public boolean isSingIn() {
         return isSingIn;
     }

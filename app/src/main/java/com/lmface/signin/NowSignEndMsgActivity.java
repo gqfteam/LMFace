@@ -256,7 +256,19 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
                         Log.i("gqf","onNext"+data.toString());
                         users=new ArrayList<>();
                         for(user_msg user_msg:signUserMsgs){
-                            UserFriend userFriend=new UserFriend(user_msg.getUserName());
+                            String name = "";
+                            name = user_msg.getUserName();
+                            if (user_msg.getNickname() != null) {
+                                if (!user_msg.getNickname().equals("")) {
+                                    name = user_msg.getNickname();
+                                }
+                            }
+                            if (user_msg.getRealname() != null) {
+                                if (!user_msg.getRealname().equals("")) {
+                                    name = user_msg.getRealname();
+                                }
+                            }
+                            UserFriend userFriend=new UserFriend(name);
                             userFriend.setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
                             users.add(userFriend);
                         }

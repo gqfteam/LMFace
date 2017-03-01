@@ -157,7 +157,7 @@ public class MsgListFragment extends Fragment {
         }
         //根据用户名查找用户信息
         if(mUserFriends.size()>0) {
-            initUserMsgList(mUserFriends.get(0).getUserName());
+            initUserMsgList(friendsname);
         }
 
         msgListAdapter = new MsgListAdapter(getContext(), mUserFriends);
@@ -186,9 +186,10 @@ public class MsgListFragment extends Fragment {
     }
     public void initList(ArrayList<UserFriend> users){
         //根据用户名查找用户信息
-        if(mUserFriends.size()>0) {
-            initUserMsgList(mUserFriends.get(0).getUserName());
-        }
+//        if(mUserFriends.size()>0) {
+//
+//            initUserMsgList(mUserFriends.get(0).getUserName());
+//        }
         if(msgListAdapter==null){
             msgListAdapter = new MsgListAdapter(getContext(), users);
             contactMsgList.setAdapter(msgListAdapter);
@@ -218,13 +219,12 @@ public class MsgListFragment extends Fragment {
     }
 
     List<user_msg> user_msgs;
-    public void initUserMsgList(String userName){
 
-        //多次查询后刷新list
-        Subscription subscription = NetWork.getUserService().selectUserByName(userName)
+    public void initUserMsgList(List<String> userNames){
+        Subscription subscription = NetWork.getUserService().selectUserByListName(userNames)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<user_msg>() {
+                .subscribe(new Observer<List<user_msg>>() {
                     @Override
                     public void onCompleted() {
 
@@ -236,14 +236,28 @@ public class MsgListFragment extends Fragment {
                     }
 
                     @Override
-                    public void onNext(user_msg user_msg) {
-                        user_msgs.add(user_msg);
-                        mUserFriends.get(user_msgs.size()-1).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
-                        if(mUserFriends.size()>user_msgs.size()){
-                            initUserMsgList(mUserFriends.get(user_msgs.size()).getUserName());
-                        }else{
-                            initList(mUserFriends);
+                    public void onNext(List<user_msg> data) {
+                        Log.i("gqf","user_msg"+data.toString());
+                        user_msgs=data;
+                        for(int i=0;i<data.size();i++){
+                            user_msg user_msg=data.get(i);
+
+                            String name="";
+                            name = user_msg.getUserName();
+                            if (user_msg.getNickname() != null) {
+                                if (!user_msg.getNickname().equals("")) {
+                                    name = user_msg.getNickname();
+                                }
+                            }
+                            if (user_msg.getRealname() != null) {
+                                if (!user_msg.getRealname().equals("")) {
+                                    name = user_msg.getRealname();
+                                }
+                            }
+                            mUserFriends.get(user_msgs.size()-1).setUserName(name);
+                            mUserFriends.get(i).setMsg(user_msg.getUserId(),user_msg.getNickname(),user_msg.getHeadimg(),user_msg.getSex(),user_msg.getPhone(),user_msg.getRealname());
                         }
+                        initList(mUserFriends);
 
                     }
                 });

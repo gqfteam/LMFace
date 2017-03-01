@@ -1,5 +1,6 @@
 package com.lmface.signin.myInitiateSign;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -173,6 +174,10 @@ public class MtInitiateSignFragment extends Fragment {
                 @Override
                 public void statistical(int position) {
                     //跳转统计详情页面
+                    Intent intent=new Intent(getActivity(),DaliySignEndMsgActivity.class);
+                    intent.putExtra("courseName",courseInfoListAdapter.getDataItem(position).getCoursename());
+                    intent.putExtra("courseId",courseInfoListAdapter.getDataItem(position).getCourseid());
+                    EventBus.getDefault().post(intent);
 
                 }
 

@@ -80,4 +80,9 @@ public interface SignService {
     Observable<List<sign_user_msg>> selectInitialsigninInfoByUserIdAndTemporary(@Path("userId")int userId);
 
 
+    //签到事件下总统计
+    @GET("Sign/selectSignUserByCourseidAndDaily/{courseId}")
+    Observable<List<UserDailySignMsg>> selectSignUserByCourseidAndDaily(@Path("courseId")int courseId);
+
+
 }
