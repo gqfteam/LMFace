@@ -22,16 +22,29 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	private Context mContext;
 
 	private ViewHolder viewHolder = null;
+	private MyCheckedChangeListener listener;
 
-	private static boolean mAllChecked=false;
+	public static boolean mAllChecked=false;
+	public static boolean mIsAllChecked=false;
 	
 	public SortAdapter(Context mContext,List<SortModel> list){
 		this.mContext = mContext;
 		this.list = list;
+		setMyCheckedChangeListener((MyCheckedChangeListener) mContext);
+
 	}
+
+	private void setMyCheckedChangeListener(MyCheckedChangeListener listener) {
+		this.listener = listener;
+	}
+
 	public void updateListView(List<SortModel> list){
 		this.list = list;
 		notifyDataSetChanged();
+	}
+
+	public interface MyCheckedChangeListener {
+		public void setBtnText();
 	}
 	
 
@@ -72,22 +85,52 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 			public void onCheckedChanged(SmoothCheckBox checkBox, boolean isChecked) {
 				mContent.isChecked = isChecked;
 
+				if (isChecked){
+					list_userName.add(mContent.getName());
+				}else {
+					list_userName.remove(mContent.getName());
+				}
+				listener.setBtnText();
+
+				Log.i("gqf", "setOnCheckedChangeListener---list_userName.size()---" + list_userName.size());
+				for (int i = 0; i < list_userName.size(); i++) {
+
+					Log.i("gqf", "setOnCheckedChangeListener---list_userName.size()---" + list_userName.get(i));
+				}
+
+
 			}
 		});
 		Log.e("Daniel","---mAllChecked----"+mAllChecked);
+		Log.e("Daniel","---mIsAllChecked----"+mIsAllChecked);
 		//是否点击全选
-		if (!mAllChecked){
-			viewHolder.cb.setChecked(false);
-		}else {
-			viewHolder.cb.setChecked(true);
-		}
-		viewHolder.cb.setChecked(mContent.isChecked);
 
-		if (viewHolder.cb.isChecked()){
-			list_userName.clear();
-			list_userName.add(mContent.getName());
-			Log.e("Daniel","--getView-list_userName.size()----"+ list_userName.size());
+		if (mIsAllChecked){
+			if (!mAllChecked){
+				viewHolder.cb.setChecked(false);
+				list_userName.clear();
+			}else {
+				if (position==0&&list_userName.size()!=0){
+					list_userName.clear();
+				}
+				viewHolder.cb.setChecked(true);
+			}
+			if (position==(list.size()-1)){
+				mIsAllChecked = false;
+			}
+		}else {
+			viewHolder.cb.setChecked(mContent.isChecked);
 		}
+
+
+
+
+
+//		if (viewHolder.cb.isChecked()){
+//			list_userName.clear();
+//			list_userName.add(mContent.getName());
+//			Log.e("Daniel","--getView-list_userName.size()----"+ list_userName.size());
+//		}
 		//����position��ȡ���������ĸ��Char asciiֵ
 		int section = getSectionForPosition(position);
 		//�����ǰλ�õ��ڸ÷�������ĸ��Char��λ�� ������Ϊ�ǵ�һ�γ���
@@ -104,6 +147,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	}
 
 	public  void setAllCheckBoxChecked(){
+		mIsAllChecked = true;
 		if (mAllChecked){
 			mAllChecked = false;
 		}else {

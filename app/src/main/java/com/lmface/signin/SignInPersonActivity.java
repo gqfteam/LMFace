@@ -34,11 +34,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.subscriptions.CompositeSubscription;
 
+import static com.lmface.R.id.allCheck_btn;
 import static com.lmface.signin.SponporSignInActivity.list_userName;
 
-public class SignInPersonActivity extends AppCompatActivity {
+public class SignInPersonActivity extends AppCompatActivity implements SortAdapter.MyCheckedChangeListener {
 
-    @BindView(R.id.allCheck_btn)
+    @BindView(allCheck_btn)
     Button allCheckBtn;
     @BindView(R.id.confim_btn)
     Button confimBtn;
@@ -68,6 +69,7 @@ public class SignInPersonActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sign_in_person);
         ButterKnife.bind(this);
         mcompositeSubscription = new CompositeSubscription();
+        sortListView = (ListView) findViewById(R.id.country_lvcountry);
         //        usernames = new ArrayList<>();
         //        for (int i = 0; i <20 ; i++) {
         //            usernames.add("第"+i+"学生");
@@ -84,10 +86,15 @@ public class SignInPersonActivity extends AppCompatActivity {
                 bean.setChecked(!bean.isChecked());
                 SmoothCheckBox checkBox = (SmoothCheckBox) view.findViewById(R.id.scb);
                 checkBox.setChecked(bean.isChecked(), true);
-                if (bean.isChecked()){
-                    list_userName.add(bean.getName());
-                }else {
-                    list_userName.remove(bean.getName());
+//                if (bean.isChecked()){
+//                    list_userName.add(bean.getName());
+//                }else {
+//                    list_userName.remove(bean.getName());
+//                }
+                Log.i("gqf", "setOnItemClickListener---list_userName.size()---" + list_userName.size());
+                for (int i = 0; i < list_userName.size(); i++) {
+
+                    Log.i("gqf", "setOnItemClickListener---list_userName.size()---" + list_userName.get(i));
                 }
 
             }
@@ -120,7 +127,7 @@ public class SignInPersonActivity extends AppCompatActivity {
             }
         });
 
-        sortListView = (ListView) findViewById(R.id.country_lvcountry);
+
 
                 int lenth = usernames.size();
                 Log.e("Daniel","---lenth---"+lenth);
@@ -133,7 +140,7 @@ public class SignInPersonActivity extends AppCompatActivity {
 
         // 根据a-z进行排序源数据
         Collections.sort(SourceDateList, pinyinComparator);
-        adapter = new SortAdapter(this, SourceDateList);
+        adapter = new SortAdapter(SignInPersonActivity.this, SourceDateList);
         sortListView.setAdapter(adapter);
 
         mClearEditText = (ClearEditText) findViewById(R.id.filter_edit);
@@ -247,11 +254,17 @@ public class SignInPersonActivity extends AppCompatActivity {
         }
     };
 
-    @OnClick({R.id.allCheck_btn, R.id.confim_btn})
+    @OnClick({allCheck_btn, R.id.confim_btn})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.allCheck_btn:
+            case allCheck_btn:
+                if (SortAdapter.mAllChecked){
+                    allCheckBtn.setText("全选");
+                }else {
+                    allCheckBtn.setText("取消全选");
+                }
                 adapter.setAllCheckBoxChecked();
+
                 break;
             case R.id.confim_btn:
                 finish();
@@ -259,8 +272,17 @@ public class SignInPersonActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void setBtnText() {
 
-//        SingInPersonAdapter mSingInPersonAdapter;
+        if (list_userName.size()!=SourceDateList.size()){
+            allCheckBtn.setText("全选");
+        }
+        Log.e("Daniel","---setBtnText---"+allCheckBtn.getText().toString());
+    }
+
+
+    //        SingInPersonAdapter mSingInPersonAdapter;
 //
 //        public void initList() {
 //    //        Log.e("Daniel",""+users.size());

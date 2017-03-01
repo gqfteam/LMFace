@@ -113,6 +113,7 @@ public class SponporSignInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        Log.i("gqf", "---list_userName.size()---" + list_userName.size());
         if (list_userName.size() != 0) {
             signInPersonFlagTxt.setText("已选择");
         } else {
