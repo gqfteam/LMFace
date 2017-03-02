@@ -277,6 +277,8 @@ public class SignInPersonActivity extends AppCompatActivity implements SortAdapt
 
         if (list_userName.size()!=SourceDateList.size()){
             allCheckBtn.setText("全选");
+        }else {
+            allCheckBtn.setText("取消全选");
         }
         Log.e("Daniel","---setBtnText---"+allCheckBtn.getText().toString());
     }

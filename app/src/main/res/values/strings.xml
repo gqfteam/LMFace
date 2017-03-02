@@ -36,6 +36,9 @@
         <item>20</item>
         <item>30</item>
     </string-array>
+    <string-array name="Courseinfo">
+        <item>临时</item>
+    </string-array>
 
     <string name="menu_search">商品搜索</string>
 

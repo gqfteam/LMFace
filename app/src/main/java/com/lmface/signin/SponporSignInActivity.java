@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.jakewharton.rxbinding.widget.RxTextView;
 import com.lmface.R;
 import com.lmface.huanxin.DemoHelper;
 import com.lmface.network.NetWork;
@@ -35,9 +37,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.qqtheme.framework.picker.DateTimePicker;
 import hugo.weaving.DebugLog;
+import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Func7;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -75,8 +79,10 @@ public class SponporSignInActivity extends AppCompatActivity {
 
     private String[] mScope;
     private String[] mIntervalTime;
+    private String[] mCourseinfo;
     private ArrayAdapter<String> mScope_arrayAdapter;
     private ArrayAdapter<String> mIntervalTime_arrayAdapter;
+    private ArrayAdapter<String> mselectCourseinfo_arrayAdapter;
     private CompositeSubscription mCompositeSubscription;
     private String strMs;
     public static List<String> list_userName = new ArrayList<>();
@@ -90,24 +96,90 @@ public class SponporSignInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCompositeSubscription = new CompositeSubscription();
         setAutoCompleteTextView();
+        initSubmit();
+        setToolbar("发起签到");
         //kkkkk
 
 
     }
 
+    private void setToolbar(String toolstr) {
+        ediAddressToolbar.setTitle(toolstr);
+        ediAddressToolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        ediAddressToolbar.setNavigationIcon(R.drawable.barcode__back_arrow);
+        setSupportActionBar(ediAddressToolbar);
+        ediAddressToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
+    }
+
+    /*提交按钮控制*/
+    private void initSubmit() {
+        Observable<CharSequence> Courseinfo = RxTextView.textChanges(selectCourseinfo).skip(1);
+        Observable<CharSequence> Scope = RxTextView.textChanges(selectScope).skip(1);
+        Observable<CharSequence> IntervalTime = RxTextView.textChanges(selectIntervalTime).skip(1);
+        Observable<CharSequence> Time = RxTextView.textChanges(selectTime).skip(1);
+        Observable<CharSequence> Address = RxTextView.textChanges(ediAddress).skip(1);
+        Observable<CharSequence> Goal = RxTextView.textChanges(ediGoal).skip(1);
+        Observable<CharSequence> InPersonFlagTxt = RxTextView.textChanges(signInPersonFlagTxt).skip(1);
+        Observable.combineLatest(Courseinfo, Scope, IntervalTime, Time, Address, Goal,InPersonFlagTxt, new Func7<CharSequence, CharSequence, CharSequence, CharSequence, CharSequence, CharSequence,CharSequence, Boolean>() {
+            @Override
+            public Boolean call(CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, CharSequence charSequence4, CharSequence charSequence5, CharSequence charSequence6,CharSequence charSequence7) {
+                boolean Bl = !TextUtils.isEmpty(charSequence);
+                boolean B2 = !TextUtils.isEmpty(charSequence2);
+                boolean B3 = !TextUtils.isEmpty(charSequence3);
+                boolean B4 = !TextUtils.isEmpty(charSequence4);
+                boolean B5 = !TextUtils.isEmpty(charSequence5);
+                boolean B6 = !TextUtils.isEmpty(charSequence6);
+                Log.e("Daniel","---charSequence7---"+charSequence7.toString());
+                boolean B7 = charSequence7.toString().equals("已选择");
+                Log.e("Daniel","---B7---"+B7);
+                return Bl && B2 && B3 && B4 && B5 && B6 && B7;
+            }
+        }).subscribe(new Observer<Boolean>() {
+            @Override
+            public void onCompleted() {
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+            @DebugLog
+
+            @Override
+            public void onNext(Boolean aBoolean) {
+                Log.e("Daniel","---aBoolean---"+aBoolean);
+                signCommitBtn.setEnabled(aBoolean);
+            }
+        });
+    }
+
     private void setAutoCompleteTextView() {
         mScope = getResources().getStringArray(R.array.scope);
         mIntervalTime = getResources().getStringArray(R.array.interval_time);
+        mCourseinfo = getResources().getStringArray(R.array.Courseinfo);
+
         mScope_arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mScope);
         mIntervalTime_arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mIntervalTime);
+        mselectCourseinfo_arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mCourseinfo);
+
         selectScope.setInputType(InputType.TYPE_NULL);
         selectScope.setKeyListener(null);
         selectScope.setAdapter(mScope_arrayAdapter);
+
         selectIntervalTime.setInputType(InputType.TYPE_NULL);
         selectIntervalTime.setKeyListener(null);
         selectIntervalTime.setAdapter(mIntervalTime_arrayAdapter);
-        selectTime.setKeyListener(null);
+
+        selectCourseinfo.setInputType(InputType.TYPE_NULL);
         selectCourseinfo.setKeyListener(null);
+        selectCourseinfo.setAdapter(mselectCourseinfo_arrayAdapter);
+        selectTime.setKeyListener(null);
     }
 
     @Override
@@ -183,7 +255,6 @@ public class SponporSignInActivity extends AppCompatActivity {
                     public void onError(Throwable e) {
 
                     }
-
                     @Override
                     public void onNext(user_msg user_msg) {
                         Log.i("gqf", "user_msg" + user_msg.toString());
@@ -195,15 +266,20 @@ public class SponporSignInActivity extends AppCompatActivity {
                         //                        } else {
                         //                            initList();
                         //                        }
+                        initiateSign(mGson, listId);
 
                     }
                 });
         mCompositeSubscription.add(subscription);
     }
 
-    @OnClick({R.id.select_scope, R.id.select_interval_time, R.id.select_time, R.id.signInPerson_btn, R.id.sign_commit_btn})
+    @OnClick({R.id.select_courseinfo,R.id.select_scope, R.id.select_interval_time, R.id.select_time, R.id.signInPerson_btn, R.id.sign_commit_btn})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.select_courseinfo:
+                //                onOptionPicker(view,mScope);
+                selectCourseinfo.showDropDown();
+                break;
             case R.id.select_scope:
                 //                onOptionPicker(view,mScope);
                 selectScope.showDropDown();
@@ -226,7 +302,7 @@ public class SponporSignInActivity extends AppCompatActivity {
                 break;
         }
     }
-
+private String mGson;
     private void setDate() {
         initialsignin_info initialsigninInfo = new initialsignin_info();
         initialsigninInfo.setTemporaryordaily(2);
@@ -252,9 +328,9 @@ public class SponporSignInActivity extends AppCompatActivity {
         initialsigninInfo.setSigncourseid(2);
         Log.e("Daniel", "----开始时间---" + initialsigninInfo.getSignstarttime());
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-        String json = gson.toJson(initialsigninInfo);
+         mGson = gson.toJson(initialsigninInfo);
 
-        Log.e("Daniel", "----json---" + json);
+        Log.e("Daniel", "----json---" + mGson);
 
         //                List<Integer> list = new ArrayList<>();
         //                list.add(34);
@@ -265,7 +341,7 @@ public class SponporSignInActivity extends AppCompatActivity {
             listId = new ArrayList<>();
         }
         initList(list_userName);
-        initiateSign(json, listId);
+
     }
 
     private void initiateSign(String json, List<Integer> list) {
