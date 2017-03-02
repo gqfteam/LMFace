@@ -98,6 +98,7 @@ public class SponporSignInActivity extends AppCompatActivity {
         setAutoCompleteTextView();
         initSubmit();
         setToolbar("发起签到");
+
         //kkkkk
 
 
@@ -218,22 +219,6 @@ public class SponporSignInActivity extends AppCompatActivity {
         for (int i = 0; i < usernames.size(); i++) {
             initUserMsgList(usernames.get(i));
         }
-        //        users = new ArrayList<>();
-        //        for (int i = 0; i < usernames.size(); i++) {
-        //            Log.i("wjd", "friendName:" + usernames.get(i));
-        //            UserFriend user = new UserFriend(usernames.get(i));
-        //            user.setUserName(usernames.get(i));
-        //            users.add(user);
-        //        }
-        //        demoHelper = DemoHelper.getInstance();
-        //        users = demoHelper.filledData(users);
-        //        listId = new ArrayList<>();
-        //        //根据用户名查找用户信息
-        //
-        //        if (users.size() > 0) {
-        //            initUserMsgList(users.get(0).getUserName());
-        //        }
-        //            initList();
 
     }
 
@@ -259,13 +244,7 @@ public class SponporSignInActivity extends AppCompatActivity {
                     public void onNext(user_msg user_msg) {
                         Log.i("gqf", "user_msg" + user_msg.toString());
                         listId.add(user_msg.getUserId());
-                        //                        user_msgs.add(user_msg);
-                        //                        users.get(user_msgs.size() - 1).setMsg(user_msg.getNickname(), user_msg.getHeadimg(), user_msg.getSex(), user_msg.getPhone());
-                        //                        if (users.size() > listId.size()) {
-                        //                            initUserMsgList(users.get(listId.size()).getUserName());
-                        //                        } else {
-                        //                            initList();
-                        //                        }
+
                         initiateSign(mGson, listId);
 
                     }
@@ -277,15 +256,12 @@ public class SponporSignInActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.select_courseinfo:
-                //                onOptionPicker(view,mScope);
                 selectCourseinfo.showDropDown();
                 break;
             case R.id.select_scope:
-                //                onOptionPicker(view,mScope);
                 selectScope.showDropDown();
                 break;
             case R.id.select_interval_time:
-                //                onOptionPicker(view,mIntervalTime);
                 selectIntervalTime.showDropDown();
 
                 break;
@@ -306,18 +282,16 @@ private String mGson;
     private void setDate() {
         initialsignin_info initialsigninInfo = new initialsignin_info();
         initialsigninInfo.setTemporaryordaily(2);
-        initialsigninInfo.setSignscope(Integer.parseInt(selectScope.getText() + ""));
-        initialsigninInfo.setSignintervaltime(Integer.parseInt(selectIntervalTime.getText() + ""));
+
+        initialsigninInfo.setSignscope(Integer.parseInt(selectScope.getText().toString().substring(0,selectScope.getText().toString().length()-1)));
+        Integer intervaltime = Integer.parseInt(selectIntervalTime.getText().toString().substring(0,selectIntervalTime.getText().toString().length()-2));
+        initialsigninInfo.setSignintervaltime(intervaltime);
 
         Log.e("Daniel", "----开始时间---" + DateUtil.toMsDate(strMs));
-
-        Log.e("Daniel", "----持续时间时间---" + Integer.parseInt(selectIntervalTime.getText() + "") * 60000);
-        Log.e("Daniel", "----结束时间时间---" + (DateUtil.toMsDate(strMs) + (Integer.parseInt(selectIntervalTime.getText() + "") * 60000)));
-
         try {
             Log.e("Daniel", "----开始时间---" + DateUtil.string2Time(selectTime.getText() + ":00"));
             initialsigninInfo.setSignstarttime(DateUtil.string2Time(selectTime.getText() + ":00"));
-            initialsigninInfo.setSignendtime(DateUtil.string2Time(TimeUtils.getFormaDatass((DateUtil.toMsDate(strMs) + (Integer.parseInt(selectIntervalTime.getText() + "") * 60000)))));
+            initialsigninInfo.setSignendtime(DateUtil.string2Time(TimeUtils.getFormaDatass((DateUtil.toMsDate(strMs) + (intervaltime* 60000)))));
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -331,11 +305,6 @@ private String mGson;
          mGson = gson.toJson(initialsigninInfo);
 
         Log.e("Daniel", "----json---" + mGson);
-
-        //                List<Integer> list = new ArrayList<>();
-        //                list.add(34);
-        //                list.add(35);
-        //                list.add(36);
         Log.e("Daniel", "----list_userName---" + list_userName.size());
         if (listId == null) {
             listId = new ArrayList<>();
@@ -357,13 +326,14 @@ private String mGson;
                     @DebugLog
                     @Override
                     public void onError(Throwable e) {
-
+                        Toast.makeText(SponporSignInActivity.this, "发起签到失败！" , Toast.LENGTH_SHORT).show();
                     }
 
                     @DebugLog
                     @Override
                     public void onNext(ResultCode resultCode) {
-                        Toast.makeText(SponporSignInActivity.this, "" + resultCode.getMsg(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SponporSignInActivity.this, "已成功发起签到！" , Toast.LENGTH_SHORT).show();
+                        finish();
 
                     }
                 });

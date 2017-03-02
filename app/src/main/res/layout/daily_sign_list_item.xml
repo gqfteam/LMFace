@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="@dimen/smallmdp"
+    >
+
+    <LinearLayout
+        android:id="@+id/sign_lin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground"
+        >
+
+        <TextView
+            android:id="@+id/temporary_sign_list_courseName"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/smallhdp"
+            android:gravity="center_vertical"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:text="14级高数课签到"
+            android:lines="1"
+            android:textColor="@color/black"
+            android:textSize="@dimen/bigsp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/hugehxxdp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin">
+
+                <TextView
+                    android:id="@+id/temporary_sign_list_user_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="发起人：gqf"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mediumxsp"/>
+
+                <TextView
+                    android:id="@+id/temporary_sign_list_course"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:text="课程：高数"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/mediumsp"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/temporary_sign_commit_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.5"
+                android:background="@drawable/apply_for_selector"
+                android:layout_margin="@dimen/activity_horizontal_margin"
+                android:text="签到"
+                android:textColor="@drawable/apply_for_text_color_selector"
+                android:textSize="@dimen/mediumxsp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/smallhdp"
+            android:maxHeight="@dimen/hugehdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/smallhdp"
+                android:text="签到次数："
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mediumsp"
+                android:gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/temporary_sign_list_count"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mediumsp"
+                android:paddingTop="@dimen/smallmdp"
+                android:maxLength="2"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:text="3"
+                android:layout_gravity="top"
+                />
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="@dimen/smallhdp"
+            android:maxHeight="@dimen/hugehdp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/smallhdp"
+                android:text="被发起签到次数："
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mediumsp"
+                android:gravity="center_vertical"
+                />
+
+            <TextView
+                android:id="@+id/temporary_sign_list_count_down"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/mediumsp"
+                android:paddingTop="@dimen/smallmdp"
+                android:maxLength="2"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:text="10"
+                android:layout_gravity="top"
+                />
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
