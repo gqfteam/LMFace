@@ -285,8 +285,10 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
         if(noSignEndMsgListAdapter==null){
             noSignEndMsgListAdapter=new NoSignEndMsgListAdapter(this,data);
             noSignEndMsgListAdapter.setSignUserIds(temporarySignMsg.getSignUserIds());
+            noSignEndMsgListAdapter.setSignInfoId(sign_user_msg.getSigninfoid());
             signUserList.setLayoutManager(new AutoHeightLayoutManager(this));
             signUserList.setAdapter(noSignEndMsgListAdapter);
+
             //下拉刷新
             initPullToRefresh();
         }else{

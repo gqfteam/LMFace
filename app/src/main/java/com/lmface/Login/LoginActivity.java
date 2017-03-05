@@ -189,12 +189,13 @@ public class LoginActivity extends AppCompatActivity {
                     //删除本地之前保存的用户信息
                     realm.beginTransaction();
                     user.deleteFromRealm();
+                    realm.delete(user_msg.class);
                     realm.commitTransaction();
                 }
-                LMFaceApplication.username = name;
+                LMFaceApplication.username = loginNameEt.getText().toString();
                 realm.beginTransaction();
-                 ui_msg.setUserPassword(password);
-                 ui_msg.setUserName(name);
+                 ui_msg.setUserPassword(loginPasswordEt.getText().toString());
+                 ui_msg.setUserName(loginNameEt.getText().toString());
                 Log.i("gqf", "userInfo" + ui_msg.toString());
                 realm.copyToRealmOrUpdate(ui_msg);
                 realm.commitTransaction();
@@ -291,7 +292,7 @@ public class LoginActivity extends AppCompatActivity {
     user_msg ui_msg;
     private void doLogin() {
         Log.i("gqf", name + password);
-        Subscription logSc = NetWork.getUserService().loginUsers(name, password)
+        Subscription logSc = NetWork.getUserService().loginUsers(loginNameEt.getText().toString(), loginPasswordEt.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<user_msg>() {

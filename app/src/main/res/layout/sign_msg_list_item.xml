@@ -3,7 +3,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:orientation="vertical"
-
+              xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/white">
 
     <View
@@ -25,11 +25,14 @@
         android:textSize="@dimen/mediumsp"/>
 
     <LinearLayout
+        android:id="@+id/sign_msg_list_item_lin"
         android:layout_width="match_parent"
         android:layout_height="@dimen/smallhdp"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/smallmdp"
-        android:paddingRight="@dimen/smallmdp">
+        android:paddingRight="@dimen/smallmdp"
+        android:clickable="true"
+        android:background="?android:selectableItemBackground">
 
 
         <TextView
@@ -54,15 +57,27 @@
             android:textSize="@dimen/mediumxsp"
             />
 
+        <!--<CheckBox-->
+            <!--android:id="@+id/need_sign_issign_check"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:button="@drawable/sex_selector"-->
+            <!--android:text="是否签到"-->
+            <!--android:textColor="@color/black"-->
+            <!--android:textSize="@dimen/mediumxsp"-->
+            <!--/>-->
         <CheckBox
             android:id="@+id/need_sign_issign_check"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:button="@drawable/sex_selector"
+            android:button="@drawable/sex_selector"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:text="是否签到"
             android:textColor="@color/black"
             android:textSize="@dimen/mediumxsp"
-            />
-
+            android:gravity="center_vertical"
+            android:paddingRight="@dimen/activity_horizontal_margin"/>
     </LinearLayout>
 </LinearLayout>
