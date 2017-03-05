@@ -1,6 +1,6 @@
 package com.lmface.pojo;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class temporary_sign_msg {
     private Integer usignid;
@@ -15,13 +15,13 @@ public class temporary_sign_msg {
 
     private String signlongitude;
 
-    private Timestamp signtime;
+    private Date signtime;
 
-    private Timestamp signstarttime;
+    private Date signstarttime;
 
     private Integer signintervaltime;
 
-    private Timestamp signendtime;
+    private Date signendtime;
 
     private String signaddress;
 
@@ -37,6 +37,17 @@ public class temporary_sign_msg {
 
     private Integer signcourseid;
 
+    private String coursename;
+
+    private Integer userid;
+
+    private String realname;
+
+    private String nickname;
+
+    private String phone;
+
+    private String userName;
 
     public Integer getUsignid() {
         return usignid;
@@ -86,8 +97,21 @@ public class temporary_sign_msg {
         this.signlongitude = signlongitude == null ? null : signlongitude.trim();
     }
 
-   
+    public Date getSigntime() {
+        return signtime;
+    }
 
+    public void setSigntime(Date signtime) {
+        this.signtime = signtime;
+    }
+
+    public Date getSignstarttime() {
+        return signstarttime;
+    }
+
+    public void setSignstarttime(Date signstarttime) {
+        this.signstarttime = signstarttime;
+    }
 
     public Integer getSignintervaltime() {
         return signintervaltime;
@@ -97,33 +121,15 @@ public class temporary_sign_msg {
         this.signintervaltime = signintervaltime;
     }
 
- 
+    public Date getSignendtime() {
+        return signendtime;
+    }
 
-    public Timestamp getSigntime() {
-		return signtime;
-	}
+    public void setSignendtime(Date signendtime) {
+        this.signendtime = signendtime;
+    }
 
-	public void setSigntime(Timestamp signtime) {
-		this.signtime = signtime;
-	}
-
-	public Timestamp getSignstarttime() {
-		return signstarttime;
-	}
-
-	public void setSignstarttime(Timestamp signstarttime) {
-		this.signstarttime = signstarttime;
-	}
-
-	public Timestamp getSignendtime() {
-		return signendtime;
-	}
-
-	public void setSignendtime(Timestamp signendtime) {
-		this.signendtime = signendtime;
-	}
-
-	public String getSignaddress() {
+    public String getSignaddress() {
         return signaddress;
     }
 
@@ -179,5 +185,51 @@ public class temporary_sign_msg {
         this.signcourseid = signcourseid;
     }
 
-   
+    public String getCoursename() {
+        return coursename;
+    }
+
+    public void setCoursename(String coursename) {
+        this.coursename = coursename == null ? null : coursename.trim();
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname == null ? null : realname.trim();
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname == null ? null : nickname.trim();
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone == null ? null : phone.trim();
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName == null ? null : userName.trim();
+    }
 }

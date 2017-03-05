@@ -30,7 +30,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
 	public SortAdapter(Context mContext,List<SortModel> list){
 		this.mContext = mContext;
 		this.list = list;
-		setMyCheckedChangeListener((MyCheckedChangeListener) mContext);
+		this.listener=(MyCheckedChangeListener) mContext;
 
 	}
 
