@@ -1,5 +1,6 @@
 package com.lmface.signin;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +11,13 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.lmface.R;
 import com.lmface.huanxin.DemoHelper;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.TemporarySignMsg;
 import com.lmface.pojo.UserFriend;
+import com.lmface.pojo.initialsignin_info;
 import com.lmface.pojo.sign_user_msg;
 import com.lmface.pojo.user_msg;
 import com.lmface.util.in.srain.cube.views.ptr.PtrClassicFrameLayout;
@@ -74,7 +77,7 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
     TemporarySignMsg temporarySignMsg;
     ArrayList<UserFriend> users;
     int initiateSignId=0;
-
+    initialsignin_info    signin_info;
     NoSignEndMsgListAdapter noSignEndMsgListAdapter;
     public void setToolbar(String statu) {
 
@@ -138,13 +141,22 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
         users=new ArrayList<>();
         temporarySignCommitBtn.setVisibility(View.GONE);
         initiateSignId=getIntent().getIntExtra("initiateSignId",0);
+       // Intent intent=getIntent();
+        String jpush_message= getIntent().getStringExtra("jpush_message");
+      Log.i("Jpush",jpush_message);
+       /* if (jpush_message!=null){
+            Gson gson = new Gson();
+            signin_info= gson.fromJson(jpush_message,initialsignin_info.class);
+
+
+        }*/
         initSignMsg(initiateSignId);
 
 
 
     }
     //初始化单条签到详情
-    public void initSignMsg(int id){
+ public void initSignMsg(int id){
 
         Subscription subscription = NetWork.getSignService().selectSignInfoById(id)
                 .subscribeOn(Schedulers.io())
@@ -163,7 +175,11 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
                     @Override
                     public void onNext(sign_user_msg data) {
 
+
+
                         if(data!=null){
+
+
                             sign_user_msg=data;
                             initView(data);
                         }

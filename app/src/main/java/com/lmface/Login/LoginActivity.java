@@ -157,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
                     JPushInterface.resumePush(LoginActivity.this);//恢复极光推送
                 }
                // LogHelp.i("JPush","JPushAlias:"+Constant.JPushAlias+response.body().getData().getUserId());
-                Log.i("JPush", loginNameEt.getText().toString());
+                Log.i("JPush",ui_msg.getUserId().toString());
                 JPushInterface.setAlias(LoginActivity.this, ui_msg.getUserId().toString() , new TagAliasCallback() {
                     @Override
                     public void gotResult(int i, String s, Set<String> set) {
