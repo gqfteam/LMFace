@@ -2,6 +2,7 @@ package com.lmface.network;
 
 import com.lmface.network.api.GoodsOrderService;
 import com.lmface.network.api.GoodsService;
+import com.lmface.network.api.SendJpushService;
 import com.lmface.network.api.ShopCarService;
 import com.lmface.network.api.SignService;
 import com.lmface.network.api.UserAddressService;
@@ -23,6 +24,7 @@ public class NetWork {
     private static GoodsService goodsService;
     private static GoodsOrderService goodsOrderService;
     private static SignService signService;
+    private static SendJpushService sendJpushService;
 
     private static final int URL_TYPE_MFACE=1;
     private static final int URL_TYPE_SIGN_FACE=2;
@@ -64,7 +66,13 @@ public class NetWork {
         }
         return goodsService;
     }
-
+    public static  SendJpushService getSendJpushService(){
+        if (sendJpushService==null){
+            Retrofit retrofit=getRetrofit(URL_TYPE_SIGN_FACE);
+            sendJpushService=retrofit.create(SendJpushService.class);
+        }
+        return sendJpushService;
+    }
     public static GoodsOrderService getGoodsOrderService() {
         if (goodsOrderService == null) {
             Retrofit retrofit = getRetrofit(URL_TYPE_MFACE);

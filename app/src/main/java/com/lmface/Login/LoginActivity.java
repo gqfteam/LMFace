@@ -28,11 +28,14 @@ import com.lmface.network.NetWork;
 import com.lmface.pojo.user_msg;
 import com.lmface.util.SettingsUtils;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 import io.realm.Realm;
 import rx.Observable;
 import rx.Observer;
@@ -147,6 +150,21 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
                 EMClient.getInstance().chatManager().loadAllConversations();
+            //设置激光推送的标志
+                JPushInterface.init(LoginActivity.this);             // 初始化 JPush
+              //  LogHelp.i("JPush","isPushStopped:"+JPushInterface.isPushStopped(LoginActivity.this));
+                if(JPushInterface.isPushStopped(LoginActivity.this)){
+                    JPushInterface.resumePush(LoginActivity.this);//恢复极光推送
+                }
+               // LogHelp.i("JPush","JPushAlias:"+Constant.JPushAlias+response.body().getData().getUserId());
+                Log.i("JPush", loginNameEt.getText().toString());
+                JPushInterface.setAlias(LoginActivity.this, ui_msg.getUserId().toString() , new TagAliasCallback() {
+                    @Override
+                    public void gotResult(int i, String s, Set<String> set) {
+                       // LogHelp.i("JPush","Login:");
+                    }
+                });
+
                 Log.d("main", "登录聊天服务器成功！");
                 Message msg=new Message();
                 msg.what=3;
