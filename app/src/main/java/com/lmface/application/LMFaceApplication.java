@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import cn.jpush.android.api.JPushInterface;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -134,8 +135,9 @@ public class LMFaceApplication extends Application {
         this.mMainTheadId = android.os.Process.myTid();
         app = this;
 
-
-
+        //极光推送的初始化
+        JPushInterface.setDebugMode(true);
+        JPushInterface.init(this);
 
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());

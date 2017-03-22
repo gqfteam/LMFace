@@ -193,7 +193,6 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
          temporarySignListCourseName.setText( data.getCoursename());
          temporarySignListIntervalTime.setText("持续时间:" +  data.getSignintervaltime()+"分");
          temporarySignListStartTime.setText("开始时间" +  data.getSignstarttime());
-        
 
          temporarySignListPurpose.setText( "签到目的："+data.getSigngoal());
         initSignUserId(data.getSigninfoid());

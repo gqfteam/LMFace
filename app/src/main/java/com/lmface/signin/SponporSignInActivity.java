@@ -1,5 +1,6 @@
 package com.lmface.signin;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,6 +38,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.qqtheme.framework.picker.DateTimePicker;
 import hugo.weaving.DebugLog;
+import okhttp3.internal.Platform;
 import rx.Observable;
 import rx.Observer;
 import rx.Subscription;
@@ -274,6 +276,8 @@ public class SponporSignInActivity extends AppCompatActivity {
                 break;
 
             case R.id.sign_commit_btn:
+                //发起签到
+
                 setDate();
                 break;
         }
@@ -309,10 +313,11 @@ private String mGson;
         if (listId == null) {
             listId = new ArrayList<>();
         }
+        //获取到要签到的人源信息
         initList(list_userName);
 
     }
-
+//发起签到
     private void initiateSign(String json, List<Integer> list) {
         Subscription initiateSign = NetWork.getSignService().initiateSign(json, list)
                 .subscribeOn(Schedulers.io())
@@ -346,4 +351,37 @@ private String mGson;
         super.onDestroy();
         mCompositeSubscription.unsubscribe();
     }
+
+    /**
+     * 发送推送*/
+      /*Runnable runable=new Runnable() {
+    @Override
+    public void run() {
+      String master_Secret = "5b7b0a004f2d3296a7593213";
+            String appKey = "48b5158a67342fb7eab0e5b4";
+
+            JPushClient jPushClient = new JPushClient(master_Secret, appKey);
+
+            PushPayload payLoad = PushPayload.newBuilder()
+                    .setPlatform(Platform.all())
+                    .setAudience(Audience.all()) //这是接收对象，即谁可以接收到该推送
+                    .setNotification(Notification.alert("收到新的签到信息")) //下发通知
+                    .setMessage(Notification.MessagingStyle.Message.content("点击进入签到页面！"))
+                    .build();
+            try {
+                PushResult result = jPushClient.sendPush(payLoad);
+                System.out.println("success");
+                System.out.println(result.msg_id);
+                System.out.println(result.sendno);
+            } catch (APIConnectionException e) {
+                // TODO Auto-generated catch block
+                System.out.println("connection error");
+                e.printStackTrace();
+            } catch (APIRequestException e) {
+                // TODO Auto-generated catch block
+                System.out.println("request error");
+                e.printStackTrace();
+            }
+        }
+    };*/
 }
