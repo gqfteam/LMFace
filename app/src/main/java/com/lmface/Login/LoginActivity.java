@@ -7,6 +7,7 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -352,4 +353,14 @@ public class LoginActivity extends AppCompatActivity {
     public void onClick() {
         startActivity(new Intent(LoginActivity.this,RegistActivity.class));
     }
+   /* @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_HOME){
+
+            //屏蔽之后的操作
+
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }*/
 }
