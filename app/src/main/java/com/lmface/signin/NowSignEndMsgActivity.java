@@ -142,8 +142,8 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
         temporarySignCommitBtn.setVisibility(View.GONE);
         initiateSignId=getIntent().getIntExtra("initiateSignId",0);
        // Intent intent=getIntent();
-        String jpush_message= getIntent().getStringExtra("jpush_message");
-      Log.i("Jpush",jpush_message);
+   /*     String jpush_message= getIntent().getStringExtra("jpush_message");
+      Log.i("Jpush",jpush_message);*/
        /* if (jpush_message!=null){
             Gson gson = new Gson();
             signin_info= gson.fromJson(jpush_message,initialsignin_info.class);
