@@ -30,4 +30,13 @@ public class collegeinfo {
     public void setCityid(String cityid) {
         this.cityid = cityid == null ? null : cityid.trim();
     }
+
+    @Override
+    public String toString() {
+        return "collegeinfo{" +
+                "collegeid=" + collegeid +
+                ", collegename='" + collegename + '\'' +
+                ", cityid='" + cityid + '\'' +
+                '}';
+    }
 }

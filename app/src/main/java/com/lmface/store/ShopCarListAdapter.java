@@ -2,6 +2,8 @@ package com.lmface.store;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -47,6 +49,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private final LayoutInflater mLayoutInflater;
     private MyItemClickListener mItemClickListener;
 
+    ShopCarListAdapter shopCarListAdapter;
     private boolean isEdi = false;//批量编辑状态
 
 
@@ -326,7 +329,7 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         this.mContext = mContext;
         this.datas = mDatas;
         mLayoutInflater = LayoutInflater.from(mContext);
-
+        shopCarListAdapter=this;
         mcompositeSubscription = new CompositeSubscription();
     }
 
@@ -350,7 +353,16 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public void setOnItemClickListener(MyItemClickListener listener) {
         mItemClickListener = listener;
     }
-
+    private Handler mHandler = new Handler()
+    {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if(msg.what==1){
+                shopCarListAdapter.notifyDataSetChanged();
+            }
+        }
+    };
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final ViewHolder mHolder = (ViewHolder) holder;
@@ -424,7 +436,13 @@ public class ShopCarListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     gmc.setGoodsnum(datas.get(position).getGoodsnum());
                     ediDatas.add(gmc);
                 }
-                ShopCarListAdapter.this.notifyItemChanged(position);
+                //ShopCarListAdapter.this.notifyItemChanged(position);
+                Message message=new Message();
+                message.what=1;
+                message.arg1=position;
+                mHandler.sendMessage(message);
+
+
             }
         });
 
