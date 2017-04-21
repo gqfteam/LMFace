@@ -119,15 +119,15 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
     goods_msg goodsMsg;
     int chooseImgView = -1;
 
-    int courierId=1;
+    int courierId = 1;
     List<Bitmap> imgs;
 
-    String goodscity="";
+    String goodscity = "";
 
-    String college="";
-    String campus="";
-    String classification="";
-    String species="";
+    String college = "";
+    String campus = "";
+    String classification = "";
+    String species = "";
     @BindView(R.id.addgoods_goodsnum_edi)
     EditText addgoodsGoodsnumEdi;
 
@@ -149,7 +149,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
     int campusid = -1;
 
 
-    public int selectImgIndex=0;
+    public int selectImgIndex = 0;
 
 
     @BindView(R.id.loan_courier_rad_1)
@@ -165,6 +165,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
     private PhotoGet photoGet;
     BaseDialog baseDialog;
     SweetAlertDialog sweetAlertDialog;
+
     public void setToolbar(int statu) {
         if (statu == 0) {
             addGoodsToolbar.setTitle("上架商品");
@@ -189,13 +190,13 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         //EventBus.getDefault().register(this);
         realm = Realm.getDefaultInstance();
         mcompositeSubscription = new CompositeSubscription();
-        bitmaps=new ArrayList<>();
+        bitmaps = new ArrayList<>();
         bitmaps.add(new File(""));
         bitmaps.add(new File(""));
         bitmaps.add(new File(""));
         imgs = new ArrayList<>();
         goodsId = getIntent().getIntExtra("goodsId", -1);
-        Log.i("gqf","goodsId"+goodsId);
+        Log.i("gqf", "goodsId" + goodsId);
         if (goodsId > 0) {
             setToolbar(1);
             getData(goodsId);
@@ -203,7 +204,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
             setToolbar(0);
         }
         initButton();
-        baseDialog=new BaseDialog(this);
+        baseDialog = new BaseDialog(this);
     }
 
     public void initButton() {
@@ -260,7 +261,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(goods_msg goods_msg) {
-                        goodsMsg=goods_msg;
+                        goodsMsg = goods_msg;
                         initViewMsg(goods_msg);
                     }
                 });
@@ -273,43 +274,46 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         addgoodsGoodsnameEdi.setText(goods_msg.getGoodsname());
         addgoodsPhonenumberEdi.setText(goods_msg.getUserphonenum());
         addgoodsGoodstxtEdi.setText(goods_msg.getGoodsdetails());
-        addgoodsGoodspriceEdi.setText(goods_msg.getGoodsprice()+"");
+        addgoodsGoodspriceEdi.setText(goods_msg.getGoodsprice() + "");
         addgoodsGoodspriceEdi.setEnabled(false);
-        addgoodsGoodsnumEdi.setText(goods_msg.getGoodsnum()+"");
-        for(int i=0;i<courierRadioGroup.getChildCount();i++){
-            RadioButton r=(RadioButton)courierRadioGroup.getChildAt(i);
-            Log.i("gqf","RadioButton"+r.getText().toString()+goods_msg.getCourierName());
-            if(r.getText().toString().equals(goods_msg.getCourierName())){
-                Log.i("gqf","RadioButton"+r.getText().toString()+"true"+goods_msg.getCourierName());
+        addgoodsGoodsnumEdi.setText(goods_msg.getGoodsnum() + "");
+        for (int i = 0; i < courierRadioGroup.getChildCount(); i++) {
+            RadioButton r = (RadioButton) courierRadioGroup.getChildAt(i);
+            Log.i("gqf", "RadioButton" + r.getText().toString() + goods_msg.getCourierName());
+            if (r.getText().toString().equals(goods_msg.getCourierName())) {
+                Log.i("gqf", "RadioButton" + r.getText().toString() + "true" + goods_msg.getCourierName());
                 r.setChecked(true);
-                courierId=i+1;
+                courierId = i + 1;
             }
         }
         initImgView(goods_msg);
     }
+
     private static final String PICASSO_CACHE = "picasso-cache";
-    public String changePath(String path){
-        String http="http://192.168.56.1:8080/mface/goodsImgs/";
-        path=path.substring(http.length(), path.length());
-        String c="";
-        path=c+path;
+
+    public String changePath(String path) {
+        String http = "http://192.168.56.1:8080/mface/goodsImgs/";
+        path = path.substring(http.length(), path.length());
+        String c = "";
+        path = c + path;
         return path;
     }
-    public void initImgView(goods_msg goods_msg){
-        final String AbsolutePath= Environment.getExternalStorageDirectory().getAbsolutePath();
 
-        if(goods_msg.getGoodsimgaddress1()!=null){
-            if(!goods_msg.getGoodsimgaddress1().equals("")){
+    public void initImgView(goods_msg goods_msg) {
+        final String AbsolutePath = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        if (goods_msg.getGoodsimgaddress1() != null) {
+            if (!goods_msg.getGoodsimgaddress1().equals("")) {
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress1())
                         .placeholder(R.drawable.ic_comment_upload_add)
                         .error(R.drawable.ic_comment_upload_add)
                         .into(addgoodsGoodsimgImg1);
-                final String Goodsimgaddress1=goods_msg.getGoodsimgaddress1();
+                final String Goodsimgaddress1 = goods_msg.getGoodsimgaddress1();
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress1()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
-                        File dcimFile =new File(getApplicationContext().getExternalCacheDir(),changePath(Goodsimgaddress1));
+                        File dcimFile = new File(getApplicationContext().getExternalCacheDir(), changePath(Goodsimgaddress1));
                         FileOutputStream ostream = null;
                         try {
                             ostream = new FileOutputStream(dcimFile);
@@ -318,11 +322,11 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if(dcimFile.exists()){
+                        if (dcimFile.exists()) {
                             bitmaps.remove(0);
                             bitmaps.add(0, dcimFile);
-                        }else{
-                            Log.i("gqf","Goodsimgaddress1");
+                        } else {
+                            Log.i("gqf", "Goodsimgaddress1");
                         }
 
                     }
@@ -340,17 +344,17 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
 
             }
         }
-        if(goods_msg.getGoodsimgaddress2()!=null){
-            if(!goods_msg.getGoodsimgaddress2().equals("")){
+        if (goods_msg.getGoodsimgaddress2() != null) {
+            if (!goods_msg.getGoodsimgaddress2().equals("")) {
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress2())
                         .placeholder(R.drawable.ic_comment_upload_add)
                         .error(R.drawable.ic_comment_upload_add)
                         .into(addgoodsGoodsimgImg2);
-                final String Goodsimgaddress2=goods_msg.getGoodsimgaddress2();
+                final String Goodsimgaddress2 = goods_msg.getGoodsimgaddress2();
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress2()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        File dcimFile =new File(getApplicationContext().getExternalCacheDir(),changePath(Goodsimgaddress2));
+                        File dcimFile = new File(getApplicationContext().getExternalCacheDir(), changePath(Goodsimgaddress2));
                         FileOutputStream ostream = null;
                         try {
                             ostream = new FileOutputStream(dcimFile);
@@ -359,11 +363,11 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if(dcimFile.exists()){
+                        if (dcimFile.exists()) {
                             bitmaps.remove(1);
                             bitmaps.add(1, dcimFile);
-                        }else{
-                            Log.i("gqf","Goodsimgaddress2");
+                        } else {
+                            Log.i("gqf", "Goodsimgaddress2");
                         }
                     }
 
@@ -380,17 +384,17 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
 
             }
         }
-        if(goods_msg.getGoodsimgaddress3()!=null){
-            if(!goods_msg.getGoodsimgaddress3().equals("")){
+        if (goods_msg.getGoodsimgaddress3() != null) {
+            if (!goods_msg.getGoodsimgaddress3().equals("")) {
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress3())
                         .placeholder(R.drawable.ic_comment_upload_add)
                         .error(R.drawable.ic_comment_upload_add)
                         .into(addgoodsGoodsimgImg3);
-                final String Goodsimgaddress3=goods_msg.getGoodsimgaddress3();
+                final String Goodsimgaddress3 = goods_msg.getGoodsimgaddress3();
                 Picasso.with(this).load(goods_msg.getGoodsimgaddress3()).into(new Target() {
                     @Override
                     public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        File dcimFile =new File(getApplicationContext().getExternalCacheDir(),changePath(Goodsimgaddress3));
+                        File dcimFile = new File(getApplicationContext().getExternalCacheDir(), changePath(Goodsimgaddress3));
                         FileOutputStream ostream = null;
                         try {
                             ostream = new FileOutputStream(dcimFile);
@@ -399,11 +403,11 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
-                        if(dcimFile.exists()){
+                        if (dcimFile.exists()) {
                             bitmaps.remove(2);
                             bitmaps.add(2, dcimFile);
-                        }else{
-                            Log.i("gqf","Goodsimgaddress3");
+                        } else {
+                            Log.i("gqf", "Goodsimgaddress3");
                         }
                     }
 
@@ -419,7 +423,6 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                 });
             }
         }
-
 
 
     }
@@ -431,7 +434,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         mcompositeSubscription.unsubscribe();
     }
 
-    @OnClick({R.id.loan_courier_rad_1, R.id.loan_courier_rad_2, R.id.loan_courier_rad_3,R.id.addgoods_goodsaddress_lin, R.id.addgoods_goodsclassification_lin, R.id.addgoods_goodsimg_img1, R.id.addgoods_goodsimg_img2, R.id.addgoods_goodsimg_img3, R.id.addgoods_addImg_txt, R.id.addgoods_deleteimg_txt, commit_btn})
+    @OnClick({R.id.loan_courier_rad_1, R.id.loan_courier_rad_2, R.id.loan_courier_rad_3, R.id.addgoods_goodsaddress_lin, R.id.addgoods_goodsclassification_lin, R.id.addgoods_goodsimg_img1, R.id.addgoods_goodsimg_img2, R.id.addgoods_goodsimg_img3, R.id.addgoods_addImg_txt, R.id.addgoods_deleteimg_txt, commit_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.addgoods_goodsimg_img1:
@@ -446,21 +449,21 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
             case R.id.addgoods_addImg_txt:
                 //在所选imgview中天加图片
                 //跳转页面选择图片
-                if(selectImgIndex>0) {
-//                    Intent i = new Intent(
-//                            Intent.ACTION_PICK,
-//                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    startActivityForResult(i,RESULT_LOAD_IMAGE);
-                    photoGet=PhotoGet.getInstance();
+                if (selectImgIndex > 0) {
+                    //                    Intent i = new Intent(
+                    //                            Intent.ACTION_PICK,
+                    //                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    //                    startActivityForResult(i,RESULT_LOAD_IMAGE);
+                    photoGet = PhotoGet.getInstance();
                     photoGet.showAvatarDialog(AddOrUpdateGoodsActivity.this, baseDialog);
 
-                }else{
-                    Toast.makeText(getApplicationContext(),"请点击上方方框选择一个位置进行添加",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "请点击上方方框选择一个位置进行添加", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.addgoods_deleteimg_txt:
                 //删除所选imgview中的图片
-                if(selectImgIndex>0) {
+                if (selectImgIndex > 0) {
                     bitmaps.remove(selectImgIndex - 1);
                     bitmaps.add(selectImgIndex - 1, new File(""));
                     if (selectImgIndex == 1) {
@@ -472,17 +475,17 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                     if (selectImgIndex == 3) {
                         addgoodsGoodsimgImg3.setImageResource(R.drawable.ic_comment_upload_add);
                     }
-                }else{
-                    Toast.makeText(getApplicationContext(),"请点击上方方框选择一个删除",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "请点击上方方框选择一个删除", Toast.LENGTH_SHORT).show();
                 }
                 break;
             case commit_btn:
                 commitBtn.setEnabled(false);
-                boolean isImgCommit=false;
-                for(File f:bitmaps){
-                    if(f!=null){
-                        if(f.exists()){
-                            isImgCommit=true;
+                boolean isImgCommit = false;
+                for (File f : bitmaps) {
+                    if (f != null) {
+                        if (f.exists()) {
+                            isImgCommit = true;
                         }
                     }
                 }
@@ -493,21 +496,20 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "商品分类信息不完整", Toast.LENGTH_SHORT).show();
                     commitBtn.setEnabled(true);
                 } else if (collegeid == -1 || campusid == -1) {
-                    Toast.makeText(getApplicationContext(), "商品地址信息不完整"+collegeid+campusid, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "商品地址信息不完整" + collegeid + campusid, Toast.LENGTH_SHORT).show();
                     commitBtn.setEnabled(true);
-                }else if(!isImgCommit){
+                } else if (!isImgCommit) {
                     Toast.makeText(getApplicationContext(), "请上传至少一张图片", Toast.LENGTH_SHORT).show();
                     commitBtn.setEnabled(true);
-                }
-                else {
-                    this.sweetAlertDialog= DialogUtils.getInstance().DialogLoading(this);
+                } else {
+                    this.sweetAlertDialog = DialogUtils.getInstance().DialogLoading(this);
                     sweetAlertDialog.changeAlertType(SweetAlertDialog.PROGRESS_TYPE);
                     sweetAlertDialog.setTitleText("Loading...")
                             .showCancelButton(false)
                             .show();
-                    if(goodsId!=-1){
+                    if (goodsId != -1) {
                         update();
-                    }else{
+                    } else {
                         commit();
                     }
 
@@ -524,23 +526,23 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                 updateClassificationPopuList();
                 break;
             case R.id.loan_courier_rad_1:
-                courierId=1;
+                courierId = 1;
                 break;
             case R.id.loan_courier_rad_2:
-                courierId=2;
+                courierId = 2;
                 break;
             case R.id.loan_courier_rad_3:
-                courierId=3;
+                courierId = 3;
                 break;
         }
     }
 
-    public void update(){
-        Subscription subscription = NetWork.getGoodsService().updateGoodsByGoodsId(goodsId,realm.where(user_msg.class).findFirst().getUserId(),
+    public void update() {
+        Subscription subscription = NetWork.getGoodsService().updateGoodsByGoodsId(goodsId, realm.where(user_msg.class).findFirst().getUserId(),
                 addgoodsGoodsnameEdi.getText().toString(), addgoodsGoodstxtEdi.getText().toString(),
                 goodsMsg.getGoodsimgaddress1(), goodsMsg.getGoodsimgaddress2(), goodsMsg.getGoodsimgaddress3(), addgoodsPhonenumberEdi.getText().toString(),
                 Double.parseDouble(addgoodsGoodspriceEdi.getText().toString()), goodscity, collegeid, campusid, goodsclassificationid,
-                goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), goodsMsg.getShelvestime(),courierId)
+                goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), goodsMsg.getShelvestime(), courierId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<ResultCode>() {
@@ -556,60 +558,63 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(ResultCode s) {
-                        result("修改",s);
+                        result("修改", s);
                     }
                 });
         mcompositeSubscription.add(subscription);
     }
-    public void result(String name,ResultCode s){
-        if(s.getCode()==10000){
-            goodsimg(Integer.parseInt(s.getMsg()),name);
 
-        }else{
-            Toast.makeText(getApplicationContext(),name+"失败",Toast.LENGTH_SHORT).show();
+    public void result(String name, ResultCode s) {
+        if (s.getCode() == 10000) {
+            goodsimg(Integer.parseInt(s.getMsg()), name);
+
+        } else {
+            Toast.makeText(getApplicationContext(), name + "失败", Toast.LENGTH_SHORT).show();
             commitBtn.setEnabled(true);
             sweetAlertDialog.dismissWithAnimation();
         }
 
     }
-    boolean isFile=false;
+
+    boolean isFile = false;
+
     //上传图片
-    public void goodsimg(int goodsId,final String name){
-        boolean isAddress1=false;
-        boolean isAddress2=false;
-        boolean isAddress3=false;
+    public void goodsimg(int goodsId, final String name) {
+        boolean isAddress1 = false;
+        boolean isAddress2 = false;
+        boolean isAddress3 = false;
 
         MultipartBody.Builder builder = new MultipartBody.Builder();
-        for(int i=0;i<bitmaps.size();i++){
-            File f=bitmaps.get(i);
-            if(f!=null) {
-                Log.i("gqf","File"+i);
-                if(f.exists()){
-                        RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), f);
-                        builder.addFormDataPart("zichifile", f.getName(), photoRequestBody);
-                    Log.i("gqf","exists"+i);
-                    if(i==0){
-                        isAddress1=true;
+        for (int i = 0; i < bitmaps.size(); i++) {
+            File f = bitmaps.get(i);
+            if (f != null) {
+                Log.i("gqf", "File" + i);
+                if (f.exists()) {
+                    RequestBody photoRequestBody = RequestBody.create(MediaType.parse("image/png"), f);
+                    builder.addFormDataPart("zichifile", f.getName(), photoRequestBody);
+                    Log.i("gqf", "exists" + i);
+                    if (i == 0) {
+                        isAddress1 = true;
                     }
-                    if(i==1){
-                        isAddress2=true;
+                    if (i == 1) {
+                        isAddress2 = true;
                     }
-                    if(i==2){
-                        isAddress3=true;
+                    if (i == 2) {
+                        isAddress3 = true;
                     }
                 }
             }
         }
         builder.setType(MultipartBody.FORM);
-        MultipartBody mb=builder.build();
+        MultipartBody mb = builder.build();
 
 
-        List<MultipartBody.Part> zichifile=new ArrayList<>();
-        for(int i=0;i<mb.size();i++){
+        List<MultipartBody.Part> zichifile = new ArrayList<>();
+        for (int i = 0; i < mb.size(); i++) {
             zichifile.add(mb.part(i));
         }
-        if(isFile) {
-            Subscription subscription = NetWork.getGoodsService().insertHtdffile(zichifile,isAddress1,isAddress2,isAddress3, goodsId)
+        if (isFile) {
+            Subscription subscription = NetWork.getGoodsService().insertHtdffile(zichifile, isAddress1, isAddress2, isAddress3, goodsId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Observer<ResultCode>() {
@@ -626,7 +631,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         @Override
                         public void onNext(ResultCode resultCode) {
                             if (resultCode.getCode() == 10000) {
-                                Toast.makeText(getApplicationContext(),"提交成功", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), "提交成功", Toast.LENGTH_SHORT).show();
                                 onBackPressed();
                             } else {
                                 Toast.makeText(getApplicationContext(), name + "失败", Toast.LENGTH_SHORT).show();
@@ -636,38 +641,39 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         }
                     });
             mcompositeSubscription.add(subscription);
-        }else{
+        } else {
             commitBtn.setEnabled(true);
         }
 
     }
+
     //先上传图片，然后返回图片地址记录，然后上传商品信息
     public void commit() {
-            Subscription subscription = NetWork.getGoodsService().insertGoods(realm.where(user_msg.class).findFirst().getUserId(),
-                    addgoodsGoodsnameEdi.getText().toString(), addgoodsGoodstxtEdi.getText().toString(),
-                    "", "", "", addgoodsPhonenumberEdi.getText().toString(),
-                    Double.parseDouble(addgoodsGoodspriceEdi.getText().toString()), goodscity, collegeid, campusid, goodsclassificationid,
-                    goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), courierId
-            )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Observer<ResultCode>() {
-                        @Override
-                        public void onCompleted() {
+        Subscription subscription = NetWork.getGoodsService().insertGoods(realm.where(user_msg.class).findFirst().getUserId(),
+                addgoodsGoodsnameEdi.getText().toString(), addgoodsGoodstxtEdi.getText().toString(),
+                "", "", "", addgoodsPhonenumberEdi.getText().toString(),
+                Double.parseDouble(addgoodsGoodspriceEdi.getText().toString()), goodscity, collegeid, campusid, goodsclassificationid,
+                goodsspecieid, Integer.parseInt(addgoodsGoodsnumEdi.getText().toString()), courierId
+        )
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ResultCode>() {
+                    @Override
+                    public void onCompleted() {
 
-                        }
+                    }
 
-                        @Override
-                        public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                        }
+                    }
 
-                        @Override
-                        public void onNext(ResultCode s) {
-                            result("提交",s);
-                        }
-                    });
-            mcompositeSubscription.add(subscription);
+                    @Override
+                    public void onNext(ResultCode s) {
+                        result("提交", s);
+                    }
+                });
+        mcompositeSubscription.add(subscription);
 
     }
 
@@ -680,63 +686,64 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
         if (imgv.getBackground() == null) {
             imgv.setBackgroundResource(R.drawable.initialsignin_top_search_edittext);
             chooseImgView = index;
-            selectImgIndex=index;
+            selectImgIndex = index;
         } else {
             imgv.setBackground(null);
             chooseImgView = -1;
-            selectImgIndex=0;
+            selectImgIndex = 0;
         }
 
 
-
     }
+
     List<File> bitmaps;
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        Log.i("gqf","onActivityResult");
-//        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-//            Uri selectedImage = data.getData();
-//            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//            Cursor cursor = getContentResolver().query(selectedImage,
-//                    filePathColumn, null, null, null);
-//            cursor.moveToFirst();
-//
-//            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//            String picturePath = cursor.getString(columnIndex);
-//            Log.i("gqf","onActivityResult"+picturePath);
-//            cursor.close();
-//            if(selectImgIndex==1) {
-//                addgoodsGoodsimgImg1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//                bitmaps.remove(0);
-//                bitmaps.add(0,new File(picturePath));
-//            }
-//            if(selectImgIndex==2) {
-//                addgoodsGoodsimgImg2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//                bitmaps.remove(1);
-//                bitmaps.add(1,new File(picturePath));
-//            }
-//            if(selectImgIndex==3) {
-//                bitmaps.remove(2);
-//                addgoodsGoodsimgImg3.setImageBitmap(BitmapFactory.decodeFile(picturePath));
-//                bitmaps.add(2,new File(picturePath));
-//            }
-//            isFile=true;
-//        }
-//
-//    }
+    //    @Override
+    //    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    //        super.onActivityResult(requestCode, resultCode, data);
+    //
+    //        Log.i("gqf","onActivityResult");
+    //        if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+    //            Uri selectedImage = data.getData();
+    //            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+    //
+    //            Cursor cursor = getContentResolver().query(selectedImage,
+    //                    filePathColumn, null, null, null);
+    //            cursor.moveToFirst();
+    //
+    //            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+    //            String picturePath = cursor.getString(columnIndex);
+    //            Log.i("gqf","onActivityResult"+picturePath);
+    //            cursor.close();
+    //            if(selectImgIndex==1) {
+    //                addgoodsGoodsimgImg1.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+    //                bitmaps.remove(0);
+    //                bitmaps.add(0,new File(picturePath));
+    //            }
+    //            if(selectImgIndex==2) {
+    //                addgoodsGoodsimgImg2.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+    //                bitmaps.remove(1);
+    //                bitmaps.add(1,new File(picturePath));
+    //            }
+    //            if(selectImgIndex==3) {
+    //                bitmaps.remove(2);
+    //                addgoodsGoodsimgImg3.setImageBitmap(BitmapFactory.decodeFile(picturePath));
+    //                bitmaps.add(2,new File(picturePath));
+    //            }
+    //            isFile=true;
+    //        }
+    //
+    //    }
     private static final int TAKEPHOTO = 1; // 拍照
     private static final int GALLERY = 2; // 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3; // 结果
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case TAKEPHOTO:
-                String headIconPath=photoGet.getHeadIconPath();
-                if (headIconPath!=null)
+                String headIconPath = photoGet.getHeadIconPath();
+                if (headIconPath != null)
                     photoGet.startPhotoZoom(Uri.fromFile(new File(headIconPath)), 150);
                 break;
             case GALLERY:
@@ -746,29 +753,27 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                 break;
             case PHOTO_REQUEST_CUT:
                 if (data != null) {
-                    ImageView userHeadImg=null;
-                    if(selectImgIndex==1) {
-                        addgoodsGoodsimgImg1.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
-                        userHeadImg=addgoodsGoodsimgImg1;
-                        photoGet.saveImage(data,userHeadImg);
+                    ImageView userHeadImg = null;
+                    if (selectImgIndex == 1) {
+                        addgoodsGoodsimgImg1.setImageBitmap((Bitmap) (data.getExtras().getParcelable("data")));
+                        userHeadImg = addgoodsGoodsimgImg1;
+                        photoGet.saveImage(data, userHeadImg);
                         bitmaps.remove(0);
-                        bitmaps.add(0,photoGet.getHeadFile());
-                    }
-                    else if(selectImgIndex==2) {
-                        addgoodsGoodsimgImg2.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
-                        userHeadImg=addgoodsGoodsimgImg2;
-                        photoGet.saveImage(data,userHeadImg);
+                        bitmaps.add(0, photoGet.getHeadFile());
+                    } else if (selectImgIndex == 2) {
+                        addgoodsGoodsimgImg2.setImageBitmap((Bitmap) (data.getExtras().getParcelable("data")));
+                        userHeadImg = addgoodsGoodsimgImg2;
+                        photoGet.saveImage(data, userHeadImg);
                         bitmaps.remove(1);
-                        bitmaps.add(1,photoGet.getHeadFile());
-                    }
-                    else if(selectImgIndex==3) {
+                        bitmaps.add(1, photoGet.getHeadFile());
+                    } else if (selectImgIndex == 3) {
                         bitmaps.remove(2);
-                        addgoodsGoodsimgImg3.setImageBitmap((Bitmap)(data.getExtras().getParcelable("data")));
-                        userHeadImg=addgoodsGoodsimgImg3;
-                        photoGet.saveImage(data,userHeadImg);
-                        bitmaps.add(2,photoGet.getHeadFile());
+                        addgoodsGoodsimgImg3.setImageBitmap((Bitmap) (data.getExtras().getParcelable("data")));
+                        userHeadImg = addgoodsGoodsimgImg3;
+                        photoGet.saveImage(data, userHeadImg);
+                        bitmaps.add(2, photoGet.getHeadFile());
                     }
-                    isFile=true;
+                    isFile = true;
 
                 }
                 break;
@@ -955,8 +960,8 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                     college = radioDistrict.getText().toString();
                     campus = mAddGoodsChooseListAdapter.getItem(position).toString();
 
-                    collegeid=campusinfos.get(position).getCollegeid();
-                    campusid=campusinfos.get(position).getCampusid();
+                    collegeid = campusinfos.get(position).getCollegeid();
+                    campusid = campusinfos.get(position).getCampusid();
                     window.dismiss();
                 } else if (chooseIndes == 3) {
                     chooseIndes = 4;
@@ -1120,6 +1125,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                         @Override
                         public void onNext(List<collegeinfo> cs) {
                             collegeinfos = cs;
+                            Log.i("gqf", "colleges" + cs.toString());
                             updatePopuList(index);
                         }
                     });
@@ -1157,7 +1163,7 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                             popupList.setEnabled(false);
                             changeRid(mAddGoodsChooseListAdapter.getItem(position).toString());
                             goodsclassificationid = goodsclassifications.get(position).getClassificationid();
-                            Log.i("gqf","goodsclassificationid"+goodsclassificationid);
+                            Log.i("gqf", "goodsclassificationid" + goodsclassificationid);
                             getJson(mAddGoodsChooseListAdapter.getItem(position).toString(), 2);
                             //初始化所选
                             goodsspecieid = -1;
@@ -1168,10 +1174,10 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                             classification = radioProvince.getText().toString();
                             species = mAddGoodsChooseListAdapter.getItem(position).toString();
 
-                                goodsspecieid = goodsspecies.get(position).getSpeciesid();
-                                goodsclassificationid=goodsspecies.get(position).getClassificationid();
+                            goodsspecieid = goodsspecies.get(position).getSpeciesid();
+                            goodsclassificationid = goodsspecies.get(position).getClassificationid();
 
-                            Log.i("gqf",goodsclassificationid+"goodsclassificationid"+goodsspecieid);
+                            Log.i("gqf", goodsclassificationid + "goodsclassificationid" + goodsspecieid);
                             window.dismiss();
                         }
                     }
@@ -1192,10 +1198,12 @@ public class AddOrUpdateGoodsActivity extends AppCompatActivity {
                 break;
 
             case 3:
+
                 ArrayList<String> colleges = new ArrayList<>();
                 for (int i = 0; i < collegeinfos.size(); i++) {
                     colleges.add(collegeinfos.get(i).getCollegename());
                 }
+                Log.i("gqf", "colleges" + colleges.toString());
                 mAddGoodsChooseListAdapter.update(colleges);
                 popupList.setEnabled(true);
 
