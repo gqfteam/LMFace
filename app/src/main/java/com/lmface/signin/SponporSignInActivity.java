@@ -1,12 +1,17 @@
 package com.lmface.signin;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -16,12 +21,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.rxbinding.widget.RxTextView;
 import com.lmface.R;
+import com.lmface.application.LMFaceApplication;
 import com.lmface.huanxin.DemoHelper;
 import com.lmface.network.NetWork;
+import com.lmface.network.api.LocationService;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.UserFriend;
 import com.lmface.pojo.initialsignin_info;
@@ -49,6 +61,7 @@ import rx.subscriptions.CompositeSubscription;
 
 /**
  * Created by Daniel on 2017/2/27.
+ * 发起签到页
  */
 
 public class SponporSignInActivity extends AppCompatActivity {
@@ -79,6 +92,10 @@ public class SponporSignInActivity extends AppCompatActivity {
     @BindView(R.id.signInPersonFlag_txt)
     TextView signInPersonFlagTxt;
 
+    @BindView(R.id.getlongitudeAndlatitude_btn)
+    Button signInGpsBtn;
+
+
     private String[] mScope;
     private String[] mIntervalTime;
     private String[] mCourseinfo;
@@ -91,6 +108,11 @@ public class SponporSignInActivity extends AppCompatActivity {
     private List<Integer> listId;
 
 
+    //百度定位
+    private LocationService locationService;
+    private String permissionInfo;
+    private final int SDK_PERMISSION_REQUEST = 127;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +120,10 @@ public class SponporSignInActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mCompositeSubscription = new CompositeSubscription();
         setAutoCompleteTextView();
+
+
+        signInGpsBtn.setMovementMethod(ScrollingMovementMethod.getInstance());
+
         initSubmit();
         setToolbar("发起签到");
 
@@ -188,6 +214,16 @@ public class SponporSignInActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        // -----------location config ------------
+        //坐标定位
+        getPersimmions();
+        locationService = ((LMFaceApplication) getApplication()).locationService;
+        //获取locationservice实例，建议应用中只初始化1个location实例，然后使用，可以参考其他示例的activity，都是通过此种方式获取locationservice实例的
+        locationService.registerListener(mListener);
+        locationService.setLocationOption(locationService.getDefaultLocationClientOption());
+
+
         Log.i("gqf", "---list_userName.size()---" + list_userName.size());
         if (list_userName.size() != 0) {
             signInPersonFlagTxt.setText("已选择");
@@ -254,7 +290,7 @@ public class SponporSignInActivity extends AppCompatActivity {
         mCompositeSubscription.add(subscription);
     }
 
-    @OnClick({R.id.select_courseinfo,R.id.select_scope, R.id.select_interval_time, R.id.select_time, R.id.signInPerson_btn, R.id.sign_commit_btn})
+    @OnClick({R.id.getlongitudeAndlatitude_btn,R.id.select_courseinfo,R.id.select_scope, R.id.select_interval_time, R.id.select_time, R.id.signInPerson_btn, R.id.sign_commit_btn})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.select_courseinfo:
@@ -269,6 +305,10 @@ public class SponporSignInActivity extends AppCompatActivity {
                 break;
             case R.id.select_time:
                 onYearMonthDayTimePicker();
+
+                break;
+            case R.id.getlongitudeAndlatitude_btn:
+                locationService.start();// 定位SDK
 
                 break;
             case R.id.signInPerson_btn:
@@ -301,8 +341,9 @@ private String mGson;
         }
         initialsigninInfo.setSignaddress(ediAddress.getText() + "");
         initialsigninInfo.setSigngoal(ediGoal.getText() + "");
-        initialsigninInfo.setAddresslatitude("34.3213231223");
-        initialsigninInfo.setAddresslongitude("33.3131432");
+
+        initialsigninInfo.setAddresslatitude(latitudeTxt.getText().toString());
+        initialsigninInfo.setAddresslongitude(longitudeTxt.getText().toString());
         initialsigninInfo.setSigncourseid(2);
         Log.e("Daniel", "----开始时间---" + initialsigninInfo.getSignstarttime());
         Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -349,39 +390,127 @@ private String mGson;
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationService.unregisterListener(mListener); //注销掉监听
+        locationService.stop(); //停止定位服务
         mCompositeSubscription.unsubscribe();
     }
 
-    /**
-     * 发送推送*/
-      /*Runnable runable=new Runnable() {
-    @Override
-    public void run() {
-      String master_Secret = "5b7b0a004f2d3296a7593213";
-            String appKey = "48b5158a67342fb7eab0e5b4";
+    /*****
+     *
+     * 定位结果回调，重写onReceiveLocation方法，可以直接拷贝如下代码到自己工程中修改
+     *
+     */
+    private BDLocationListener mListener = new BDLocationListener() {
 
-            JPushClient jPushClient = new JPushClient(master_Secret, appKey);
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            // TODO Auto-generated method stub
+            if (null != location && location.getLocType() != BDLocation.TypeServerError) {
+                StringBuffer sb = new StringBuffer(256);
 
-            PushPayload payLoad = PushPayload.newBuilder()
-                    .setPlatform(Platform.all())
-                    .setAudience(Audience.all()) //这是接收对象，即谁可以接收到该推送
-                    .setNotification(Notification.alert("收到新的签到信息")) //下发通知
-                    .setMessage(Notification.MessagingStyle.Message.content("点击进入签到页面！"))
-                    .build();
-            try {
-                PushResult result = jPushClient.sendPush(payLoad);
-                System.out.println("success");
-                System.out.println(result.msg_id);
-                System.out.println(result.sendno);
-            } catch (APIConnectionException e) {
-                // TODO Auto-generated catch block
-                System.out.println("connection error");
-                e.printStackTrace();
-            } catch (APIRequestException e) {
-                // TODO Auto-generated catch block
-                System.out.println("request error");
-                e.printStackTrace();
+                /**
+                 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；
+                 * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变
+                 */
+                sb.append(location.getTime());
+                sb.append("\nlocType : ");// 定位类型
+                sb.append(location.getLocType());
+                sb.append("\nlocType description : ");// *****对应的定位类型说明*****
+                sb.append(location.getLocTypeDescription());
+                sb.append("\nlatitude : ");// 纬度
+                sb.append(location.getLatitude());
+                sb.append("\nlontitude : ");// 经度
+
+                logMsg(location.getLongitude()+"",location.getLatitude()+"");
             }
         }
-    };*/
+
+        public void onConnectHotSpotMessage(String s, int i){
+        }
+    };
+
+    /**
+     * 显示请求字符串
+     *
+     * @param lng
+     * @param lat
+     */
+    public void logMsg(final  String lng,final  String lat) {
+
+        try {
+            if (signInGpsBtn != null){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        signInGpsBtn.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                longitudeTxt.setText(lng);
+                                latitudeTxt.setText(lat);
+                            }
+                        });
+
+                    }
+                }).start();
+            }
+            //LocationResult.setText(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @TargetApi(23)
+    private void getPersimmions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            ArrayList<String> permissions = new ArrayList<String>();
+            /***
+             * 定位权限为必须权限，用户如果禁止，则每次进入都会申请
+             */
+            // 定位精确位置
+            if(checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+            if(checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            }
+			/*
+			 * 读写权限和电话状态权限非必要权限(建议授予)只会申请一次，用户同意或者禁止，只会弹一次
+			 */
+            // 读写权限
+            if (addPermission(permissions, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                permissionInfo += "Manifest.permission.WRITE_EXTERNAL_STORAGE Deny \n";
+            }
+            // 读取电话状态权限
+            if (addPermission(permissions, Manifest.permission.READ_PHONE_STATE)) {
+                permissionInfo += "Manifest.permission.READ_PHONE_STATE Deny \n";
+            }
+
+            if (permissions.size() > 0) {
+                requestPermissions(permissions.toArray(new String[permissions.size()]), SDK_PERMISSION_REQUEST);
+            }
+        }
+    }
+
+    @TargetApi(23)
+    private boolean addPermission(ArrayList<String> permissionsList, String permission) {
+        if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) { // 如果应用没有获得对应权限,则添加到列表中,准备批量申请
+            if (shouldShowRequestPermissionRationale(permission)){
+                return true;
+            }else{
+                permissionsList.add(permission);
+                return false;
+            }
+
+        }else{
+            return true;
+        }
+    }
+
+    @TargetApi(23)
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        // TODO Auto-generated method stub
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+    }
 }

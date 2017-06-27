@@ -5,13 +5,17 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Handler;
+import android.os.Vibrator;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
@@ -22,6 +26,7 @@ import com.hyphenate.chat.EMOptions;
 import com.lmface.R;
 import com.lmface.huanxin.AddFriendsListActivity;
 import com.lmface.huanxin.ContactActivity;
+import com.lmface.network.api.LocationService;
 import com.lmface.pojo.AddFriendMsg;
 import com.lmface.util.CommonUtil;
 
@@ -40,6 +45,9 @@ import io.realm.RealmConfiguration;
 public class LMFaceApplication extends Application {
     private static List<Activity> mList ;
     private static LMFaceApplication app;
+    //定位service
+    public LocationService locationService;
+    public Vibrator mVibrator;
     // 获取到主线程的handler
     private static Handler mMainThreadHandler = null;
     // 获取到主线程
@@ -142,7 +150,12 @@ public class LMFaceApplication extends Application {
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());
 
-
+        /***
+         * 初始化定位sdk，建议在Application中创建
+         */
+        locationService = new LocationService(getApplicationContext());
+        mVibrator =(Vibrator)getApplicationContext().getSystemService(Service.VIBRATOR_SERVICE);
+        SDKInitializer.initialize(getApplicationContext());
 
 
 
@@ -229,5 +242,9 @@ public class LMFaceApplication extends Application {
             });
         }
     }
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
 }

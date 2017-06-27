@@ -1,6 +1,12 @@
 package com.lmface.signin;
 
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +17,13 @@ import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.lmface.R;
 import com.lmface.huanxin.DemoHelper;
 import com.lmface.network.NetWork;
+import com.lmface.network.api.LocationService;
 import com.lmface.pojo.TemporarySignMsg;
 import com.lmface.pojo.UserFriend;
 import com.lmface.pojo.initialsignin_info;
@@ -26,6 +35,8 @@ import com.lmface.util.in.srain.cube.views.ptr.PtrFrameLayout;
 import com.lmface.util.in.srain.cube.views.ptr.PtrHandler;
 import com.lmface.util.myPullToRefreshHeader;
 import com.lmface.view.AutoHeightLayoutManager;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +90,11 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
     int initiateSignId=0;
     initialsignin_info    signin_info;
     NoSignEndMsgListAdapter noSignEndMsgListAdapter;
+
+    //百度定位
+
     public void setToolbar(String statu) {
+
 
         nowSignEndMsgToolbar.setTitle(statu);
         setSupportActionBar(nowSignEndMsgToolbar);
@@ -141,15 +156,28 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
         users=new ArrayList<>();
         temporarySignCommitBtn.setVisibility(View.GONE);
         Log.i("Jpush","获取数据");
-        initiateSignId=getIntent().getIntExtra("initiateSignId",0);
+
+        SharedPreferences preferences=getSharedPreferences("jpush_message", Context.MODE_PRIVATE);
+        String message=preferences.getString("message", "0");
+
+
+       /* initiateSignId=getIntent().getIntExtra("initiateSignId",0);
+
+        String message=getIntent().getStringExtra("jpush_message");*/
+
+        Log.i("Jpush","得到数据--"+message);
        // Intent intent=getIntent();
 
-    /*   if (jpush_message!=null){
-            Gson gson = new Gson();
-            signin_info= gson.fromJson(jpush_message,initialsignin_info.class);
+       if (message!=null&&!"".equals(message)){
+           try {
+               JSONObject   jsonObject = new JSONObject(message);
+               /*initiateSignId =Integer.valueOf(jsonObject.get("signcourseid"));*/
+               Log.i("Jpush","得到数据 signin_info--"+jsonObject.get("signcourseid").toString());
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+       }
 
-
-        }*/
         initSignMsg(initiateSignId);
 
 
@@ -174,10 +202,7 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(sign_user_msg data) {
-
-
-
-                        if(data!=null){
+                   if(data!=null){
 
 
                             sign_user_msg=data;
@@ -318,4 +343,7 @@ public class NowSignEndMsgActivity extends AppCompatActivity {
         realm.close();
         mcompositeSubscription.unsubscribe();
     }
+
+
+
 }

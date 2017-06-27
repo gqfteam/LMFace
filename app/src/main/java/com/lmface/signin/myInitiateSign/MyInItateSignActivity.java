@@ -13,6 +13,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.Poi;
 import com.lmface.R;
 import com.lmface.network.NetWork;
 import com.lmface.pojo.courseinfo;
@@ -80,6 +85,7 @@ public class MyInItateSignActivity extends AppCompatActivity {
         mcompositeSubscription = new CompositeSubscription();
         EventBus.getDefault().register(this);
 
+
         setToolbar("我发起的签到");
         myInitiateSignViewPagerAdapter = new MyInitiateSignViewPagerAdapter(getSupportFragmentManager());
         myInitiateSignViewpager.setAdapter(myInitiateSignViewPagerAdapter);
@@ -89,7 +95,7 @@ public class MyInItateSignActivity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void showDrawerLayout(courseinfo courseinfo) {
-        Log.i("gqf", "courseinfo" + courseinfo.toString());
+        Log.i("gqf", "courseinfo" + courseinfo.getCourseid());
         Subscription subscription = NetWork.getSignService().selectInitialsigninInfoByCourseIdAndDaily(courseinfo.getCourseid())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -150,4 +156,6 @@ public class MyInItateSignActivity extends AppCompatActivity {
         mcompositeSubscription.unsubscribe();
         EventBus.getDefault().unregister(this);
     }
+
+
 }

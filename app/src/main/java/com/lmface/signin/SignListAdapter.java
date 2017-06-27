@@ -1,7 +1,11 @@
 package com.lmface.signin;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,15 +16,20 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.google.gson.Gson;
 import com.lmface.R;
 import com.lmface.network.NetWork;
+import com.lmface.network.api.LocationService;
 import com.lmface.pojo.ResultCode;
 import com.lmface.pojo.sign_user_msg;
 import com.lmface.pojo.user_msg;
 import com.lmface.pojo.user_sign;
+import com.lmface.signin.myinterface.LocationInterface;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -33,6 +42,7 @@ import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
+ * 签到列表
  * Created by johe on 2017/2/27.
  */
 
@@ -42,7 +52,10 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context mContext;
     private List<sign_user_msg> datas;
     private final LayoutInflater mLayoutInflater;
+    private LocationInterface locationInterface;
     private MyItemClickListener mItemClickListener;
+
+
 
     Realm realm;
     private CompositeSubscription mcompositeSubscription;
@@ -68,7 +81,6 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mLayoutInflater = LayoutInflater.from(mContext);
         mcompositeSubscription = new CompositeSubscription();
     }
-
     public void update(List<sign_user_msg> mDatas) {
         this.datas = mDatas;
         this.notifyDataSetChanged();
@@ -96,7 +108,14 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public void setOnItemClickListener(MyItemClickListener listener) {
         mItemClickListener = listener;
     }
-
+    /**
+     * 设置Item点击监听
+     *
+     * @param listener
+     */
+    public void setOncompareLocationDistanceListener(LocationInterface listener) {
+        locationInterface = listener;
+    }
     public void showDialog(String str, final int positio, final boolean statu) {
         AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
         alert.setTitle(str)
@@ -132,7 +151,6 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     public void onCompleted() {
 
                     }
-
                     @Override
                     public void onError(Throwable e) {
                         Log.i("gqf","onError"+e.getMessage());
@@ -159,6 +177,10 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         mHolder.temporarySignCommitBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //获取经纬度信息
+                locationInterface.compareLocationDistance(Double.valueOf(datas.get(p).getAddresslatitude())
+                        ,Double.valueOf(datas.get(p).getAddresslongitude()));
+
                 showDialog("确定签到？", p, true);
             }
         });
@@ -226,4 +248,72 @@ public class SignListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             ButterKnife.bind(this, view);
         }
     }
+
+
+
+    /*****
+     *
+     * 定位结果回调，重写onReceiveLocation方法，可以直接拷贝如下代码到自己工程中修改
+     *
+     */
+    private BDLocationListener mListener = new BDLocationListener() {
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            // TODO Auto-generated method stub
+            if (null != location && location.getLocType() != BDLocation.TypeServerError) {
+                StringBuffer sb = new StringBuffer(256);
+
+                /**
+                 * 时间也可以使用systemClock.elapsedRealtime()方法 获取的是自从开机以来，每次回调的时间；
+                 * location.getTime() 是指服务端出本次结果的时间，如果位置不发生变化，则时间不变
+                 */
+                sb.append(location.getTime());
+                sb.append("\nlocType : ");// 定位类型
+                sb.append(location.getLocType());
+                sb.append("\nlocType description : ");// *****对应的定位类型说明*****
+                sb.append(location.getLocTypeDescription());
+                sb.append("\nlatitude : ");// 纬度
+                sb.append(location.getLatitude());
+                sb.append("\nlontitude : ");// 经度
+
+                logMsg(location.getLongitude()+"",location.getLatitude()+"");
+            }
+        }
+
+        public void onConnectHotSpotMessage(String s, int i){
+        }
+    };
+
+    /**
+     * 显示请求字符串
+     *
+     * @param lng
+     * @param lat
+     */
+    public void logMsg(final  String lng,final  String lat) {
+
+        try {
+          /*  if (signInGpsBtn != null){
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        signInGpsBtn.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                longitudeTxt.setText(lng);
+                                latitudeTxt.setText(lat);
+                            }
+                        });
+
+                    }
+                }).start();}*/
+
+            //LocationResult.setText(str);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

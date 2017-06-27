@@ -37,6 +37,9 @@ import rx.subscriptions.CompositeSubscription;
 import static com.lmface.R.id.allCheck_btn;
 import static com.lmface.signin.SponporSignInActivity.list_userName;
 
+/**
+ * 签到个人信息详情页
+ */
 public class SignInPersonActivity extends AppCompatActivity implements SortAdapter.MyCheckedChangeListener {
 
     @BindView(allCheck_btn)

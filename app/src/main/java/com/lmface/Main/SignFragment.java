@@ -45,9 +45,11 @@ public class SignFragment extends Fragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.sign_lin:
+                //签到页面
                 mListener.changeActivity(NowNeedSignListActivity.class);
                 break;
             case R.id.initiate_sign_lin:
+                //我的签到页面
                 mListener.changeActivity(SponporSignInActivity.class);
                 break;
             case R.id.my_initiate_sign_lin:
